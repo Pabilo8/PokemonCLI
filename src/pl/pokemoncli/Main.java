@@ -53,9 +53,7 @@ public class Main
 					terminal.applyBackgroundColor(127, 127, 127);
 					terminal.clearScreen();
 					drawWholeMap(terminal);
-					terminal.applySGR(SGR.ENTER_BOLD);
 					drawSidePanel(terminal);
-					terminal.applySGR(SGR.RESET_ALL);
 					flushTimer = 0;
 				}
 
@@ -66,8 +64,9 @@ public class Main
 					int px = player.getX(), py = player.getY();
 					if(handleKeyInput(key))
 					{
-						updateDrawTile(terminal, px, py);
-						updateDrawCharacter(terminal, player);
+						flushTimer = FLUSH_DELAY-1;
+//						updateDrawTile(terminal, px, py);
+//						updateDrawCharacter(terminal, player);
 					}
 
 				}
@@ -89,6 +88,7 @@ public class Main
 
 	private void drawSidePanel(Terminal terminal)
 	{
+		terminal.applySGR(SGR.ENTER_BOLD);
 		terminal.applyBackgroundColor(127, 127, 127);
 		terminal.applyForegroundColor(255, 255, 255);
 
@@ -107,7 +107,13 @@ public class Main
 		drawString(terminal, "Name: Ash", GAME_X+2, 2);
 		drawString(terminal, "HP: 100", GAME_X+2, 3);
 
-		drawString(terminal, "Inventory", GAME_X+2, 5);
+		drawString(terminal, "Inventory:", GAME_X+2, 5);
+		terminal.applySGR(SGR.RESET_ALL);
+
+		Tile.BLOCKED.draw(GAME_X+2, 7, terminal);
+		Tile.BLOCKED.draw(GAME_X+2+8, 7, terminal);
+		Tile.BLOCKED.draw(GAME_X+2+16, 7, terminal);
+		Tile.BLOCKED.draw(GAME_X+2+24, 7, terminal);
 	}
 
 	private boolean handleKeyInput(Key key)
@@ -134,12 +140,26 @@ public class Main
 
 	private void drawWholeMap(Terminal terminal)
 	{
-		for(int y = 0; y*Tile.TILE_SIZE_Y < GAME_Y&&y < level.getHeight(); y++)
-			for(int x = 0; x*Tile.TILE_SIZE_X < GAME_X&&x < level.getWidth(); x++)
-				updateDrawTile(terminal, x, y);
+		int visibleWidth = GAME_X/Tile.TILE_SIZE_X;
+		int visibleHeight = GAME_Y/Tile.TILE_SIZE_Y;
+		int playerX = player.getX();
+		int playerY = player.getY();
 
-		// Draw characters on the map
-		level.getCharacters().forEach(c -> updateDrawCharacter(terminal, c));
+		Terrain[][] visibleMap = level.getVisibleMap(playerX, playerY, visibleWidth, visibleHeight);
+
+		for(int y = 0; y < visibleHeight; y++)
+			for(int x = 0; x < visibleWidth; x++)
+			{
+				int drawX = x*Tile.TILE_SIZE_X;
+				int drawY = y*Tile.TILE_SIZE_Y;
+				visibleMap[x][y].getTile().draw(drawX, drawY, terminal);
+			}
+
+		// Draw characters on the visible map
+		level.getCharacters().forEach(c -> {
+			if(Math.abs(c.getX()-playerX) <= visibleWidth/2&&Math.abs(c.getY()-playerY) <= visibleHeight/2)
+				updateDrawCharacter(terminal, c);
+		});
 	}
 
 	private void updateDrawTile(Terminal terminal, int x, int y)
@@ -150,8 +170,14 @@ public class Main
 
 	private void updateDrawCharacter(Terminal terminal, Character character)
 	{
+		int startX = Math.max(0, player.getX()-GAME_X/Tile.TILE_SIZE_X/2);
+		int startY = Math.max(0, player.getY()-GAME_X/Tile.TILE_SIZE_Y/2);
+		int cX = character.getX()-startX, cY = character.getY()-startY;
+
+		if(cX < 0||cY < 0||cX*Tile.TILE_SIZE_X > GAME_X||cY*Tile.TILE_SIZE_Y > GAME_Y)
+			return;
+
 		Tile sprite = character.getCurrentSprite();
-		int cX = character.getX(), cY = character.getY();
 		sprite.drawWithBackground(level.getTerrain(cX, cY).getTile(),
 				cX*Tile.TILE_SIZE_X, cY*Tile.TILE_SIZE_Y, terminal);
 	}

@@ -54,6 +54,31 @@ public class Level
 		characters.remove(character);
 	}
 
+	public Terrain[][] getVisibleMap(int playerX, int playerY, int visibleWidth, int visibleHeight)
+	{
+		Terrain[][] visibleMap = new Terrain[visibleWidth][visibleHeight];
+		int startX = Math.max(0, playerX-visibleWidth/2);
+		int startY = Math.max(0, playerY-visibleHeight/2);
+
+		for(int x = 0; x < visibleWidth; x++)
+		{
+			for(int y = 0; y < visibleHeight; y++)
+			{
+				int mapX = startX+x;
+				int mapY = startY+y;
+				if(mapX < width&&mapY < height)
+				{
+					visibleMap[x][y] = map[mapX][mapY];
+				}
+				else
+				{
+					visibleMap[x][y] = Terrain.GRASS; // Default terrain for out-of-bounds
+				}
+			}
+		}
+		return visibleMap;
+	}
+
 	public boolean moveCharacterBy(Character character, int dx, int dy)
 	{
 		int newX = character.getX()+dx;

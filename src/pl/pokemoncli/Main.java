@@ -11,6 +11,7 @@ import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.characters.Character;
 import pl.pokemoncli.logic.characters.Player;
 
+import javax.swing.*;
 import java.nio.charset.Charset;
 
 /**
@@ -171,7 +172,7 @@ public class Main
 	private void updateDrawCharacter(Terminal terminal, Character character)
 	{
 		int startX = Math.max(0, player.getX()-GAME_X/Tile.TILE_SIZE_X/2);
-		int startY = Math.max(0, player.getY()-GAME_X/Tile.TILE_SIZE_Y/2);
+		int startY = Math.max(0, player.getY()-GAME_Y/Tile.TILE_SIZE_Y/2);
 		int cX = character.getX()-startX, cY = character.getY()-startY;
 
 		if(cX < 0||cY < 0||cX*Tile.TILE_SIZE_X > GAME_X||cY*Tile.TILE_SIZE_Y > GAME_Y)

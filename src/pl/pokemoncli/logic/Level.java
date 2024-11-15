@@ -72,7 +72,7 @@ public class Level
 				}
 				else
 				{
-					visibleMap[x][y] = Terrain.GRASS; // Default terrain for out-of-bounds
+					visibleMap[x][y] = Terrain.BLOCKED; // Default terrain for out-of-bounds
 				}
 			}
 		}

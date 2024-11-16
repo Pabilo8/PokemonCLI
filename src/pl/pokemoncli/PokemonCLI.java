@@ -1,12 +1,13 @@
 package pl.pokemoncli;
 
 import com.googlecode.lanterna.input.Key;
-import pl.pokemoncli.display.DoubleBufferedTerminal;
-import pl.pokemoncli.display.GameDisplay;
-import pl.pokemoncli.display.PanelDisplay;
-import pl.pokemoncli.display.Tile;
+import pl.pokemoncli.display.*;
+import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
+import pl.pokemoncli.logic.Level.ActionResult;
+import pl.pokemoncli.logic.Level.ResultType;
 import pl.pokemoncli.logic.Level.Terrain;
+import pl.pokemoncli.logic.characters.Character;
 import pl.pokemoncli.logic.characters.Enemy;
 import pl.pokemoncli.logic.characters.Player;
 
@@ -18,27 +19,30 @@ public class PokemonCLI
 {
 	private static PokemonCLI INSTANCE;
 	private final DoubleBufferedTerminal terminal;
+	private final FightDisplay fightDisplay;
 	private final PanelDisplay panelDisplay;
 	private final GameDisplay gameDisplay;
 
 	static int GAME_X, GAME_Y;
 	private Level level;
 	private Player player;
+	private Fight fight;
 
 	final static int FLUSH_DELAY = 60;
 	int flushTimer = FLUSH_DELAY;
 
-	public PokemonCLI(DoubleBufferedTerminal terminal, PanelDisplay panelDisplay, GameDisplay gameDisplay)
+	public PokemonCLI(DoubleBufferedTerminal terminal, PanelDisplay panelDisplay, GameDisplay gameDisplay, FightDisplay fightDisplay)
 	{
 		this.terminal = terminal;
 		this.panelDisplay = panelDisplay;
 		this.gameDisplay = gameDisplay;
+		this.fightDisplay = fightDisplay;
 	}
 
 	public static void main(String[] args) throws InterruptedException
 	{
 		DoubleBufferedTerminal dbTerminal = new DoubleBufferedTerminal();
-		INSTANCE = new PokemonCLI(dbTerminal, new PanelDisplay(dbTerminal), new GameDisplay(dbTerminal));
+		INSTANCE = new PokemonCLI(dbTerminal, new PanelDisplay(dbTerminal), new GameDisplay(dbTerminal), new FightDisplay(dbTerminal));
 		INSTANCE.loadGame();
 		INSTANCE.displayMenu();
 		INSTANCE.displayGame();
@@ -59,7 +63,10 @@ public class PokemonCLI
 		{
 			if(flushTimer==FLUSH_DELAY)
 			{
-				gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y);
+				if(fight!=null)
+					fightDisplay.drawFightScreen(fight);
+				else
+					gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y);
 				panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
 				flushTimer = 0;
 			}
@@ -85,13 +92,44 @@ public class PokemonCLI
 
 	private boolean handleKeyInput(Key key)
 	{
-		return switch(key.getCharacter())
+		//TODO: 16.11.2024 fight screen controls
+		//TODO: 16.11.2024 current screen enum (?)
+
+		ActionResult result = switch(key.getCharacter())
 		{
 			case 'w' -> level.moveCharacterBy(player, 0, -1);
 			case 'a' -> level.moveCharacterBy(player, -1, 0);
 			case 's' -> level.moveCharacterBy(player, 0, 1);
 			case 'd' -> level.moveCharacterBy(player, 1, 0);
-			default -> false;
+			default -> null;
+		};
+
+		if(result==null)
+			return false;
+
+		return switch(result.getResult())
+		{
+			case MOVE -> true;
+			case MET_OBSTACLE -> false;
+			case FIGHT ->
+			{
+				//TODO: 16.11.2024 other characters that have dialogues
+				//start fight
+				fight = new Fight(player, ((Enemy)result.getContactedCharacter()));
+				yield true;
+			}
+			case WILD_POKEMON ->
+			{
+				//display message that wild pokemon appeared, start fight
+				yield false;
+			}
+			case COLLECT_ITEM ->
+			{
+				//display message that item was acquired, add item to player's inventory
+				yield false;
+			}
+			case null -> false;
+
 		};
 	}
 
@@ -99,6 +137,7 @@ public class PokemonCLI
 	{
 		level = new Level(15, 15);
 		player = new Player("Ash", 5, 5, 100, 100);
+		fight = null;
 		level.addCharacter(player);
 
 		level.setTerrain(2, 2, Terrain.BLOCKED);

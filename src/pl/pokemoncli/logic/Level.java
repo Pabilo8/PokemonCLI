@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import pl.pokemoncli.display.Tile;
 import pl.pokemoncli.logic.characters.Character;
+import pl.pokemoncli.logic.equipment.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,14 @@ public class Level
 		characters.remove(character);
 	}
 
+	public Character findCharacterAt(Character filter, int x, int y)
+	{
+		for(Character other : characters)
+			if(other!=filter&&other.getX()==x&&other.getY()==y)
+				return other;
+		return null;
+	}
+
 	public Terrain[][] getVisibleMap(int playerX, int playerY, int visibleWidth, int visibleHeight)
 	{
 		Terrain[][] visibleMap = new Terrain[visibleWidth][visibleHeight];
@@ -77,27 +86,27 @@ public class Level
 		return visibleMap;
 	}
 
-	public boolean moveCharacterBy(Character character, int dx, int dy)
+	public ActionResult moveCharacterBy(Character character, int dx, int dy)
 	{
 		int newX = character.getX()+dx;
 		int newY = character.getY()+dy;
 
 		// Check if the new position is within bounds
 		if(newX < 0||newY < 0||newX >= map.length||newY >= map[0].length)
-			return false;
+			return new ActionResult(ResultType.MET_OBSTACLE);
 
 		// Check if the tile is passable
 		if(!map[newX][newY].isPassable())
-			return false;
+			return new ActionResult(ResultType.MET_OBSTACLE);
 
 		// Check if there is another character at the new position
-		for(Character other : characters)
-			if(other.getX()==newX&&other.getY()==newY)
-				return false;
+		Character c;
+		if((c = findCharacterAt(character, newX, newY))!=null)
+			return new ActionResult(ResultType.FIGHT, c);
 
 		// Move the character
 		character.setPosition(newX, newY);
-		return true;
+		return new ActionResult(ResultType.MOVE);
 	}
 
 	@Getter
@@ -111,5 +120,38 @@ public class Level
 
 		final boolean passable;
 		final Tile tile;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	public static class ActionResult
+	{
+		private final ResultType result;
+		private final Character contactedCharacter;
+		private final ItemType collectedItem;
+
+		public ActionResult(ResultType result)
+		{
+			this(result, null, null);
+		}
+
+		public ActionResult(ResultType result, Character contactedCharacter)
+		{
+			this(result, contactedCharacter, null);
+		}
+
+		public ActionResult(ResultType result, ItemType collectedItem)
+		{
+			this(result, null, collectedItem);
+		}
+	}
+
+	public enum ResultType
+	{
+		MOVE,
+		MET_OBSTACLE,
+		FIGHT,
+		WILD_POKEMON,
+		COLLECT_ITEM
 	}
 }

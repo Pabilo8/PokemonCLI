@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import pl.pokemoncli.display.Tile;
 import pl.pokemoncli.logic.characters.Character;
-import pl.pokemoncli.logic.characters.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +15,9 @@ import java.util.List;
 @Getter
 public class Level
 {
-	private int width, height;
-	private Terrain[][] map;
-	private List<Character> characters;
-	private Player player;
+	private final int width, height;
+	private final Terrain[][] map;
+	private final List<Character> characters;
 
 	public Level(int width, int height)
 	{

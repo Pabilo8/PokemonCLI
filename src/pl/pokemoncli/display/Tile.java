@@ -1,7 +1,5 @@
 package pl.pokemoncli.display;
 
-import com.googlecode.lanterna.terminal.Terminal;
-
 import java.awt.*;
 
 /**
@@ -39,53 +37,30 @@ public enum Tile
 
 	public static final int TILE_SIZE_X = 6;
 	public static final int TILE_SIZE_Y = 3;
-	final int foreR, foreG, foreB;
-	final int backR, backG, backB;
+	final Color foreground;
+	final Color background;
 	final String[] graphics;
 
 	Tile(Color foreground, Color background, String[] graphics)
 	{
 		this.graphics = graphics;
-		this.foreR = foreground.getRed();
-		this.foreG = foreground.getGreen();
-		this.foreB = foreground.getBlue();
-		if(background!=null)
-		{
-			this.backR = background.getRed();
-			this.backG = background.getGreen();
-			this.backB = background.getBlue();
-		}
-		else
-			backR = backG = backB = -1;
+		this.foreground = foreground;
+		this.background = background;
 	}
 
-	public void draw(int offsetX, int offsetY, Terminal terminal)
+	public void draw(int offsetX, int offsetY, DoubleBufferedTerminal terminal)
 	{
-		terminal.applyBackgroundColor(backR, backG, backB);
-		terminal.applyForegroundColor(foreR, foreG, foreB);
+		//TODO: 16.11.2024 batch drawing using System.arraycopy
 		for(int y = 0; y < TILE_SIZE_Y; y++)
-		{
-			terminal.moveCursor(offsetX, offsetY+y);
 			for(int x = 0; x < TILE_SIZE_X; x++)
-				terminal.putCharacter(graphics[y].charAt(x));
-		}
+				terminal.drawColor(offsetX+x, offsetY+y, graphics[y].charAt(x), foreground, background);
 	}
 
-	public void drawWithBackground(Tile background, int offsetX, int offsetY, Terminal terminal)
+	public void drawWithBackground(Tile background, int offsetX, int offsetY, DoubleBufferedTerminal terminal)
 	{
-		terminal.applyBackgroundColor(background.backR, background.backG, background.backB);
-		terminal.applyForegroundColor(foreR, foreG, foreB);
 		for(int y = 0; y < TILE_SIZE_Y; y++)
-		{
-			terminal.moveCursor(offsetX, offsetY+y);
 			for(int x = 0; x < TILE_SIZE_X; x++)
-			{
-				char c = graphics[y].charAt(x);
-				if(c==' ')
-					terminal.moveCursor(offsetX+x+1, offsetY+y);
-				else
-					terminal.putCharacter(c);
-			}
-		}
+				if(graphics[y].charAt(x)!=' ')
+					terminal.drawColor(offsetX+x, offsetY+y, graphics[y].charAt(x), foreground, background==null?this.background: background.background);
 	}
 }

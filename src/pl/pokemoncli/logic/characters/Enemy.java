@@ -8,7 +8,7 @@ import pl.pokemoncli.display.Tile;
  */
 public class Enemy extends Character
 {
-	public Enemy(String name, int y, int health, int maxHealth, int x)
+	public Enemy(String name, int x, int y, int health, int maxHealth)
 	{
 		super(name, x, y, health, maxHealth);
 	}

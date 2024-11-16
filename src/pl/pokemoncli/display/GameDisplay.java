@@ -1,6 +1,5 @@
 package pl.pokemoncli.display;
 
-import com.googlecode.lanterna.terminal.Terminal;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.characters.Character;
@@ -10,20 +9,14 @@ import pl.pokemoncli.logic.characters.Player;
  * @author Pabilo8
  * @since 15.11.2024
  */
-public class GameDisplay
+public class GameDisplay extends BaseDisplay
 {
-	private final Terminal terminal;
-	private final Level level;
-	private final Player player;
-
-	public GameDisplay(Terminal terminal, Level level, Player player)
+	public GameDisplay(DoubleBufferedTerminal terminal)
 	{
-		this.terminal = terminal;
-		this.level = level;
-		this.player = player;
+		super(terminal);
 	}
 
-	public void drawWholeMap(int gameX, int gameY)
+	public void drawWholeMap(Player player, Level level, int gameX, int gameY)
 	{
 		int visibleWidth = gameX/Tile.TILE_SIZE_X;
 		int visibleHeight = gameY/Tile.TILE_SIZE_Y;
@@ -43,20 +36,20 @@ public class GameDisplay
 		// Draw characters on the visible map
 		level.getCharacters().forEach(c -> {
 			if(Math.abs(c.getX()-playerX) <= visibleWidth/2&&Math.abs(c.getY()-playerY) <= visibleHeight/2)
-				updateDrawCharacter(c, gameX, gameY);
+				updateDrawCharacter(playerX, playerY, level, c, gameX, gameY);
 		});
 	}
 
-	public void updateDrawTile(int x, int y)
+/*	public void updateDrawTile(int x, int y)
 	{
 		Tile tile = level.getMap()[x][y].getTile();
 		tile.draw(x*Tile.TILE_SIZE_X, y*Tile.TILE_SIZE_Y, terminal);
-	}
+	}*/
 
-	public void updateDrawCharacter(Character character, int gameX, int gameY)
+	public void updateDrawCharacter(int playerX, int playerY, Level level, Character character, int gameX, int gameY)
 	{
-		int startX = Math.max(0, player.getX()-gameX/Tile.TILE_SIZE_X/2);
-		int startY = Math.max(0, player.getY()-gameY/Tile.TILE_SIZE_Y/2);
+		int startX = Math.max(0, playerX-gameX/Tile.TILE_SIZE_X/2);
+		int startY = Math.max(0, playerY-gameY/Tile.TILE_SIZE_Y/2);
 		int cX = character.getX()-startX, cY = character.getY()-startY;
 
 		if(cX < 0||cY < 0||cX*Tile.TILE_SIZE_X > gameX||cY*Tile.TILE_SIZE_Y > gameY)

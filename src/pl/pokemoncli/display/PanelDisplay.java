@@ -26,6 +26,9 @@ public class PanelDisplay extends BaseDisplay
 				terminal.drawColor(x, y, ' ', textColor, backgroundColor);
 
 		// Draw Stats
+		drawString("X: "+player.getX(), gameX+2+15, 2);
+		drawString("Y: "+player.getY(), gameX+2+15, 3);
+
 		drawString("Name: "+player.getName(), gameX+2, 2);
 		drawString("HP: "+player.getHealth(), gameX+2, 3);
 

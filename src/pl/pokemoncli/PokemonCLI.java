@@ -6,7 +6,9 @@ import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
+import pl.pokemoncli.logic.characters.Door;
 import pl.pokemoncli.logic.characters.Enemy;
+import pl.pokemoncli.logic.characters.NPC;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.sound.AudioSystem;
 import pl.pokemoncli.sound.AudioSystem.Track;
@@ -122,6 +124,17 @@ public class PokemonCLI
 				fight = new Fight(player, ((Enemy)result.getContactedCharacter()));
 				yield true;
 			}
+			case CHANGE_LEVEL ->
+			{
+				Door door = (Door)result.getContactedCharacter();
+				this.level.removeCharacter(player);
+				this.level = door.getLevel();
+				this.level.addCharacter(player);
+				for(int i = 0; i < 2; i++)
+					this.player.setPosition(door.getDestX(), door.getDestY());
+				yield true;
+			}
+			case DIALOG -> false;
 			case WILD_POKEMON ->
 			{
 				//display message that wild pokemon appeared, start fight
@@ -139,20 +152,38 @@ public class PokemonCLI
 
 	private void loadGame()
 	{
+
 		level = new Level(32, 32);
 		player = new Player("Ash", 5, 5, 100, 100);
-		fight = null;
 		level.addCharacter(player);
+		fight = null;
+
+		Level houseInside = new Level(7, 7);
+		houseInside.paintTerrain(0, 0, 10, 10, Terrain.FLOOR);
+		houseInside.addDoor(3, 6, level, 8, 4);
+		houseInside.addCharacter(new NPC("Pies", 3, 3));
+		houseInside.addCharacter(new NPC("Psi Syn", 5, 5));
+		houseInside.addCharacter(new NPC("Czlowiek", 1, 1));
+
+
+		level.placeHouse(0, 2, 2, 5, 2, 4);
+		level.placeHouse(7, 3, 1, 3, 1, 4, houseInside, 3, 5);
+		level.placeHouse(11, 3, 1, 3, 1, 4);
+		level.placeHouse(14, 3, 1, 3, 1, 4);
+		level.placeHouse(17, 3, 1, 3, 1, 4);
+
+		level.paintTerrain(0, 6, 31, 15, Terrain.BEACH);
+		level.paintTerrain(5, 0, 6, 7, Terrain.ROAD);
 
 		level.paintTerrain(0, 9, 20, 12, Terrain.WATER_FLOWING);
 		level.paintTerrain(20, 8, 31, 11, Terrain.WATER_FLOWING);
 		level.paintTerrain(5, 8, 5, 13, Terrain.BRIDGE1);
 		level.paintTerrain(6, 8, 6, 13, Terrain.BRIDGE2);
 
-		level.setTerrain(2, 2, Terrain.BLOCKED);
-		level.setTerrain(3, 2, Terrain.BLOCKED);
-		level.setTerrain(4, 2, Terrain.BLOCKED);
-		level.setTerrain(4, 3, Terrain.BLOCKED);
+//		level.setTerrain(2, 2, Terrain.BLOCKED);
+//		level.setTerrain(3, 2, Terrain.BLOCKED);
+//		level.setTerrain(4, 2, Terrain.BLOCKED);
+//		level.setTerrain(4, 3, Terrain.BLOCKED);
 
 		level.addCharacter(new Enemy("Psi Syn", 10, 5, 10, 10));
 		level.addCharacter(new Enemy("Czlowiek", 3, 12, 10, 10));

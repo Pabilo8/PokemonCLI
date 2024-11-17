@@ -1,12 +1,15 @@
 package pl.pokemoncli;
 
 import com.googlecode.lanterna.input.Key;
+import com.googlecode.lanterna.input.Key.Kind;
 import pl.pokemoncli.display.*;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
+import pl.pokemoncli.logic.characters.Door;
 import pl.pokemoncli.logic.characters.Enemy;
+import pl.pokemoncli.logic.characters.NPC;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.logic.pokemon.MoveList;
 import pl.pokemoncli.logic.pokemon.Pokedex;
@@ -76,10 +79,11 @@ public class PokemonCLI
 			{
 				fightDisplay.drawFightScreen(fight, GAME_X, GAME_Y);
 				fightMenuDisplay.drawMenuPanel(fight, GAME_X, GAME_Y);
-			}else
+			}
+			else
 			{
 				gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y, tickTimer);
-			 	panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
+				panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
 			}
 			terminal.flush();
 
@@ -113,36 +117,44 @@ public class PokemonCLI
 		//TODO: 16.11.2024 fight screen controls
 		//TODO: 16.11.2024 current screen enum (?)
 		ActionResult result;
-		if (fight != null) {
-			switch(key.getCharacter())
+		if(fight!=null)
+		{
+			if(key.getKind().equals(Kind.Escape))
+				result = fight.goBack(true);
+			else result = switch(key.getCharacter())
 			{
-				case 'w' -> result = fight.moveButton(0,1);
-				case 'a' -> result = fight.moveButton(-1,0);
-				case 's' -> result = fight.moveButton(0,-1);
-				case 'd' -> result = fight.moveButton(1,0);
-				case ' ' -> {
-					if(fight.getButton() == Fight.Button.RUN&&fight.isMainMenu()) {
+				case 'w' -> result = fight.moveButton(0, 1);
+				case 'a' -> result = fight.moveButton(-1, 0);
+				case 's' -> result = fight.moveButton(0, -1);
+				case 'd' -> result = fight.moveButton(1, 0);
+				case ' ' ->
+				{
+					if(fight.getButton()==Fight.Button.RUN&&fight.isMainMenu())
+					{
 						fight = null;
-						result = new Level.ActionResult(Level.ResultType.MOVE);
-					} else {
-						result = fight.selectButton();
+						yield new Level.ActionResult(Level.ResultType.MOVE);
+					}
+					else
+					{
+						yield fight.selectButton();
 					}
 				}
-				case 27 -> result = fight.goBack();
-				default -> result = null;
+				default -> null;
 			};
-		} else {
-            result = switch(key.getCharacter())
-            {
-                case 'w' -> level.moveCharacterBy(player, 0, -1);
-                case 'a' -> level.moveCharacterBy(player, -1, 0);
-                case 's' -> level.moveCharacterBy(player, 0, 1);
-                case 'd' -> level.moveCharacterBy(player, 1, 0);
-                default -> null;
-            };
-        }
+		}
+		else
+		{
+			result = switch(key.getCharacter())
+			{
+				case 'w' -> level.moveCharacterBy(player, 0, -1);
+				case 'a' -> level.moveCharacterBy(player, -1, 0);
+				case 's' -> level.moveCharacterBy(player, 0, 1);
+				case 'd' -> level.moveCharacterBy(player, 1, 0);
+				default -> null;
+			};
+		}
 
-        if(result==null)
+		if(result==null)
 			return false;
 
 		return switch(result.getResult())
@@ -156,6 +168,17 @@ public class PokemonCLI
 				fight = new Fight(player, ((Enemy)result.getContactedCharacter()));
 				yield true;
 			}
+			case CHANGE_LEVEL ->
+			{
+				Door door = (Door)result.getContactedCharacter();
+				this.level.removeCharacter(player);
+				this.level = door.getLevel();
+				this.level.addCharacter(player);
+				for(int i = 0; i < 2; i++)
+					this.player.setPosition(door.getDestX(), door.getDestY());
+				yield true;
+			}
+			case DIALOG -> false;
 			case WILD_POKEMON ->
 			{
 				//display message that wild pokemon appeared, start fight
@@ -173,17 +196,35 @@ public class PokemonCLI
 
 	private void loadGame()
 	{
+
 		level = new Level(32, 32);
-		player = new Player("Ash", 5, 5, 6);
+		level.addCharacter(player = new Player("Ash", 5, 5, 6));
 		fight = null;
-		level.addCharacter(player);
-		player.addPokemon(new Pokemon(pokedex.getPokemon(133),5));
+
+		Level houseInside = new Level(7, 7);
+		houseInside.paintTerrain(0, 0, 10, 10, Terrain.FLOOR);
+		houseInside.addDoor(3, 6, level, 8, 4);
+		houseInside.addCharacter(new NPC("Pies", 3, 3));
+		houseInside.addCharacter(new NPC("Psi Syn", 5, 5));
+		houseInside.addCharacter(new NPC("Czlowiek", 1, 1));
+
+
+		level.placeHouse(0, 2, 2, 5, 2, 4);
+		level.placeHouse(7, 3, 1, 3, 1, 4, houseInside, 3, 5);
+		level.placeHouse(11, 3, 1, 3, 1, 4);
+		level.placeHouse(14, 3, 1, 3, 1, 4);
+		level.placeHouse(17, 3, 1, 3, 1, 4);
+
+		level.paintTerrain(0, 6, 31, 15, Terrain.BEACH);
+		level.paintTerrain(5, 0, 6, 7, Terrain.ROAD);
+		player.addPokemon(new Pokemon(pokedex.getPokemon(133), 5));
 		player.getPokemon(0).getAttacks().add(moveList.getMove(1));
 		player.getPokemon(0).getAttacks().add(moveList.getMove(2));
 		player.getPokemon(0).getAttacks().add(moveList.getMove(3));
 		player.getPokemon(0).getAttacks().add(moveList.getMove(4));
-		for (int i=1; i<=player.getMaxPokemons(); i++) {
-			player.addPokemon(new Pokemon(pokedex.getPokemon(0),0));
+		for(int i = 1; i <= player.getMaxPokemons(); i++)
+		{
+			player.addPokemon(new Pokemon(pokedex.getPokemon(0), 0));
 		}
 
 		level.paintTerrain(0, 9, 20, 12, Terrain.WATER_FLOWING);
@@ -191,14 +232,15 @@ public class PokemonCLI
 		level.paintTerrain(5, 8, 5, 13, Terrain.BRIDGE1);
 		level.paintTerrain(6, 8, 6, 13, Terrain.BRIDGE2);
 
-		level.setTerrain(2, 2, Terrain.BLOCKED);
-		level.setTerrain(3, 2, Terrain.BLOCKED);
-		level.setTerrain(4, 2, Terrain.BLOCKED);
-		level.setTerrain(4, 3, Terrain.BLOCKED);
+//		level.setTerrain(2, 2, Terrain.BLOCKED);
+//		level.setTerrain(3, 2, Terrain.BLOCKED);
+//		level.setTerrain(4, 2, Terrain.BLOCKED);
+//		level.setTerrain(4, 3, Terrain.BLOCKED);
 
-		level.addCharacter(new Enemy("Psi Syn", 10, 5, 1));
-		level.getCharacters().get(0).addPokemon(new Pokemon(pokedex.getPokemon(1),5));
-		level.addCharacter(new Enemy("Czlowiek", 3, 12, 1));
-		level.getCharacters().get(1).addPokemon(new Pokemon(pokedex.getPokemon(1),5));
+		Enemy e1, e2;
+		level.addCharacter(e1 = new Enemy("Psi Syn", 10, 5, 1));
+		e1.addPokemon(new Pokemon(pokedex.getPokemon(1), 5));
+		level.addCharacter(e2 = new Enemy("Czlowiek", 3, 12, 1));
+		e2.addPokemon(new Pokemon(pokedex.getPokemon(1), 5));
 	}
 }

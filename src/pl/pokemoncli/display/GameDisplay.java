@@ -1,6 +1,5 @@
 package pl.pokemoncli.display;
 
-import pl.pokemoncli.PokemonCLI;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.characters.Character;
@@ -37,7 +36,7 @@ public class GameDisplay extends BaseDisplay
 		// Draw characters on the visible map
 		level.getCharacters().forEach(c -> {
 			if(Math.abs(c.getX()-playerX) <= visibleWidth/2&&Math.abs(c.getY()-playerY) <= visibleHeight/2)
-				updateDrawCharacter(playerX, playerY, level, c, gameX, gameY);
+				updateDrawCharacter(playerX, playerY, c, gameX, gameY);
 		});
 	}
 
@@ -47,7 +46,7 @@ public class GameDisplay extends BaseDisplay
 		tile.draw(x*Tile.TILE_SIZE_X, y*Tile.TILE_SIZE_Y, terminal);
 	}*/
 
-	public void updateDrawCharacter(int playerX, int playerY, Level level, Character character, int gameX, int gameY)
+	public void updateDrawCharacter(int playerX, int playerY, Character character, int gameX, int gameY)
 	{
 		int startX = Math.max(0, playerX-gameX/Tile.TILE_SIZE_X/2);
 		int startY = Math.max(0, playerY-gameY/Tile.TILE_SIZE_Y/2);
@@ -57,7 +56,6 @@ public class GameDisplay extends BaseDisplay
 			return;
 
 		Tile sprite = character.getCurrentSprite();
-		sprite.drawWithBackground(level.getTerrain(cX, cY).getTile(0),
-				cX*Tile.TILE_SIZE_X, cY*Tile.TILE_SIZE_Y, terminal);
+		sprite.drawTrnsparent(cX*Tile.TILE_SIZE_X, cY*Tile.TILE_SIZE_Y, terminal);
 	}
 }

@@ -5,7 +5,6 @@ import pl.pokemoncli.display.Tile;
 import pl.pokemoncli.logic.pokemon.Pokemon;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Pabilo8
@@ -33,12 +32,15 @@ public abstract class Character
 		this.x = x;
 		this.y = y;
 	}
-	public void addPokemon(Pokemon newPokemon) {
-		if (pokemons.size()<maxPokemons)
+
+	public void addPokemon(Pokemon newPokemon)
+	{
+		if(pokemons.size() < maxPokemons)
 			pokemons.add(newPokemon);
 	}
 
-	public Pokemon getPokemon(int id) {
+	public Pokemon getPokemon(int id)
+	{
 		return pokemons.get(id);
 	}
 

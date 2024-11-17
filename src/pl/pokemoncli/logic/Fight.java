@@ -53,8 +53,9 @@ public class Fight
 		return new Level.ActionResult(Level.ResultType.MET_OBSTACLE);
 	}
 
-	public Level.ActionResult goBack() {
-		mainMenu = false;
+	public Level.ActionResult goBack(boolean mainMenu)
+	{
+		this.mainMenu = mainMenu;
 		return new Level.ActionResult(Level.ResultType.MOVE);
 	}
 
@@ -64,9 +65,21 @@ public class Fight
 		{
 			switch (button)
 			{
-				case FIGHT -> {secondMenu = Button.FIGHT; goBack() ; }
-				case POKEMON -> {secondMenu = Button.POKEMON; goBack() ;}
-				case ITEM -> {secondMenu = Button.ITEM; goBack() ;}
+				case FIGHT ->
+				{
+					secondMenu = Button.FIGHT;
+					goBack(false);
+				}
+				case POKEMON ->
+				{
+					secondMenu = Button.POKEMON;
+					goBack(false);
+				}
+				case ITEM ->
+				{
+					secondMenu = Button.ITEM;
+					goBack(false);
+				}
 				case RUN -> {}
 			}
 		} else {

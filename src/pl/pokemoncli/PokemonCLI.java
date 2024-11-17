@@ -5,11 +5,11 @@ import pl.pokemoncli.display.*;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
-import pl.pokemoncli.logic.Level.ResultType;
 import pl.pokemoncli.logic.Level.Terrain;
-import pl.pokemoncli.logic.characters.Character;
 import pl.pokemoncli.logic.characters.Enemy;
 import pl.pokemoncli.logic.characters.Player;
+import pl.pokemoncli.sound.AudioSystem;
+import pl.pokemoncli.sound.AudioSystem.Track;
 
 /**
  * @author Pabilo8
@@ -22,14 +22,14 @@ public class PokemonCLI
 	private final FightDisplay fightDisplay;
 	private final PanelDisplay panelDisplay;
 	private final GameDisplay gameDisplay;
+	private final AudioSystem audioSystem;
 
 	static int GAME_X, GAME_Y;
 	private Level level;
 	private Player player;
 	private Fight fight;
 
-	final static int FLUSH_DELAY = 60;
-	int flushTimer = FLUSH_DELAY;
+	int tickTimer = 0;
 
 	public PokemonCLI(DoubleBufferedTerminal terminal, PanelDisplay panelDisplay, GameDisplay gameDisplay, FightDisplay fightDisplay)
 	{
@@ -37,6 +37,7 @@ public class PokemonCLI
 		this.panelDisplay = panelDisplay;
 		this.gameDisplay = gameDisplay;
 		this.fightDisplay = fightDisplay;
+		this.audioSystem = new AudioSystem();
 	}
 
 	public static void main(String[] args) throws InterruptedException
@@ -61,33 +62,36 @@ public class PokemonCLI
 
 		while(true)
 		{
-			if(flushTimer==FLUSH_DELAY)
-			{
-				if(fight!=null)
-					fightDisplay.drawFightScreen(fight);
-				else
-					gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y);
-				panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
-				flushTimer = 0;
-			}
+			if(fight!=null)
+				fightDisplay.drawFightScreen(fight);
+			else
+				gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y, tickTimer);
+			panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
 			terminal.flush();
+
+			handleMusic();
 
 			//Clean get top key and clear queue to prevent lag
 			boolean handled = false;
 			Key key;
 			while((key = terminal.readInput())!=null)
 				if(handled||handleKeyInput(key))
-				{
-					flushTimer = FLUSH_DELAY-1;
 					handled = true;
-				}
 
 			//A mirmir
 			Thread.sleep(100);
-			flushTimer++;
+			tickTimer = (tickTimer+1)%20;
 		}
 
 //		terminal.end();
+	}
+
+	private void handleMusic()
+	{
+		if(this.fight!=null)
+			audioSystem.play(Track.FIGHT);
+		else
+			audioSystem.play(AudioSystem.Track.GAME);
 	}
 
 	private boolean handleKeyInput(Key key)
@@ -135,10 +139,15 @@ public class PokemonCLI
 
 	private void loadGame()
 	{
-		level = new Level(15, 15);
+		level = new Level(32, 32);
 		player = new Player("Ash", 5, 5, 100, 100);
 		fight = null;
 		level.addCharacter(player);
+
+		level.paintTerrain(0, 9, 20, 12, Terrain.WATER_FLOWING);
+		level.paintTerrain(20, 8, 31, 11, Terrain.WATER_FLOWING);
+		level.paintTerrain(5, 8, 5, 13, Terrain.BRIDGE1);
+		level.paintTerrain(6, 8, 6, 13, Terrain.BRIDGE2);
 
 		level.setTerrain(2, 2, Terrain.BLOCKED);
 		level.setTerrain(3, 2, Terrain.BLOCKED);

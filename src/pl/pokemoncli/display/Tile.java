@@ -13,11 +13,66 @@ public enum Tile
 			",. ,..",
 			";'.. ."
 	}),
+
+	WATER_STILL1(new Color(0x4C787C), new Color(0x68918B), new String[]{
+			"░▒░░░░",
+			"░░░░░▒",
+			"░░░▒░░"
+	}),
+	WATER_STILL2(new Color(0x4C787C), new Color(0x68918B), new String[]{
+			"░▒░░░▒",
+			"░░░░░░",
+			"░░▒░░░"
+	}),
+
+	WATER_FLOWING1(new Color(0x4C787C), new Color(0x68918B), new String[]{
+			"░▒▓▒░~",
+			"░~░▒▓▒",
+			"░▒▓▒░~"
+	}),
+	WATER_FLOWING2(new Color(0x4C787C), new Color(0x68918B), new String[]{
+			"░~░▒▓▒",
+			"▒░~░▒▓",
+			"░~░▒▓▒"
+	}),
+	WATER_FLOWING3(new Color(0x4C787C), new Color(0x68918B), new String[]{
+			"▒░~░▒▓",
+			"▓▒░~░▒",
+			"▒░~░▒▓"
+	}),
+	WATER_FLOWING4(new Color(0x4C787C), new Color(0x68918B), new String[]{
+			"▓▒░~░▒",
+			"▒▓▒░~░",
+			"▓▒░~░▒"
+	}),
+	WATER_FLOWING5(new Color(0x4C787C), new Color(0x68918B), new String[]{
+			"▒▓▒░~░",
+			"░▒▓▒░~",
+			"▒▓▒░~░"
+	}),
+
+	BRIDGE1(new Color(0x716658), new Color(0x3A3430), new String[]{
+			"▒░    ",
+			"▒░    ",
+			"▒░    "
+	}),
+	BRIDGE2(new Color(0x716658), new Color(0x3A3430), new String[]{
+			"    ░▒",
+			"    ░▒",
+			"    ░▒"
+	}),
+
+	VOID(new Color(0x000000), new Color(0x222222), new String[]{
+			"░░░░░░",
+			"░░░░░░",
+			"░░░░░░"
+	}),
 	BLOCKED(new Color(0x000000), new Color(0x8A8A8A), new String[]{
 			"░░░░░▒",
 			"░▒▒▒▒▓",
 			"▒▓▓▓▓▓"
 	}),
+
 	PLAYER_VERTICAL(new Color(0xAF6464), new Color(0xB5A5A5), new String[]{
 			"  []  ",
 			" /██\\ ",

@@ -1,5 +1,6 @@
 package pl.pokemoncli.display;
 
+import pl.pokemoncli.PokemonCLI;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.characters.Character;
@@ -16,7 +17,7 @@ public class GameDisplay extends BaseDisplay
 		super(terminal);
 	}
 
-	public void drawWholeMap(Player player, Level level, int gameX, int gameY)
+	public void drawWholeMap(Player player, Level level, int gameX, int gameY, int currentTicks)
 	{
 		int visibleWidth = gameX/Tile.TILE_SIZE_X;
 		int visibleHeight = gameY/Tile.TILE_SIZE_Y;
@@ -30,7 +31,7 @@ public class GameDisplay extends BaseDisplay
 			{
 				int drawX = x*Tile.TILE_SIZE_X;
 				int drawY = y*Tile.TILE_SIZE_Y;
-				visibleMap[x][y].getTile().draw(drawX, drawY, terminal);
+				visibleMap[x][y].getTile(currentTicks).draw(drawX, drawY, terminal);
 			}
 
 		// Draw characters on the visible map
@@ -56,7 +57,7 @@ public class GameDisplay extends BaseDisplay
 			return;
 
 		Tile sprite = character.getCurrentSprite();
-		sprite.drawWithBackground(level.getTerrain(cX, cY).getTile(),
+		sprite.drawWithBackground(level.getTerrain(cX, cY).getTile(0),
 				cX*Tile.TILE_SIZE_X, cY*Tile.TILE_SIZE_Y, terminal);
 	}
 }

@@ -79,7 +79,7 @@ public class Level
 				}
 				else
 				{
-					visibleMap[x][y] = Terrain.BLOCKED; // Default terrain for out-of-bounds
+					visibleMap[x][y] = Terrain.VOID; // Default terrain for out-of-bounds
 				}
 			}
 		}
@@ -109,17 +109,39 @@ public class Level
 		return new ActionResult(ResultType.MOVE);
 	}
 
+	public void paintTerrain(int x, int y, int xx, int yy, Terrain terrain)
+	{
+		for(int i = x; i <= xx; i++)
+			for(int j = y; j <= yy; j++)
+				setTerrain(i, j, terrain);
+	}
+
 	@Getter
-	@AllArgsConstructor
 	public enum Terrain
 	{
 		GRASS(true, Tile.GRASS),
 		ROAD(true, Tile.GRASS),
 		BLOCKED(false, Tile.BLOCKED),
-		WATER(false, Tile.GRASS);
+		VOID(false, Tile.VOID),
+
+		WATER_STILL(false, Tile.WATER_STILL1, Tile.WATER_STILL1, Tile.WATER_STILL2, Tile.WATER_STILL2),
+		WATER_FLOWING(false, Tile.WATER_FLOWING1, Tile.WATER_FLOWING2, Tile.WATER_FLOWING3, Tile.WATER_FLOWING4, Tile.WATER_FLOWING5),
+		BRIDGE1(true, Tile.BRIDGE1),
+		BRIDGE2(true, Tile.BRIDGE2);
 
 		final boolean passable;
-		final Tile tile;
+		final Tile[] tiles;
+
+		Terrain(boolean passable, Tile... tiles)
+		{
+			this.passable = passable;
+			this.tiles = tiles;
+		}
+
+		public Tile getTile(int time)
+		{
+			return tiles[time%tiles.length];
+		}
 	}
 
 	@Getter

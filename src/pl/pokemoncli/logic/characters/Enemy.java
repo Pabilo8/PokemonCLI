@@ -1,6 +1,9 @@
 package pl.pokemoncli.logic.characters;
 
 import pl.pokemoncli.display.Tile;
+import pl.pokemoncli.logic.pokemon.Pokemon;
+
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8
@@ -8,9 +11,9 @@ import pl.pokemoncli.display.Tile;
  */
 public class Enemy extends Character
 {
-	public Enemy(String name, int x, int y, int health, int maxHealth)
+	public Enemy(String name, int x, int y, int maxPokemons)
 	{
-		super(name, x, y, health, maxHealth);
+		super(name, x, y, maxPokemons);
 	}
 
 	@Override

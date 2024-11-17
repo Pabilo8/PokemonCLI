@@ -2,6 +2,9 @@ package pl.pokemoncli.logic.characters;
 
 import pl.pokemoncli.display.Tile;
 import pl.pokemoncli.logic.equipment.ItemType;
+import pl.pokemoncli.logic.pokemon.Pokemon;
+
+import java.util.ArrayList;
 
 /**
  * @author Pabilo8
@@ -10,11 +13,12 @@ import pl.pokemoncli.logic.equipment.ItemType;
 public class Player extends Character
 {
 	protected final ItemType[] equipment = new ItemType[3];
+
 	Tile currentSprite = Tile.PLAYER_VERTICAL;
 
-	public Player(String name, int y, int x, int health, int maxHealth)
+	public Player(String name, int y, int x, int maxPokemons)
 	{
-		super(name, x, y, health, maxHealth);
+		super(name, x, y, maxPokemons);
 	}
 
 	@Override

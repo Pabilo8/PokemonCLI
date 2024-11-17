@@ -1,5 +1,6 @@
 package pl.pokemoncli.display;
 
+import pl.pokemoncli.PokemonCLI;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.characters.Character;
@@ -56,6 +57,7 @@ public class GameDisplay extends BaseDisplay
 			return;
 
 		Tile sprite = character.getCurrentSprite();
-		sprite.drawTrnsparent(cX*Tile.TILE_SIZE_X, cY*Tile.TILE_SIZE_Y, terminal);
+		sprite.drawWithBackground(level.getTerrain(cX, cY).getTile(0),
+				cX*Tile.TILE_SIZE_X, cY*Tile.TILE_SIZE_Y, terminal);
 	}
 }

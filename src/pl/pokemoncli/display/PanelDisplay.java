@@ -26,17 +26,17 @@ public class PanelDisplay extends BaseDisplay
 				terminal.drawColor(x, y, ' ', textColor, backgroundColor);
 
 		// Draw Stats
-		drawString("X: "+player.getX(), gameX+2+15, 2);
-		drawString("Y: "+player.getY(), gameX+2+15, 3);
+		drawString("Name: "+player.getName(), gameX+2, 1);
 
-		drawString("Name: "+player.getName(), gameX+2, 2);
-		drawString("HP: "+player.getHealth(), gameX+2, 3);
-
-		drawString("Inventory:", gameX+2, 5);
-
-		Tile.BLOCKED.draw(gameX+2, 7, terminal);
-		Tile.BLOCKED.draw(gameX+2+8, 7, terminal);
-		Tile.BLOCKED.draw(gameX+2+16, 7, terminal);
-		Tile.BLOCKED.draw(gameX+2+24, 7, terminal);
+		//Draw Pokemon list
+		drawString("Pokemons:", gameX+2, 3);
+		for(int i=0;i<player.getMaxPokemons();i++)
+		{
+			if (player.getPokemon(i).getId() != 0) {
+				drawString("➢ " + player.getPokemon(i).getName(), gameX + 2, 4 + i);
+			} else {
+				drawString("➢ ", gameX + 2, 4 + i);
+			}
+		}
 	}
 }

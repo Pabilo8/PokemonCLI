@@ -68,6 +68,12 @@ public abstract class Character
 		}
 	}
 
+	public Character withPokemon(Pokemon newPokemon)
+	{
+		addPokemon(newPokemon);
+		return this;
+	}
+
 	public Pokemon getPokemon(int id)
 	{
 		return pokemons.get(id);

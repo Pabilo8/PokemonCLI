@@ -11,6 +11,7 @@ import pl.pokemoncli.logic.equipment.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Pabilo8
@@ -19,6 +20,7 @@ import java.util.List;
 @Getter
 public class Level
 {
+	private final Random random = new Random();
 	private final int width, height;
 	private final Terrain[][] map;
 	private final List<Character> characters;
@@ -121,11 +123,11 @@ public class Level
 		return new ActionResult(ResultType.MOVE);
 	}
 
-	public void paintTerrain(int x, int y, int xx, int yy, Terrain terrain)
+	public void paintTerrain(int x, int y, int xx, int yy, Terrain... terrains)
 	{
 		for(int i = x; i <= xx; i++)
 			for(int j = y; j <= yy; j++)
-				setTerrain(i, j, terrain);
+				setTerrain(i, j, terrains.length==1?terrains[0]: terrains[random.nextInt(terrains.length)]);
 	}
 
 	public void addDoor(int x, int y, Level interior, int destX, int destY)
@@ -184,10 +186,17 @@ public class Level
 	{
 		GRASS(true, Tile.GRASS),
 		BEACH(true, Tile.BEACH),
+		BEACH2(true, Tile.BEACH2),
 		ROAD(true, Tile.ROAD),
 		FLOOR(true, Tile.FLOOR),
 		BLOCKED(false, Tile.BLOCKED),
 		VOID(false, Tile.VOID),
+
+		BUSH1(true, Tile.BUSH1),
+		BUSH2(true, Tile.BUSH2),
+		TREE_LEAVES(true, Tile.TREE_LEAVES),
+		TREE_TRUNK(false, Tile.TREE_TRUNK),
+		TREE_LEAVES_SOLID(false, Tile.TREE_LEAVES),
 
 		WATER_STILL(false, Tile.WATER_STILL1, Tile.WATER_STILL1, Tile.WATER_STILL2, Tile.WATER_STILL2),
 		WATER_FLOWING(false, Tile.WATER_FLOWING1, Tile.WATER_FLOWING2, Tile.WATER_FLOWING3, Tile.WATER_FLOWING4, Tile.WATER_FLOWING5),

@@ -26,8 +26,7 @@ public class Fight
 	private final Random roll = new Random();
 	private boolean lockedChoose;
 
-	public Fight(Player player, Enemy enemy)
-	{
+	public Fight(Player player, Enemy enemy) {
 		this.player = player;
 		this.enemy = enemy;
 		this.currPlayerPokemonID = getFirstPokemon();
@@ -241,19 +240,6 @@ public class Fight
 
 	public Pokemon getCurrPlayerPokemon() {
 		return player.getPokemon(currPlayerPokemonID);
-	}
-
-	public void changeEnemyPokemon(int newPokemon) {
-		if (enemy.getPokemons().size() <= newPokemon) {
-			currEnemyPokemonID = newPokemon;
-		}
-	}
-
-	public void changePlayerPokemon(int newPokemon) {
-		if (player.getPokemons().size() <= newPokemon) {
-			currPlayerPokemonID = newPokemon;
-			tempPlayerPokemonID = newPokemon;
-		}
 	}
 
 	public enum Button {

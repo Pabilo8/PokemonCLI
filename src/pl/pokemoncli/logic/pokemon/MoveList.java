@@ -10,18 +10,18 @@ public class MoveList {
     private final int MAX_MOVES_NUMBER = 10;
     private final Move MOVE_NULL;
 
-    public MoveList()
-    {
+    public MoveList() {
         this.moves = new ArrayList<>();
         this.MOVE_NULL = new Move("MOVE_NULL",PokemonType.NORMAL, Move.MoveCategory.STATUS,0,0,0);
         AssignMoves();
     }
-    private void AssignMoves()
-    {
+
+    private void AssignMoves() {
         for(int id = 0; id <= MAX_MOVES_NUMBER; id++) {
             moves.add(MovesById(id));
         }
     }
+
     private Move MovesById(int id) {
         return switch (id)
         {
@@ -32,6 +32,7 @@ public class MoveList {
             default -> MOVE_NULL;
         };
     }
+
     public Move getMove(int id) {
         return moves.get(id);
     }

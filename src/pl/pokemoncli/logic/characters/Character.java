@@ -17,6 +17,8 @@ public abstract class Character
 	protected int x, y;
 	private ArrayList<Pokemon> pokemons;
 	private int maxPokemons;
+	private int usablePokemons;
+	private boolean fightable;
 
 	public Character(String name, int x, int y, int maxPokemons)
 	{
@@ -25,6 +27,29 @@ public abstract class Character
 		this.y = y;
 		this.maxPokemons = maxPokemons;
 		this.pokemons = new ArrayList<>();
+		this.usablePokemons = 0;
+		this.fightable = false;
+	}
+
+	protected Character(String name, int x, int y, int maxPokemons, boolean fightable)
+	{
+		this.name = name;
+		this.x = x;
+		this.y = y;
+		this.maxPokemons = maxPokemons;
+		this.pokemons = new ArrayList<>();
+		this.usablePokemons = 0;
+		this.fightable = fightable;
+	}
+
+	public void reduceUsablePokemons(int amount) {
+		if (usablePokemons > 0)
+			usablePokemons--;
+	}
+
+	public void increaseUsablePokemons(int amount) {
+		if (usablePokemons < maxPokemons)
+			usablePokemons++;
 	}
 
 	public void setPosition(int x, int y)
@@ -35,8 +60,12 @@ public abstract class Character
 
 	public void addPokemon(Pokemon newPokemon)
 	{
-		if(pokemons.size() < maxPokemons)
+		if(pokemons.size() < maxPokemons) {
 			pokemons.add(newPokemon);
+			if (newPokemon.getCurrentHp()>0) {
+				usablePokemons++;
+			}
+		}
 	}
 
 	public Pokemon getPokemon(int id)

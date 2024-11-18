@@ -18,7 +18,7 @@ public class Player extends Character
 
 	public Player(String name, int y, int x, int maxPokemons)
 	{
-		super(name, x, y, maxPokemons);
+		super(name, x, y, maxPokemons, false);
 	}
 
 	@Override

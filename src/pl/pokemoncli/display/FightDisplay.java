@@ -18,9 +18,6 @@ public class FightDisplay extends BaseDisplay
 		super(terminal);
 	}
 
-	private void drawMenu(Fight fight, int Display_X, int Display_Y) {
-	}
-
 	private void drawHpBar(Pokemon pokemon, int bar_X, int bar_Y, boolean visiblePoints) {
 		int currPercentage = (pokemon.getCurrentHp()*100/pokemon.getHp())/5;
 		int lines = visiblePoints? 5 : 4;
@@ -62,8 +59,7 @@ public class FightDisplay extends BaseDisplay
 		}
     }
 
-	public void drawFightScreen(Fight fight, int Display_X, int Display_Y)
-	{
+	public void drawFightScreen(Fight fight, int Display_X, int Display_Y) {
 		Color foreground = new Color(0x0A3A0A);
 		Color background = new Color(0x4C7C4F);
 		// clear terminal
@@ -76,15 +72,14 @@ public class FightDisplay extends BaseDisplay
 		}
 
 		// draw enemy pokemon
-		fight.getEnemyPokemon().getFront().draw(Display_X - PokemonSprite.POKEMON_SIZE_X-4, 2, terminal);
-		drawHpBar(fight.getEnemyPokemon(), 7, 2, false);
+		fight.getCurrEnemyPokemon().getFront().draw(Display_X - PokemonSprite.POKEMON_SIZE_X-4, 2, terminal);
+		drawHpBar(fight.getCurrEnemyPokemon(), 7, 2, false);
 
 		// draw player pokemon
-		fight.getPlayerPokemon().getBack().draw(4, Display_Y-PokemonSprite.POKEMON_SIZE_Y-2, terminal);
-		drawHpBar(fight.getPlayerPokemon(),4 + PokemonSprite.POKEMON_SIZE_X + 2, Display_Y-PokemonSprite.POKEMON_SIZE_Y-2, true);
+		fight.getCurrPlayerPokemon().getBack().draw(4, Display_Y-PokemonSprite.POKEMON_SIZE_Y-2, terminal);
+		drawHpBar(fight.getCurrPlayerPokemon(),4 + PokemonSprite.POKEMON_SIZE_X + 2, Display_Y-PokemonSprite.POKEMON_SIZE_Y-2, true);
 
 		// draw options menu
-		drawMenu(fight, Display_X, Display_Y);
 		//drawString("Fight!", terminal.getWidth() - 2, 2);
 		//drawString("Player", 2, 4);
 		//drawString("Enemy", terminal.getWidth() - 7, 4);

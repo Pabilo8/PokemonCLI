@@ -78,6 +78,7 @@ public class PokemonCLI
 			if(fight!=null)
 			{
 				fightDisplay.drawFightScreen(fight, GAME_X, GAME_Y);
+				panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
 				fightMenuDisplay.drawMenuPanel(fight, GAME_X, GAME_Y);
 			}
 			else
@@ -114,21 +115,18 @@ public class PokemonCLI
 
 	private boolean handleKeyInput(Key key)
 	{
-		//TODO: 16.11.2024 fight screen controls
 		//TODO: 16.11.2024 current screen enum (?)
 		ActionResult result;
 		if(fight!=null)
 		{
 			if(key.getKind().equals(Kind.Escape))
-				result = fight.goBack(true);
-			else result = switch(key.getCharacter())
-			{
-				case 'w' -> result = fight.moveButton(0, 1);
-				case 'a' -> result = fight.moveButton(-1, 0);
-				case 's' -> result = fight.moveButton(0, -1);
-				case 'd' -> result = fight.moveButton(1, 0);
-				case ' ' ->
-				{
+				result = fight.goBack(true, fight.getButton());
+			else result = switch(key.getCharacter()) {
+				case 'w' -> fight.moveButton(0, 1);
+				case 'a' -> fight.moveButton(-1, 0);
+				case 's' -> fight.moveButton(0, -1);
+				case 'd' -> fight.moveButton(1, 0);
+				case ' ' -> {
 					if(fight.getButton()==Fight.Button.RUN&&fight.isMainMenu())
 					{
 						fight = null;
@@ -217,14 +215,13 @@ public class PokemonCLI
 
 		level.paintTerrain(0, 6, 31, 15, Terrain.BEACH);
 		level.paintTerrain(5, 0, 6, 7, Terrain.ROAD);
-		player.addPokemon(new Pokemon(pokedex.getPokemon(133), 5));
-		player.getPokemon(0).getAttacks().add(moveList.getMove(1));
-		player.getPokemon(0).getAttacks().add(moveList.getMove(2));
-		player.getPokemon(0).getAttacks().add(moveList.getMove(3));
-		player.getPokemon(0).getAttacks().add(moveList.getMove(4));
-		for(int i = 1; i <= player.getMaxPokemons(); i++)
+		for(int i = 0; i < player.getMaxPokemons(); i++)
 		{
-			player.addPokemon(new Pokemon(pokedex.getPokemon(0), 0));
+			player.addPokemon(new Pokemon(pokedex.getPokemon(133), 5));
+			player.getPokemon(i).getAttacks().add(moveList.getMove(1));
+			player.getPokemon(i).getAttacks().add(moveList.getMove(2));
+			player.getPokemon(i).getAttacks().add(moveList.getMove(3));
+			player.getPokemon(i).getAttacks().add(moveList.getMove(4));
 		}
 
 		level.paintTerrain(0, 9, 20, 12, Terrain.WATER_FLOWING);

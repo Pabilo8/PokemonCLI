@@ -32,6 +32,15 @@ public class Move {
         this.pp = move.pp;
         this.currentPp = move.pp;
     }
+
+    public void reduceCurrentPp(int amount) {
+        currentPp -= amount;
+    }
+
+    public void increaseCurrentPp(int amount) {
+        currentPp += amount;
+    }
+
     public enum MoveCategory {
         PHISICAL,
         SPECIAL,

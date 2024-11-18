@@ -69,4 +69,13 @@ public class Pokemon
         this.Attacks = new ArrayList<>();
         this.moveSet = pokemon.moveSet;
     }
+
+    public void reduceCurrentHp(int amount) {
+        currentHp -= amount;
+    }
+
+    public void increaseCurrentHp(int amount) {
+        currentHp += amount;
+    }
+
 }

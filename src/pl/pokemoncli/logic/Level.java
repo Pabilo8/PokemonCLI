@@ -258,6 +258,7 @@ public class Level
 		CHANGE_LEVEL,
 		DIALOG,
 		WILD_POKEMON,
-		COLLECT_ITEM
+		COLLECT_ITEM,
+		END_OF_BATTLE
 	}
 }

@@ -79,6 +79,16 @@ public class Fight
 		this.mainMenu = mainMenu;
 		this.secondMenu = newButton;
 		this.button = Button.FIGHT;
+		if(getCurrEnemyPokemon().getCurrentHp() == 0) {
+			enemy.reduceUsablePokemons(1);
+			if(enemy.getUsablePokemons() <= 0) {
+				return new Level.ActionResult(Level.ResultType.END_OF_BATTLE);
+			}
+			if(currEnemyPokemonID != enemy.getMaxPokemons()) {
+				currEnemyPokemonID++;
+			}
+			return new Level.ActionResult(Level.ResultType.MOVE);
+		}
 		return new Level.ActionResult(Level.ResultType.MOVE);
 	}
 
@@ -133,7 +143,7 @@ public class Fight
 	}
 
 	public Pokemon getCurrPlayerPokemon() {
-		return player.getPokemon(currEnemyPokemonID);
+		return player.getPokemon(currPlayerPokemonID);
 	}
 
 	public void changeEnemyPokemon(int newPokemon) {

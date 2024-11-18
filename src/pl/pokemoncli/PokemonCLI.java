@@ -127,15 +127,8 @@ public class PokemonCLI
 				case 's' -> fight.moveButton(0, -1);
 				case 'd' -> fight.moveButton(1, 0);
 				case ' ' -> {
-					if(fight.getButton()==Fight.Button.RUN&&fight.isMainMenu())
-					{
-						fight = null;
-						yield new Level.ActionResult(Level.ResultType.MOVE);
-					}
-					else
-					{
-						yield fight.selectButton();
-					}
+					if(fight.getButton()==Fight.Button.RUN&&fight.isMainMenu()) { yield new Level.ActionResult(Level.ResultType.END_OF_BATTLE);}
+					else { yield fight.selectButton();}
 				}
 				default -> null;
 			};
@@ -159,15 +152,25 @@ public class PokemonCLI
 		{
 			case MOVE -> true;
 			case MET_OBSTACLE -> false;
-			case FIGHT ->
-			{
-				//TODO: 16.11.2024 other characters that have dialogues
+			case FIGHT -> {
 				//start fight
-				fight = new Fight(player, ((Enemy)result.getContactedCharacter()));
+				if (result.getContactedCharacter().isFightable()) {
+					if((result.getContactedCharacter()).getUsablePokemons() > 0) {
+						//TODO: 18.11.2024 dialogue before battle
+						fight = new Fight(player, ((Enemy)result.getContactedCharacter()));
+					} else {
+						//TODO: 18.11.2024 dialogue after defeat
+					}
+				} else {
+					//TODO: 16.11.2024 other characters that have dialogues
+				}
 				yield true;
 			}
-			case CHANGE_LEVEL ->
-			{
+			case END_OF_BATTLE -> {
+				fight = null;
+				yield true;
+			}
+			case CHANGE_LEVEL -> {
 				Door door = (Door)result.getContactedCharacter();
 				this.level.removeCharacter(player);
 				this.level = door.getLevel();
@@ -177,13 +180,11 @@ public class PokemonCLI
 				yield true;
 			}
 			case DIALOG -> false;
-			case WILD_POKEMON ->
-			{
+			case WILD_POKEMON -> {
 				//display message that wild pokemon appeared, start fight
 				yield false;
 			}
-			case COLLECT_ITEM ->
-			{
+			case COLLECT_ITEM -> {
 				//display message that item was acquired, add item to player's inventory
 				yield false;
 			}
@@ -215,13 +216,23 @@ public class PokemonCLI
 
 		level.paintTerrain(0, 6, 31, 15, Terrain.BEACH);
 		level.paintTerrain(5, 0, 6, 7, Terrain.ROAD);
-		for(int i = 0; i < player.getMaxPokemons(); i++)
+		player.addPokemon(new Pokemon(pokedex.getPokemon(133), 5));
+		player.getPokemon(0).getAttacks().add(moveList.getMove(1));
+		player.getPokemon(0).getAttacks().add(moveList.getMove(2));
+		player.getPokemon(0).getAttacks().add(moveList.getMove(3));
+		player.getPokemon(0).getAttacks().add(moveList.getMove(4));
+		player.addPokemon(new Pokemon(pokedex.getPokemon(1), 5));
+		player.getPokemon(1).getAttacks().add(moveList.getMove(1));
+		player.getPokemon(1).getAttacks().add(moveList.getMove(2));
+		player.getPokemon(1).getAttacks().add(moveList.getMove(3));
+		player.getPokemon(1).getAttacks().add(moveList.getMove(4));
+		for(int i = 2; i < player.getMaxPokemons(); i++)
 		{
-			player.addPokemon(new Pokemon(pokedex.getPokemon(133), 5));
-			player.getPokemon(i).getAttacks().add(moveList.getMove(1));
-			player.getPokemon(i).getAttacks().add(moveList.getMove(2));
-			player.getPokemon(i).getAttacks().add(moveList.getMove(3));
-			player.getPokemon(i).getAttacks().add(moveList.getMove(4));
+			player.addPokemon(new Pokemon(pokedex.getPokemon(0), 1));
+			player.getPokemon(i).getAttacks().add(moveList.getMove(0));
+			player.getPokemon(i).getAttacks().add(moveList.getMove(0));
+			player.getPokemon(i).getAttacks().add(moveList.getMove(0));
+			player.getPokemon(i).getAttacks().add(moveList.getMove(0));
 		}
 
 		level.paintTerrain(0, 9, 20, 12, Terrain.WATER_FLOWING);

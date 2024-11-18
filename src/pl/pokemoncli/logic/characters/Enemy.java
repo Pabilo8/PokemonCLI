@@ -13,7 +13,7 @@ public class Enemy extends Character
 {
 	public Enemy(String name, int x, int y, int maxPokemons)
 	{
-		super(name, x, y, maxPokemons);
+		super(name, x, y, maxPokemons, true);
 	}
 
 	@Override

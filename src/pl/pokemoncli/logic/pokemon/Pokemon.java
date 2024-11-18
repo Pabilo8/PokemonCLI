@@ -71,7 +71,11 @@ public class Pokemon
     }
 
     public void reduceCurrentHp(int amount) {
-        currentHp -= amount;
+        if(currentHp < amount) {
+            currentHp = 0;
+        } else {
+            currentHp -= amount;
+        }
     }
 
     public void increaseCurrentHp(int amount) {

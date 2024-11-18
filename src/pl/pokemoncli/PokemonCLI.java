@@ -11,6 +11,7 @@ import pl.pokemoncli.logic.characters.Door;
 import pl.pokemoncli.logic.characters.Enemy;
 import pl.pokemoncli.logic.characters.NPC;
 import pl.pokemoncli.logic.characters.Player;
+import pl.pokemoncli.logic.pokemon.Move;
 import pl.pokemoncli.logic.pokemon.MoveList;
 import pl.pokemoncli.logic.pokemon.Pokedex;
 import pl.pokemoncli.logic.pokemon.Pokemon;
@@ -75,14 +76,12 @@ public class PokemonCLI
 
 		while(true)
 		{
-			if(fight!=null)
-			{
+			if(fight!=null) {
 				fightDisplay.drawFightScreen(fight, GAME_X, GAME_Y);
 				panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
 				fightMenuDisplay.drawMenuPanel(fight, GAME_X, GAME_Y);
 			}
-			else
-			{
+			else {
 				gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y, tickTimer);
 				panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
 			}
@@ -119,17 +118,14 @@ public class PokemonCLI
 		ActionResult result;
 		if(fight!=null)
 		{
-			if(key.getKind().equals(Kind.Escape))
+			if(key.getKind().equals(Kind.Escape) && !fight.isLockedChoose())
 				result = fight.goBack(true, fight.getButton());
 			else result = switch(key.getCharacter()) {
 				case 'w' -> fight.moveButton(0, 1);
 				case 'a' -> fight.moveButton(-1, 0);
 				case 's' -> fight.moveButton(0, -1);
 				case 'd' -> fight.moveButton(1, 0);
-				case ' ' -> {
-					if(fight.getButton()==Fight.Button.RUN&&fight.isMainMenu()) { yield new Level.ActionResult(Level.ResultType.END_OF_BATTLE);}
-					else { yield fight.selectButton();}
-				}
+				case ' ' -> fight.selectButton();
 				default -> null;
 			};
 		}
@@ -216,23 +212,18 @@ public class PokemonCLI
 
 		level.paintTerrain(0, 6, 31, 15, Terrain.BEACH);
 		level.paintTerrain(5, 0, 6, 7, Terrain.ROAD);
-		player.addPokemon(new Pokemon(pokedex.getPokemon(133), 5));
-		player.getPokemon(0).getAttacks().add(moveList.getMove(1));
-		player.getPokemon(0).getAttacks().add(moveList.getMove(2));
-		player.getPokemon(0).getAttacks().add(moveList.getMove(3));
-		player.getPokemon(0).getAttacks().add(moveList.getMove(4));
-		player.addPokemon(new Pokemon(pokedex.getPokemon(1), 5));
-		player.getPokemon(1).getAttacks().add(moveList.getMove(1));
-		player.getPokemon(1).getAttacks().add(moveList.getMove(2));
-		player.getPokemon(1).getAttacks().add(moveList.getMove(3));
-		player.getPokemon(1).getAttacks().add(moveList.getMove(4));
-		for(int i = 2; i < player.getMaxPokemons(); i++)
+
+		// Adding pokemons to player
+		for(int i = 0; i < player.getMaxPokemons(); i++)
 		{
-			player.addPokemon(new Pokemon(pokedex.getPokemon(0), 1));
-			player.getPokemon(i).getAttacks().add(moveList.getMove(0));
-			player.getPokemon(i).getAttacks().add(moveList.getMove(0));
-			player.getPokemon(i).getAttacks().add(moveList.getMove(0));
-			player.getPokemon(i).getAttacks().add(moveList.getMove(0));
+			switch (i) {
+				case 0 -> player.addPokemon(new Pokemon(pokedex.getPokemon(133), 5));
+				case 1 -> player.addPokemon(new Pokemon(pokedex.getPokemon(1), 5));
+				default -> player.addPokemon(new Pokemon(pokedex.getPokemon(0), 1));
+			}
+			for(int j = 0; j < player.getPokemon(i).getMaxMoves(); j++) {
+				player.getPokemon(i).addAttack(new Move(moveList.getMove(j+1)));
+			}
 		}
 
 		level.paintTerrain(0, 9, 20, 12, Terrain.WATER_FLOWING);
@@ -245,9 +236,27 @@ public class PokemonCLI
 //		level.setTerrain(4, 2, Terrain.BLOCKED);
 //		level.setTerrain(4, 3, Terrain.BLOCKED);
 
+		//Adding enemies
 		Enemy e1, e2;
-		level.addCharacter(e1 = new Enemy("Psi Syn", 10, 5, 1));
-		e1.addPokemon(new Pokemon(pokedex.getPokemon(1), 5));
+
+		// 1st Enemy
+		level.addCharacter(e1 = new Enemy("Psi Syn", 10, 5, 3));
+		for(int i = 0; i < e1.getMaxPokemons(); i++)
+		{
+			switch (i) {
+				case 0 -> e1.addPokemon(new Pokemon(pokedex.getPokemon(133), 5));
+				case 1 -> {
+					e1.addPokemon(new Pokemon(pokedex.getPokemon(1), 5));
+					e1.getPokemon(i).setName("Bulbasaur 2");
+				}
+				default -> e1.addPokemon(new Pokemon(pokedex.getPokemon(0), 1));
+			}
+			for(int j = 0; j < 2; j++) {
+				e1.getPokemon(i).addAttack(new Move(moveList.getMove(j+1)));
+			}
+		}
+
+		// 2nd Enemy
 		level.addCharacter(e2 = new Enemy("Czlowiek", 3, 12, 1));
 		e2.addPokemon(new Pokemon(pokedex.getPokemon(1), 5));
 	}

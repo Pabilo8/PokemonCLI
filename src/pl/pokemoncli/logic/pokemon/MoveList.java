@@ -25,7 +25,7 @@ public class MoveList {
     private Move MovesById(int id) {
         return switch (id)
         {
-            case 1 -> new Move("Covet",PokemonType.NORMAL, Move.MoveCategory.PHISICAL,60,100,25);
+            case 1 -> new Move("Covet",PokemonType.NORMAL, Move.MoveCategory.PHISICAL,60,20,25);
             case 2 -> new Move("Tackle",PokemonType.NORMAL, Move.MoveCategory.PHISICAL,40,100,35);
             case 3 -> new Move("Growl",PokemonType.NORMAL, Move.MoveCategory.STATUS,0,100,40);
             case 4 -> new Move("Tail Whip",PokemonType.NORMAL, Move.MoveCategory.STATUS,0,100,30);

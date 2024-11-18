@@ -30,6 +30,7 @@ public class Pokemon
     private final PokemonSprite front;
     private final PokemonSprite back;
     private ArrayList<Move> Attacks;
+    private final int maxMoves = 4;
     private final ArrayList<Move> moveSet;
 
     public Pokemon(int id, String name, PokemonType type1, PokemonType type2, int hp, int attack, int defence, int spAttack, int spDefence, int speed, PokemonSprite front, PokemonSprite back, ArrayList<Move> moveSet) {
@@ -82,4 +83,12 @@ public class Pokemon
         currentHp += amount;
     }
 
+    public void addAttack(Move attack) {
+        Attacks.add(attack);
+    }
+
+    public void replaceAttack(Move newAttack, int oldAttackId) {
+        Attacks.add(oldAttackId, newAttack);
+        Attacks.remove(oldAttackId+1);
+    }
 }

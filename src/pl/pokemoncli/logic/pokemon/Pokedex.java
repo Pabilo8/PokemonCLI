@@ -13,7 +13,7 @@ public class Pokedex {
     public Pokedex() {
         Dex = new ArrayList<>();
         moves = new MoveList();
-        Pokemon_Null = new Pokemon(0,"POKEMON_NULL",PokemonType.NONE,PokemonType.NONE ,1,1,1,1,1,1, PokemonSprite.POKEMON_NULL, PokemonSprite.POKEMON_NULL, new ArrayList<>());
+        Pokemon_Null = new Pokemon(0,"POKEMON_NULL",PokemonType.NONE,PokemonType.NONE ,0,0,0,0,0,0, PokemonSprite.POKEMON_NULL, PokemonSprite.POKEMON_NULL, new ArrayList<>());
         AssignPokemons();
     }
     private void AssignPokemons() {

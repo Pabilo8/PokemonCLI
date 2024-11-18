@@ -33,9 +33,9 @@ public class PanelDisplay extends BaseDisplay
 		for(int i=0;i<player.getMaxPokemons();i++)
 		{
 			if (player.getPokemon(i).getId() != 0) {
-				drawString("➢ " + player.getPokemon(i).getName(), gameX + 2, 4 + i);
+				drawString("⮚ " + player.getPokemon(i).getName(), gameX + 2, 4 + i);
 			} else {
-				drawString("➢ ", gameX + 2, 4 + i);
+				drawString("⮚ ", gameX + 2, 4 + i);
 			}
 		}
 	}

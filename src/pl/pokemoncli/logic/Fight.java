@@ -14,8 +14,9 @@ public class Fight
 {
 	private final Player player;
 	private final Enemy enemy;
-	private int currPlayerPokemon;
-	private int currEnemyPokemon;
+	private int currPlayerPokemonID;
+	private int tempPlayerPokemonID;
+	private int currEnemyPokemonID;
 	private Button button;
 	private boolean mainMenu;
 	private Button secondMenu;
@@ -24,103 +25,131 @@ public class Fight
 	{
 		this.player = player;
 		this.enemy = enemy;
-		this.currPlayerPokemon = 0;
-		this.currEnemyPokemon = 0;
+		this.currPlayerPokemonID = getFirstPokemon();
+		this.tempPlayerPokemonID = currPlayerPokemonID;
+		this.currEnemyPokemonID = 0;
 		this.button = Button.FIGHT;
 		this.mainMenu = true;
 	}
 
-	public Level.ActionResult moveButton(int x, int y)
-	{
-		switch (button) {
-			case FIGHT -> {
-				if (x > 0) { button = Button.POKEMON; return new Level.ActionResult(Level.ResultType.MOVE);}
-				if (y < 0) { button = Button.ITEM; return new Level.ActionResult(Level.ResultType.MOVE);}
+	private int getFirstPokemon() {
+		for (int i = 0; i < player.getMaxPokemons(); i++) {
+			if (player.getPokemon(i).getCurrentHp() > 0) {
+				return i;
 			}
-			case POKEMON -> {
-				if (x < 0) { button = Button.FIGHT; return new Level.ActionResult(Level.ResultType.MOVE);}
-				if (y < 0) { button = Button.RUN; return new Level.ActionResult(Level.ResultType.MOVE);}
-			}
-			case ITEM -> {
-				if (x > 0) { button = Button.RUN; return new Level.ActionResult(Level.ResultType.MOVE);}
-				if (y > 0) { button = Button.FIGHT; return new Level.ActionResult(Level.ResultType.MOVE);}
-			}
-			case RUN -> {
-				if (x < 0) { button = Button.ITEM; return new Level.ActionResult(Level.ResultType.MOVE);}
-				if (y > 0) { button = Button.POKEMON; return new Level.ActionResult(Level.ResultType.MOVE);}
-			}
-		}
-		return new Level.ActionResult(Level.ResultType.MET_OBSTACLE);
+        }
+		return 0;
 	}
 
-	public Level.ActionResult goBack(boolean mainMenu)
-	{
+	public Level.ActionResult moveButton(int x, int y) {
+		if (!isMainMenu()) {
+			switch (secondMenu) {
+				case POKEMON -> {
+					if (y>0) {
+						if (player.getPokemons().getFirst() != player.getPokemon(tempPlayerPokemonID)) { tempPlayerPokemonID--;}
+					} else if (y<0) {
+						if (player.getPokemons().getLast() != player.getPokemon(tempPlayerPokemonID)) { tempPlayerPokemonID++;}
+					}
+				}
+				case ITEM -> {}
+			}
+		}
+		switch (button) {
+			case FIGHT -> {
+            if (x > 0) { button = Button.POKEMON; return new Level.ActionResult(Level.ResultType.MOVE);}
+            if (y < 0) { button = Button.ITEM; return new Level.ActionResult(Level.ResultType.MOVE);}
+            }
+            case POKEMON -> {
+            if (x < 0) { button = Button.FIGHT; return new Level.ActionResult(Level.ResultType.MOVE);}
+            if (y < 0) { button = Button.RUN; return new Level.ActionResult(Level.ResultType.MOVE);}
+            }
+            case ITEM -> {
+            if (x > 0) { button = Button.RUN; return new Level.ActionResult(Level.ResultType.MOVE);}
+            if (y > 0) { button = Button.FIGHT; return new Level.ActionResult(Level.ResultType.MOVE);}
+            }
+            case RUN -> {
+            if (x < 0) { button = Button.ITEM; return new Level.ActionResult(Level.ResultType.MOVE);}
+            if (y > 0) { button = Button.POKEMON; return new Level.ActionResult(Level.ResultType.MOVE);}
+            }
+		}
+        return new Level.ActionResult(Level.ResultType.MET_OBSTACLE);
+	}
+
+	public Level.ActionResult goBack(boolean mainMenu, Button newButton) {
 		this.mainMenu = mainMenu;
+		this.secondMenu = newButton;
+		this.button = Button.FIGHT;
 		return new Level.ActionResult(Level.ResultType.MOVE);
 	}
 
-	public Level.ActionResult selectButton()
-	{
+	public Level.ActionResult selectButton() {
 		if (mainMenu)
 		{
-			switch (button)
-			{
-				case FIGHT ->
-				{
-					secondMenu = Button.FIGHT;
-					goBack(false);
-				}
-				case POKEMON ->
-				{
-					secondMenu = Button.POKEMON;
-					goBack(false);
-				}
-				case ITEM ->
-				{
-					secondMenu = Button.ITEM;
-					goBack(false);
-				}
-				case RUN -> {}
+			switch (button) {
+				case FIGHT -> { return goBack(false, Button.FIGHT);}
+				case POKEMON -> { return goBack(false, Button.POKEMON);}
+				case ITEM -> { return goBack(false, Button.ITEM);}
 			}
 		} else {
-			switch (button)
+			switch (secondMenu)
 			{
-				case FIGHT -> {}
-				case POKEMON -> {}
+				case FIGHT -> {
+					switch (button) {
+						case FIGHT -> useAttack(getCurrPlayerPokemon(), 0, getCurrEnemyPokemon());
+						case POKEMON -> useAttack(getCurrPlayerPokemon(), 1, getCurrEnemyPokemon());
+						case ITEM -> useAttack(getCurrPlayerPokemon(), 2, getCurrEnemyPokemon());
+						case RUN -> useAttack(getCurrPlayerPokemon(), 3, getCurrEnemyPokemon());
+						default -> {return new Level.ActionResult(Level.ResultType.MET_OBSTACLE);}
+					}
+				}
+				case POKEMON -> currPlayerPokemonID = tempPlayerPokemonID;
 				case ITEM -> {}
-				case RUN -> {}
+				default -> {return new Level.ActionResult(Level.ResultType.MET_OBSTACLE);}
 			}
+			return goBack(true, null);
 		}
 		return new Level.ActionResult(Level.ResultType.MET_OBSTACLE);
 	}
 
-	public Pokemon getEnemyPokemon()
-	{
-		return enemy.getPokemon(currEnemyPokemon);
+	private void useAttack(Pokemon attackingPokemon, int moveID, Pokemon targetPokemon) {
+		int L = attackingPokemon.getLevel(), P = attackingPokemon.getAttacks().get(moveID).getPower(), A, D;
+		switch (attackingPokemon.getAttacks().get(moveID).getCategory()) {
+			case PHISICAL -> {
+				A = attackingPokemon.getAttack();
+				D = targetPokemon.getDefence();
+				targetPokemon.reduceCurrentHp((((2 * L / 5 + 2) * A * P / D) / 50) + 2);
+			}
+			case SPECIAL -> {
+				A = attackingPokemon.getSpAttack();
+				D = targetPokemon.getSpDefence();
+				targetPokemon.reduceCurrentHp((((2 * L / 5 + 2) * A * P / D) / 50) + 2);
+			}
+		}
+		attackingPokemon.getAttacks().get(moveID).reduceCurrentPp(1);
+    }
+
+	public Pokemon getCurrEnemyPokemon() {
+		return enemy.getPokemon(currEnemyPokemonID);
 	}
 
-	public Pokemon getPlayerPokemon()
-	{
-		return player.getPokemon(currPlayerPokemon);
+	public Pokemon getCurrPlayerPokemon() {
+		return player.getPokemon(currEnemyPokemonID);
 	}
 
-	public void changeEnemyPokemon(int newPokemon)
-	{
+	public void changeEnemyPokemon(int newPokemon) {
 		if (enemy.getPokemons().size() <= newPokemon) {
-			currEnemyPokemon = newPokemon;
+			currEnemyPokemonID = newPokemon;
 		}
 	}
 
-	public void changePlayerPokemon(int newPokemon)
-	{
+	public void changePlayerPokemon(int newPokemon) {
 		if (player.getPokemons().size() <= newPokemon) {
-			currPlayerPokemon = newPokemon;
+			currPlayerPokemonID = newPokemon;
+			tempPlayerPokemonID = newPokemon;
 		}
 	}
 
-
-	public enum Button
-	{
+	public enum Button {
 		FIGHT,
 		POKEMON,
 		ITEM,

@@ -2,15 +2,12 @@ package pl.pokemoncli.logic.characters;
 
 import pl.pokemoncli.display.Tile;
 import pl.pokemoncli.logic.equipment.ItemType;
-import pl.pokemoncli.logic.pokemon.Pokemon;
-
-import java.util.ArrayList;
 
 /**
  * @author Pabilo8
  * @since 04.11.2024
  */
-public class Player extends Character
+public class Player extends FightableCharacter
 {
 	protected final ItemType[] equipment = new ItemType[3];
 
@@ -18,7 +15,7 @@ public class Player extends Character
 
 	public Player(String name, int y, int x, int maxPokemons)
 	{
-		super(name, x, y, maxPokemons, false);
+		super(name, x, y, maxPokemons);
 	}
 
 	@Override

@@ -35,17 +35,15 @@ public class DialogueDisplay extends BaseDisplay implements KeyHandlingDisplay
 
 
 		// Draw the current message
-		drawStringColor(dialogue.getCharacter().getName(), 2, y++, textColor, backgroundColor);
+		drawStringColor(dialogue.getGameObject().getName(), 2, y++, textColor, backgroundColor);
 		drawStringWrappedColor(dialogue.getCurrentNode().getMessage(), 2, y++, gameX-5, textColor, backgroundColor);
 		y += 2;
 
 		// Draw the responses
 
 		for(DialogueResponse response : responses)
-		{
 			drawStringWrappedColor(response.getText(), 4, y++, gameX-5,
 					response==selectedResponse?selectedTextColor: textColor, backgroundColor);
-		}
 	}
 
 	@Override

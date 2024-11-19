@@ -5,7 +5,7 @@ import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
-import pl.pokemoncli.logic.characters.Character;
+import pl.pokemoncli.logic.characters.GameObject;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.logic.dialogue.Dialogue;
 
@@ -38,22 +38,22 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 			}
 
 		// Draw characters on the visible map
-		level.getCharacters().forEach(c -> {
+		level.getGameObjects().forEach(c -> {
 			if(Math.abs(c.getX()-playerX) <= visibleWidth/2&&Math.abs(c.getY()-playerY) <= visibleHeight/2)
 				updateDrawCharacter(playerX, playerY, c, gameX, gameY);
 		});
 	}
 
-	public void updateDrawCharacter(int playerX, int playerY, Character character, int gameX, int gameY)
+	public void updateDrawCharacter(int playerX, int playerY, GameObject gameObject, int gameX, int gameY)
 	{
 		int startX = Math.max(0, playerX-gameX/Tile.TILE_SIZE_X/2);
 		int startY = Math.max(0, playerY-gameY/Tile.TILE_SIZE_Y/2);
-		int cX = character.getX()-startX, cY = character.getY()-startY;
+		int cX = gameObject.getX()-startX, cY = gameObject.getY()-startY;
 
 		if(cX < 0||cY < 0||cX*Tile.TILE_SIZE_X >= gameX||cY*Tile.TILE_SIZE_Y >= gameY)
 			return;
 
-		Tile sprite = character.getCurrentSprite();
+		Tile sprite = gameObject.getCurrentSprite();
 		sprite.drawTrnsparent(cX*Tile.TILE_SIZE_X, cY*Tile.TILE_SIZE_Y, terminal);
 	}
 

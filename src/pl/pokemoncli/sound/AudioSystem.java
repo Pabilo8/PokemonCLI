@@ -32,7 +32,7 @@ public class AudioSystem
 			currentTrack = musicTrack;
 		} catch(UnsupportedAudioFileException|IOException|LineUnavailableException e)
 		{
-			e.printStackTrace();
+			System.out.printf("Error while playing track %s: %s%n", musicTrack.name(), e.getMessage());
 		}
 	}
 

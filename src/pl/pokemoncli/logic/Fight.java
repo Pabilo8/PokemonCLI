@@ -16,14 +16,17 @@ public class Fight
 {
 	private final Player player;
 	private final Enemy enemy;
+
 	private int currPlayerPokemonID;
 	private int tempPlayerPokemonID;
 	private int currEnemyPokemonID;
+
 	private Button button;
-	private boolean mainMenu;
 	private Button secondMenu;
-	private int run_attempts;
-	private final Random roll = new Random();
+	private boolean mainMenu;
+
+	private final Random diceRoll = new Random();
+	private int runAttempts;
 	private boolean lockedChoose;
 
 	public Fight(Player player, Enemy enemy)
@@ -35,7 +38,7 @@ public class Fight
 		this.currEnemyPokemonID = 0;
 		this.button = Button.FIGHT;
 		this.mainMenu = true;
-		this.run_attempts = 0;
+		this.runAttempts = 0;
 		this.lockedChoose = false;
 	}
 
@@ -163,7 +166,7 @@ public class Fight
 				case ITEM -> {return goBack(false, Button.ITEM);}
 				case RUN ->
 				{
-					if(roll.nextInt(100) < 50+run_attempts+(getCurrPlayerPokemon().getSpeed()-getCurrEnemyPokemon().getSpeed()))
+					if(diceRoll.nextInt(100) < 50+runAttempts+(getCurrPlayerPokemon().getSpeed()-getCurrEnemyPokemon().getSpeed()))
 						return new Level.ActionResult(Level.ResultType.END_OF_BATTLE);
 					else
 						userAction(ActionType.RUN_ATTEMPT);
@@ -231,19 +234,19 @@ public class Fight
 				{
 					// player is first
 					useAttack(getCurrPlayerPokemon(), actionType.id, getCurrEnemyPokemon());
-					useAttack(getCurrEnemyPokemon(), roll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+					useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
 				}
 				else
 				{
 					// enemy is first
-					useAttack(getCurrEnemyPokemon(), roll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+					useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
 					useAttack(getCurrPlayerPokemon(), actionType.id, getCurrEnemyPokemon());
 				}
 			}
 			case POKEMON_CHANGE ->
 			{
 				// enemy attack
-				useAttack(getCurrEnemyPokemon(), roll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+				useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
 
 				// change pokemon
 				currPlayerPokemonID = tempPlayerPokemonID;
@@ -251,7 +254,7 @@ public class Fight
 			case ITEM_USAGE ->
 			{
 				// enemy attack
-				useAttack(getCurrEnemyPokemon(), roll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+				useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
 
 				// use item
 
@@ -259,9 +262,9 @@ public class Fight
 			case RUN_ATTEMPT ->
 			{
 				// player faild to run
-				run_attempts++;
+				runAttempts++;
 				// enemy attack
-				useAttack(getCurrEnemyPokemon(), roll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+				useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
 			}
 		}
 	}
@@ -269,9 +272,9 @@ public class Fight
 	private void useAttack(Pokemon attackingPokemon, int moveID, Pokemon targetPokemon)
 	{
 		double critical = 1;
-		if(roll.nextInt(100) < attackingPokemon.getAttacks().get(moveID).getAccuracy())
+		if(diceRoll.nextInt(100) < attackingPokemon.getAttacks().get(moveID).getAccuracy())
 		{
-			if(roll.nextInt(100) < attackingPokemon.getSpeed())
+			if(diceRoll.nextInt(100) < attackingPokemon.getSpeed())
 				critical = 1.5;
 			calculateDamage(attackingPokemon, moveID, targetPokemon, critical);
 		}
@@ -308,6 +311,7 @@ public class Fight
 		return player.getPokemon(currPlayerPokemonID);
 	}
 
+	//REFACTOR: 19.11.2024 maybe
 	public enum Button
 	{
 		FIGHT,

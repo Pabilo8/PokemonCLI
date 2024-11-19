@@ -19,20 +19,19 @@ public class FightDisplay extends BaseDisplay implements KeyHandlingDisplay
 {
 	private final Color foreground = new Color(0x0A3A0A);
 	private final Color background = new Color(0x4C7C4F);
-	protected final int BarSize = 20;
+	protected final int barSize = 20;
 
 	public FightDisplay(DoubleBufferedTerminal terminal)
 	{
 		super(terminal);
 	}
 
-	private void drawHpBar(Pokemon pokemon, int barX, int barY, boolean visiblePoints)
+	private void drawPokemon(Pokemon pokemon, int barX, int barY, boolean visiblePoints)
 	{
-		int currPercentage = (pokemon.getCurrentHp()*100/pokemon.getHp())/5;
 		int lines = visiblePoints?5: 4;
 
 		// Bar Background
-		for(int i = -1; i <= BarSize+4; i++)
+		for(int i = -1; i <= barSize+4; i++)
 		{
 			for(int j = 0; j < lines-1; j++)
 				drawString(" ", barX+i, barY+j);
@@ -47,17 +46,23 @@ public class FightDisplay extends BaseDisplay implements KeyHandlingDisplay
 
 		// line 3 (HP: ▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒)
 		drawString("HP: ", barX, barY+2);
-		if(pokemon.getCurrentHp()!=0&&pokemon.getCurrentHp()!=pokemon.getHp())
-			++currPercentage;
-		for(int i = 0; i < currPercentage; i++)
-			drawString("▒", barX+4+i, barY+2);
-		for(int i = currPercentage; i < BarSize; i++)
-			drawString("▓", barX+4+i, barY+2);
+		drawHealthBar(pokemon, barX, barY);
 
 
 		// line 4 (Current HP / Max HP)
 		if(visiblePoints)
 			drawString(pokemon.getCurrentHp()+" / "+pokemon.getHp(), barX+5, barY+3);
+	}
+
+	private void drawHealthBar(Pokemon pokemon, int barX, int barY)
+	{
+		int currPercentage = (pokemon.getCurrentHp()*100/pokemon.getHp())/5;
+		if(pokemon.getCurrentHp()!=0&&pokemon.getCurrentHp()!=pokemon.getHp())
+			++currPercentage;
+		for(int i = 0; i < currPercentage; i++)
+			terminal.draw(barX+4+i, barY+2, '▒');
+		for(int i = currPercentage; i < barSize; i++)
+			terminal.draw(barX+4+i, barY+2, '▓');
 	}
 
 	public void drawFightScreen(Fight fight, int displayX, int displayY)
@@ -69,11 +74,11 @@ public class FightDisplay extends BaseDisplay implements KeyHandlingDisplay
 
 		// draw enemy pokemon
 		fight.getCurrEnemyPokemon().getFront().draw(displayX-PokemonSprite.POKEMON_SIZE_X-4, 2, terminal);
-		drawHpBar(fight.getCurrEnemyPokemon(), 7, 2, false);
+		drawPokemon(fight.getCurrEnemyPokemon(), 7, 2, false);
 
 		// draw player pokemon
 		fight.getCurrPlayerPokemon().getBack().draw(4, displayY-PokemonSprite.POKEMON_SIZE_Y-2, terminal);
-		drawHpBar(fight.getCurrPlayerPokemon(), 4+PokemonSprite.POKEMON_SIZE_X+2, displayY-PokemonSprite.POKEMON_SIZE_Y-2, true);
+		drawPokemon(fight.getCurrPlayerPokemon(), 4+PokemonSprite.POKEMON_SIZE_X+2, displayY-PokemonSprite.POKEMON_SIZE_Y-2, true);
 	}
 
 	@Override

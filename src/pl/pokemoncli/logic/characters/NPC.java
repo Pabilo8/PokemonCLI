@@ -9,15 +9,15 @@ import pl.pokemoncli.logic.dialogue.DialogueNode;
  * @author Pabilo8
  * @since 17.11.2024
  */
-public class NPC extends Character
+@Setter
+@Getter
+public class NPC extends GameObject
 {
-	@Getter
-	@Setter
 	DialogueNode dialogue;
 
 	public NPC(String name, int x, int y)
 	{
-		super(name, x, y, 0);
+		super(name, x, y);
 	}
 
 	public NPC withDialogue(DialogueNode dialogue)

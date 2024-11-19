@@ -1,8 +1,7 @@
 package pl.pokemoncli.logic.dialogue;
 
 import lombok.Getter;
-import pl.pokemoncli.logic.characters.Character;
-import pl.pokemoncli.logic.characters.NPC;
+import pl.pokemoncli.logic.characters.GameObject;
 
 /**
  * @author Pabilo8
@@ -13,14 +12,14 @@ public class Dialogue
 	@Getter
 	private DialogueNode currentNode;
 	@Getter
-	private Character character;
+	private final GameObject gameObject;
 
 	private int selectedResponseIndex;
 
-	public Dialogue(DialogueNode startNode, Character character)
+	public Dialogue(DialogueNode startNode, GameObject gameObject)
 	{
 		this.currentNode = startNode;
-		this.character = character;
+		this.gameObject = gameObject;
 		this.selectedResponseIndex = 0;
 	}
 

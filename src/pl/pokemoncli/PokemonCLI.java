@@ -6,7 +6,6 @@ import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
-import pl.pokemoncli.logic.characters.Character;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.dialogue.Dialogue;
 import pl.pokemoncli.logic.dialogue.DialogueNode;
@@ -24,12 +23,11 @@ import pl.pokemoncli.sound.AudioSystem.Track;
  */
 public class PokemonCLI
 {
-	private static PokemonCLI INSTANCE;
 	private final DoubleBufferedTerminal terminal;
 
 	private final DialogueDisplay dialogueDisplay;
 	private final FightDisplay fightDisplay;
-	private final FightMenuDisplay fightMenuDisplay;
+	private final FightPanelDisplay fightPanelDisplay;
 	private final PanelDisplay panelDisplay;
 	private final GameDisplay gameDisplay;
 
@@ -41,8 +39,8 @@ public class PokemonCLI
 	private Dialogue dialogue;
 	private Fight fight;
 
-	public Pokedex pokedex;
-	public MoveList moveList;
+	public final Pokedex pokedex;
+	public final MoveList moveList;
 
 	int tickTimer = 0;
 
@@ -52,7 +50,7 @@ public class PokemonCLI
 		this.panelDisplay = new PanelDisplay(terminal);
 		this.gameDisplay = new GameDisplay(terminal);
 		this.fightDisplay = new FightDisplay(terminal);
-		this.fightMenuDisplay = new FightMenuDisplay(terminal);
+		this.fightPanelDisplay = new FightPanelDisplay(terminal);
 		this.dialogueDisplay = new DialogueDisplay(terminal);
 		this.audioSystem = new AudioSystem();
 		this.pokedex = new Pokedex();
@@ -62,10 +60,10 @@ public class PokemonCLI
 	public static void main(String[] args) throws InterruptedException
 	{
 		DoubleBufferedTerminal dbTerminal = new DoubleBufferedTerminal();
-		INSTANCE = new PokemonCLI(dbTerminal);
-		INSTANCE.loadGame();
-		INSTANCE.displayMenu();
-		INSTANCE.displayGame();
+		PokemonCLI instance = new PokemonCLI(dbTerminal);
+		instance.loadGame();
+		instance.displayMenu();
+		instance.displayGame();
 	}
 
 	private void displayMenu()
@@ -79,6 +77,7 @@ public class PokemonCLI
 		GAME_Y = Math.min(terminal.getWidth(), terminal.getHeight());
 		GAME_X = (int)(GAME_Y*(Tile.TILE_SIZE_X/(float)Tile.TILE_SIZE_Y));
 
+		//TODO: 19.11.2024 game end condition / return to main menu
 		while(true)
 		{
 			//ORDER: DIALOGUE, FIGHT, WORLD
@@ -88,7 +87,7 @@ public class PokemonCLI
 			else if(fight!=null)
 			{
 				fightDisplay.drawFightScreen(fight, GAME_X, GAME_Y);
-				fightMenuDisplay.drawMenuPanel(fight, GAME_X, GAME_Y);
+				fightPanelDisplay.drawMenuPanel(fight, GAME_X, GAME_Y);
 			}
 			else
 				gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y, tickTimer);
@@ -125,13 +124,13 @@ public class PokemonCLI
 		if(dialogue!=null)
 			result = dialogueDisplay.handleKeyInput(level, player, dialogue, fight, key);
 		else if(fight!=null)
-			result = fightDisplay.handleKeyInput(level, player, dialogue, fight, key);
+			result = fightDisplay.handleKeyInput(level, player, null, fight, key);
 		else
-			result = gameDisplay.handleKeyInput(level, player, dialogue, fight, key);
+			result = gameDisplay.handleKeyInput(level, player, null, null, key);
 
 		if(result==null)
 			return false;
-		final Character contacted = result.getContactedCharacter();
+		final GameObject contacted = result.getContactedGameObject();
 		return switch(result.getResult())
 		{
 			case MOVE -> true;
@@ -139,16 +138,7 @@ public class PokemonCLI
 			case FIGHT ->
 			{
 				//start fight
-				if(contacted.isFightable())
-					//dialogue = new Dialogue();
-					//dialogue =
-					if(contacted.getUsablePokemons() > 0)
-						fight = new Fight(player, ((Enemy)contacted));
-					else
-					{
-						//dialogue = new Dialogue();
-						//TODO: 18.11.2024 dialogue after defeat
-					}
+				fight = new Fight(player, ((Enemy)contacted));
 				yield true;
 			}
 			case END_OF_BATTLE ->
@@ -183,15 +173,11 @@ public class PokemonCLI
 				yield true;
 			}
 			case WILD_POKEMON ->
-			{
 				//display message that wild pokemon appeared, start fight
-				yield false;
-			}
+					false;
 			case COLLECT_ITEM ->
-			{
 				//display message that item was acquired, add item to player's inventory
-				yield false;
-			}
+					false;
 			case null -> false;
 
 		};

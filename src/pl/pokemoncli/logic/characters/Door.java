@@ -8,16 +8,15 @@ import pl.pokemoncli.logic.Level;
  * @author Pabilo8
  * @since 17.11.2024
  */
-public class Door extends Character
+@Getter
+public class Door extends GameObject
 {
-	@Getter
 	private final Level level;
-	@Getter
 	private final int destX, destY;
 
 	public Door(int x, int y, Level level, int destX, int destY)
 	{
-		super("door", x, y, 0);
+		super("door", x, y);
 		this.level = level;
 		this.destX = destX;
 		this.destY = destY;

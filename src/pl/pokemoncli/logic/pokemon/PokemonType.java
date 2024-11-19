@@ -1,6 +1,7 @@
 package pl.pokemoncli.logic.pokemon;
 
-public enum PokemonType {
+public enum PokemonType
+{
     NONE,
     NORMAL,
     FIRE,

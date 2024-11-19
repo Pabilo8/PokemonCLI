@@ -3,10 +3,7 @@ package pl.pokemoncli.logic;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import pl.pokemoncli.display.Tile;
-import pl.pokemoncli.logic.characters.Character;
-import pl.pokemoncli.logic.characters.Door;
-import pl.pokemoncli.logic.characters.Enemy;
-import pl.pokemoncli.logic.characters.NPC;
+import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.equipment.ItemType;
 
 import java.util.ArrayList;
@@ -23,14 +20,14 @@ public class Level
 	private final Random random = new Random();
 	private final int width, height;
 	private final Terrain[][] map;
-	private final List<Character> characters;
+	private final List<GameObject> gameObjects;
 
 	public Level(int width, int height, Terrain defaultTile)
 	{
 		this.width = width;
 		this.height = height;
 		this.map = new Terrain[width][height];
-		this.characters = new ArrayList<>();
+		this.gameObjects = new ArrayList<>();
 
 		// Initialize the map with default tiles
 		for(int x = 0; x < width; x++)
@@ -51,19 +48,19 @@ public class Level
 		map[x][y] = terrain;
 	}
 
-	public void addCharacter(Character character)
+	public void addCharacter(GameObject gameObject)
 	{
-		characters.add(character);
+		gameObjects.add(gameObject);
 	}
 
-	public void removeCharacter(Character character)
+	public void removeCharacter(GameObject gameObject)
 	{
-		characters.remove(character);
+		gameObjects.remove(gameObject);
 	}
 
-	public Character findCharacterAt(Character filter, int x, int y)
+	public GameObject findCharacterAt(GameObject filter, int x, int y)
 	{
-		for(Character other : characters)
+		for(GameObject other : gameObjects)
 			if(other!=filter&&other.getX()==x&&other.getY()==y)
 				return other;
 		return null;
@@ -76,28 +73,22 @@ public class Level
 		int startY = Math.max(0, playerY-visibleHeight/2);
 
 		for(int x = 0; x < visibleWidth; x++)
-		{
 			for(int y = 0; y < visibleHeight; y++)
 			{
 				int mapX = startX+x;
 				int mapY = startY+y;
 				if(mapX < width&&mapY < height)
-				{
 					visibleMap[x][y] = map[mapX][mapY];
-				}
 				else
-				{
 					visibleMap[x][y] = Terrain.VOID; // Default terrain for out-of-bounds
-				}
 			}
-		}
 		return visibleMap;
 	}
 
-	public ActionResult moveCharacterBy(Character character, int dx, int dy)
+	public ActionResult moveCharacterBy(FightableCharacter gameObject, int dx, int dy)
 	{
-		int newX = character.getX()+dx;
-		int newY = character.getY()+dy;
+		int newX = gameObject.getX()+dx;
+		int newY = gameObject.getY()+dy;
 
 		// Check if the new position is within bounds
 		if(newX < 0||newY < 0||newX >= map.length||newY >= map[0].length)
@@ -108,8 +99,8 @@ public class Level
 			return new ActionResult(ResultType.MET_OBSTACLE);
 
 		// Check if there is another character at the new position
-		Character c;
-		if((c = findCharacterAt(character, newX, newY))!=null)
+		GameObject c;
+		if((c = findCharacterAt(gameObject, newX, newY))!=null)
 			return switch(c)
 			{
 				case Enemy enemy -> new ActionResult(ResultType.FIGHT, enemy);
@@ -119,7 +110,7 @@ public class Level
 			};
 
 		// Move the character
-		character.setPosition(newX, newY);
+		gameObject.setPosition(newX, newY);
 		return new ActionResult(ResultType.MOVE);
 	}
 
@@ -240,7 +231,7 @@ public class Level
 	public static class ActionResult
 	{
 		private final ResultType result;
-		private final Character contactedCharacter;
+		private final GameObject contactedGameObject;
 		private final ItemType collectedItem;
 
 		public ActionResult(ResultType result)
@@ -248,9 +239,9 @@ public class Level
 			this(result, null, null);
 		}
 
-		public ActionResult(ResultType result, Character contactedCharacter)
+		public ActionResult(ResultType result, GameObject contactedGameObject)
 		{
-			this(result, contactedCharacter, null);
+			this(result, contactedGameObject, null);
 		}
 
 		public ActionResult(ResultType result, ItemType collectedItem)

@@ -1,7 +1,7 @@
 package pl.pokemoncli.logic.characters;
 
 import lombok.Getter;
-import pl.pokemoncli.display.Tile;
+import pl.pokemoncli.display.graphics.TileGraphics;
 
 /**
  * @author Pabilo8
@@ -20,7 +20,7 @@ public abstract class GameObject
 		this.y = y;
 	}
 
-	public abstract Tile getCurrentSprite();
+	public abstract TileGraphics getCurrentSprite();
 
 	public void setPosition(int x, int y)
 	{

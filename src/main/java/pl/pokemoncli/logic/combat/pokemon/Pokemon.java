@@ -2,7 +2,7 @@ package pl.pokemoncli.logic.combat.pokemon;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.pokemoncli.display.PokemonSprite;
+import pl.pokemoncli.display.graphics.PokemonGraphics;
 import pl.pokemoncli.logic.combat.move.Move;
 import pl.pokemoncli.logic.combat.move.MoveType;
 
@@ -30,8 +30,8 @@ public class Pokemon
 	private int spDefence;
 	private int speed;
 
-	private final PokemonSprite front;
-	private final PokemonSprite back;
+	private final PokemonGraphics front;
+	private final PokemonGraphics back;
 
 	private ArrayList<Move> moves;
 
@@ -39,7 +39,7 @@ public class Pokemon
 
 	public Pokemon(String name, PokemonType type1, PokemonType type2,
 				   int hp, int attack, int defence, int spAttack, int spDefence, int speed,
-				   PokemonSprite front, PokemonSprite back)
+				   PokemonGraphics front, PokemonGraphics back)
 	{
 		this.name = name;
 		this.type1 = type1;

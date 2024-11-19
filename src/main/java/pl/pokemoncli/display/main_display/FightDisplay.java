@@ -1,7 +1,11 @@
-package pl.pokemoncli.display;
+package pl.pokemoncli.display.main_display;
 
 import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.input.Key.Kind;
+import pl.pokemoncli.display.BaseDisplay;
+import pl.pokemoncli.display.DoubleBufferedTerminal;
+import pl.pokemoncli.display.KeyHandlingDisplay;
+import pl.pokemoncli.display.graphics.PokemonGraphics;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
@@ -73,12 +77,12 @@ public class FightDisplay extends BaseDisplay implements KeyHandlingDisplay
 				terminal.drawColor(x, y, '░', foreground, background);
 
 		// draw enemy pokemon
-		fight.getCurrEnemyPokemon().getFront().draw(displayX-PokemonSprite.POKEMON_SIZE_X-4, 2, terminal);
+		fight.getCurrEnemyPokemon().getFront().draw(displayX-PokemonGraphics.POKEMON_SIZE_X-4, 2, terminal);
 		drawPokemon(fight.getCurrEnemyPokemon(), 7, 2, false);
 
 		// draw player pokemon
-		fight.getCurrPlayerPokemon().getBack().draw(4, displayY-PokemonSprite.POKEMON_SIZE_Y-2, terminal);
-		drawPokemon(fight.getCurrPlayerPokemon(), 4+PokemonSprite.POKEMON_SIZE_X+2, displayY-PokemonSprite.POKEMON_SIZE_Y-2, true);
+		fight.getCurrPlayerPokemon().getBack().draw(4, displayY-PokemonGraphics.POKEMON_SIZE_Y-2, terminal);
+		drawPokemon(fight.getCurrPlayerPokemon(), 4+PokemonGraphics.POKEMON_SIZE_X+2, displayY-PokemonGraphics.POKEMON_SIZE_Y-2, true);
 	}
 
 	@Override

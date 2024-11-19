@@ -1,6 +1,10 @@
-package pl.pokemoncli.display;
+package pl.pokemoncli.display.main_display;
 
 import com.googlecode.lanterna.input.Key;
+import pl.pokemoncli.display.BaseDisplay;
+import pl.pokemoncli.display.DoubleBufferedTerminal;
+import pl.pokemoncli.display.KeyHandlingDisplay;
+import pl.pokemoncli.display.graphics.TileGraphics;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
@@ -22,8 +26,8 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 
 	public void drawWholeMap(Player player, Level level, int gameX, int gameY, int currentTicks)
 	{
-		int visibleWidth = gameX/Tile.TILE_SIZE_X;
-		int visibleHeight = gameY/Tile.TILE_SIZE_Y;
+		int visibleWidth = gameX/TileGraphics.TILE_SIZE_X;
+		int visibleHeight = gameY/TileGraphics.TILE_SIZE_Y;
 		int playerX = player.getX();
 		int playerY = player.getY();
 
@@ -32,8 +36,8 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 		for(int y = 0; y < visibleHeight; y++)
 			for(int x = 0; x < visibleWidth; x++)
 			{
-				int drawX = x*Tile.TILE_SIZE_X;
-				int drawY = y*Tile.TILE_SIZE_Y;
+				int drawX = x*TileGraphics.TILE_SIZE_X;
+				int drawY = y*TileGraphics.TILE_SIZE_Y;
 				visibleMap[x][y].getTile(currentTicks).draw(drawX, drawY, terminal);
 			}
 
@@ -46,15 +50,15 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 
 	public void updateDrawCharacter(int playerX, int playerY, GameObject gameObject, int gameX, int gameY)
 	{
-		int startX = Math.max(0, playerX-gameX/Tile.TILE_SIZE_X/2);
-		int startY = Math.max(0, playerY-gameY/Tile.TILE_SIZE_Y/2);
+		int startX = Math.max(0, playerX-gameX/TileGraphics.TILE_SIZE_X/2);
+		int startY = Math.max(0, playerY-gameY/TileGraphics.TILE_SIZE_Y/2);
 		int cX = gameObject.getX()-startX, cY = gameObject.getY()-startY;
 
-		if(cX < 0||cY < 0||cX*Tile.TILE_SIZE_X >= gameX||cY*Tile.TILE_SIZE_Y >= gameY)
+		if(cX < 0||cY < 0||cX*TileGraphics.TILE_SIZE_X >= gameX||cY*TileGraphics.TILE_SIZE_Y >= gameY)
 			return;
 
-		Tile sprite = gameObject.getCurrentSprite();
-		sprite.drawTrnsparent(cX*Tile.TILE_SIZE_X, cY*Tile.TILE_SIZE_Y, terminal);
+		TileGraphics sprite = gameObject.getCurrentSprite();
+		sprite.drawTrnsparent(cX*TileGraphics.TILE_SIZE_X, cY*TileGraphics.TILE_SIZE_Y, terminal);
 	}
 
 	@Override

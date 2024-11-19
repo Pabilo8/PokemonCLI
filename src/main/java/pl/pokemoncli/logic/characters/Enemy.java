@@ -1,6 +1,6 @@
 package pl.pokemoncli.logic.characters;
 
-import pl.pokemoncli.display.Tile;
+import pl.pokemoncli.display.graphics.TileGraphics;
 
 /**
  * @author Pabilo8
@@ -14,8 +14,8 @@ public class Enemy extends FightableCharacter
 	}
 
 	@Override
-	public Tile getCurrentSprite()
+	public TileGraphics getCurrentSprite()
 	{
-		return Tile.PLAYER_VERTICAL;
+		return TileGraphics.PLAYER_VERTICAL;
 	}
 }

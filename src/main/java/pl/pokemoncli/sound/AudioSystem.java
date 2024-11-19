@@ -52,7 +52,7 @@ public class AudioSystem
 
 		public String getPath()
 		{
-			return "src/main/resources/"+name().toLowerCase()+".wav";
+			return "src/main/resources/music/"+name().toLowerCase()+".wav";
 		}
 	}
 }

@@ -1,18 +1,25 @@
 package pl.pokemoncli;
 
 import com.googlecode.lanterna.input.Key;
-import pl.pokemoncli.display.*;
+import pl.pokemoncli.display.DoubleBufferedTerminal;
+import pl.pokemoncli.display.graphics.PokemonGraphics;
+import pl.pokemoncli.display.graphics.TileGraphics;
+import pl.pokemoncli.display.main_display.DialogueDisplay;
+import pl.pokemoncli.display.main_display.FightDisplay;
+import pl.pokemoncli.display.main_display.GameDisplay;
+import pl.pokemoncli.display.side_display.FightPanelDisplay;
+import pl.pokemoncli.display.side_display.PanelDisplay;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.characters.*;
+import pl.pokemoncli.logic.combat.move.MoveType;
+import pl.pokemoncli.logic.combat.pokemon.Pokemon;
+import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
 import pl.pokemoncli.logic.dialogue.Dialogue;
 import pl.pokemoncli.logic.dialogue.DialogueNode;
 import pl.pokemoncli.logic.dialogue.DialogueResponse;
-import pl.pokemoncli.logic.combat.pokemon.Pokemon;
-import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
-import pl.pokemoncli.logic.combat.move.MoveType;
 import pl.pokemoncli.sound.AudioSystem;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
@@ -55,9 +62,24 @@ public class PokemonCLI
 	{
 		DoubleBufferedTerminal dbTerminal = new DoubleBufferedTerminal();
 		PokemonCLI instance = new PokemonCLI(dbTerminal);
+
+		//Load level
 		instance.loadGame();
+
+		//Load Graphics
+		instance.loadGraphics();
+
+		//Display the Game
 		instance.displayMenu();
 		instance.displayGame();
+	}
+
+	private void loadGraphics()
+	{
+		for(TileGraphics value : TileGraphics.values())
+			value.loadGraphics();
+		for(PokemonGraphics value : PokemonGraphics.values())
+			value.loadGraphics();
 	}
 
 	private void displayMenu()
@@ -69,7 +91,7 @@ public class PokemonCLI
 	{
 		terminal.init();
 		GAME_Y = Math.min(terminal.getWidth(), terminal.getHeight());
-		GAME_X = (int)(GAME_Y*(Tile.TILE_SIZE_X/(float)Tile.TILE_SIZE_Y));
+		GAME_X = (int)(GAME_Y*(TileGraphics.TILE_SIZE_X/(float)TileGraphics.TILE_SIZE_Y));
 
 		//TODO: 19.11.2024 game end condition / return to main menu
 		while(true)

@@ -1,7 +1,7 @@
 package pl.pokemoncli.logic.characters;
 
 import lombok.Getter;
-import pl.pokemoncli.display.Tile;
+import pl.pokemoncli.display.graphics.TileGraphics;
 import pl.pokemoncli.logic.Level;
 
 /**
@@ -23,8 +23,8 @@ public class Door extends GameObject
 	}
 
 	@Override
-	public Tile getCurrentSprite()
+	public TileGraphics getCurrentSprite()
 	{
-		return Tile.DOOR_OPENABLE;
+		return TileGraphics.DOOR_OPENABLE;
 	}
 }

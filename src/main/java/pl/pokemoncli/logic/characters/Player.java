@@ -1,6 +1,6 @@
 package pl.pokemoncli.logic.characters;
 
-import pl.pokemoncli.display.Tile;
+import pl.pokemoncli.display.graphics.TileGraphics;
 import pl.pokemoncli.logic.combat.item.ItemType;
 
 /**
@@ -11,7 +11,7 @@ public class Player extends FightableCharacter
 {
 	protected final ItemType[] equipment = new ItemType[3];
 
-	Tile currentSprite = Tile.PLAYER_VERTICAL;
+	TileGraphics currentSprite = TileGraphics.PLAYER_VERTICAL;
 
 	public Player(String name, int y, int x, int maxPokemons)
 	{
@@ -26,15 +26,15 @@ public class Player extends FightableCharacter
 
 		//Change sprite based on movement
 		if(x > cX)
-			currentSprite = Tile.PLAYER_RIGHT;
+			currentSprite = TileGraphics.PLAYER_RIGHT;
 		else if(x < cX)
-			currentSprite = Tile.PLAYER_LEFT;
+			currentSprite = TileGraphics.PLAYER_LEFT;
 		else
-			currentSprite = Tile.PLAYER_VERTICAL;
+			currentSprite = TileGraphics.PLAYER_VERTICAL;
 	}
 
 	@Override
-	public Tile getCurrentSprite()
+	public TileGraphics getCurrentSprite()
 	{
 		return currentSprite;
 	}

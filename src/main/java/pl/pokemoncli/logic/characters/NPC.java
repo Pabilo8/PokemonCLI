@@ -2,7 +2,7 @@ package pl.pokemoncli.logic.characters;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.pokemoncli.display.Tile;
+import pl.pokemoncli.display.graphics.TileGraphics;
 import pl.pokemoncli.logic.dialogue.DialogueNode;
 
 /**
@@ -27,8 +27,8 @@ public class NPC extends GameObject
 	}
 
 	@Override
-	public Tile getCurrentSprite()
+	public TileGraphics getCurrentSprite()
 	{
-		return Tile.PLAYER_VERTICAL;
+		return TileGraphics.PLAYER_VERTICAL;
 	}
 }

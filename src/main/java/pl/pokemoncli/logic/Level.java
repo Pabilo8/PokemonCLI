@@ -2,7 +2,7 @@ package pl.pokemoncli.logic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import pl.pokemoncli.display.Tile;
+import pl.pokemoncli.display.graphics.TileGraphics;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.item.ItemType;
 
@@ -177,54 +177,54 @@ public class Level
 	@Getter
 	public enum Terrain
 	{
-		GRASS(true, Tile.GRASS),
-		BEACH(true, Tile.BEACH),
-		BEACH2(true, Tile.BEACH2),
-		ROAD(true, Tile.ROAD),
-		FLOOR(true, Tile.FLOOR),
-		BLOCKED(false, Tile.BLOCKED),
-		VOID(false, Tile.VOID),
+		GRASS(true, TileGraphics.GRASS),
+		BEACH(true, TileGraphics.BEACH),
+		BEACH2(true, TileGraphics.BEACH2),
+		ROAD(true, TileGraphics.ROAD),
+		FLOOR(true, TileGraphics.FLOOR),
+		BLOCKED(false, TileGraphics.BLOCKED),
+		VOID(false, TileGraphics.VOID),
 
-		BUSH1(true, Tile.BUSH1),
-		BUSH2(true, Tile.BUSH2),
-		TREE_LEAVES(true, Tile.TREE_LEAVES),
-		TREE_TRUNK(false, Tile.TREE_TRUNK),
-		TREE_LEAVES_SOLID(false, Tile.TREE_LEAVES),
+		BUSH1(true, TileGraphics.BUSH1),
+		BUSH2(true, TileGraphics.BUSH2),
+		TREE_LEAVES(true, TileGraphics.TREE_LEAVES),
+		TREE_TRUNK(false, TileGraphics.TREE_TRUNK),
+		TREE_LEAVES_SOLID(false, TileGraphics.TREE_LEAVES),
 
-		WATER_STILL(false, Tile.WATER_STILL1, Tile.WATER_STILL1, Tile.WATER_STILL2, Tile.WATER_STILL2),
-		WATER_FLOWING(false, Tile.WATER_FLOWING1, Tile.WATER_FLOWING2, Tile.WATER_FLOWING3, Tile.WATER_FLOWING4, Tile.WATER_FLOWING5),
-		BRIDGE1(true, Tile.BRIDGE1),
-		BRIDGE2(true, Tile.BRIDGE2),
+		WATER_STILL(false, TileGraphics.WATER_STILL1, TileGraphics.WATER_STILL1, TileGraphics.WATER_STILL2, TileGraphics.WATER_STILL2),
+		WATER_FLOWING(false, TileGraphics.WATER_FLOWING1, TileGraphics.WATER_FLOWING2, TileGraphics.WATER_FLOWING3, TileGraphics.WATER_FLOWING4, TileGraphics.WATER_FLOWING5),
+		BRIDGE1(true, TileGraphics.BRIDGE1),
+		BRIDGE2(true, TileGraphics.BRIDGE2),
 
-		DOOR(true, Tile.DOOR),
-		HOUSE_WALL_LEFT(false, Tile.HOUSE_WALL_LEFT),
-		HOUSE_WALL_RIGHT(false, Tile.HOUSE_WALL_RIGHT),
-		HOUSE_WALL_LEFT_BOTTOM(false, Tile.HOUSE_WALL_LEFT_BOTTOM),
-		HOUSE_WALL_RIGHT_BOTTOM(false, Tile.HOUSE_WALL_RIGHT_BOTTOM),
+		DOOR(true, TileGraphics.DOOR),
+		HOUSE_WALL_LEFT(false, TileGraphics.HOUSE_WALL_LEFT),
+		HOUSE_WALL_RIGHT(false, TileGraphics.HOUSE_WALL_RIGHT),
+		HOUSE_WALL_LEFT_BOTTOM(false, TileGraphics.HOUSE_WALL_LEFT_BOTTOM),
+		HOUSE_WALL_RIGHT_BOTTOM(false, TileGraphics.HOUSE_WALL_RIGHT_BOTTOM),
 
-		HOUSE_WALL_LEFT_ROOF(false, Tile.HOUSE_WALL_LEFT_ROOF),
-		HOUSE_WALL_RIGHT_ROOF(false, Tile.HOUSE_WALL_RIGHT_ROOF),
-		HOUSE_WALL_MIDDLE_ROOF(false, Tile.HOUSE_WALL_MIDDLE_ROOF),
-		HOUSE_WALL_ROOF_LEFT(false, Tile.HOUSE_ROOF_TOP_LEFT),
-		HOUSE_WALL_ROOF_RIGHT(false, Tile.HOUSE_ROOF_TOP_RIGHT),
-		HOUSE_WALL_ROOF_MIDDLE(false, Tile.HOUSE_ROOF_TOP_MIDDLE),
+		HOUSE_WALL_LEFT_ROOF(false, TileGraphics.HOUSE_WALL_LEFT_ROOF),
+		HOUSE_WALL_RIGHT_ROOF(false, TileGraphics.HOUSE_WALL_RIGHT_ROOF),
+		HOUSE_WALL_MIDDLE_ROOF(false, TileGraphics.HOUSE_WALL_MIDDLE_ROOF),
+		HOUSE_WALL_ROOF_LEFT(false, TileGraphics.HOUSE_ROOF_TOP_LEFT),
+		HOUSE_WALL_ROOF_RIGHT(false, TileGraphics.HOUSE_ROOF_TOP_RIGHT),
+		HOUSE_WALL_ROOF_MIDDLE(false, TileGraphics.HOUSE_ROOF_TOP_MIDDLE),
 
-		HOUSE_WALL(false, Tile.HOUSE_WALL),
-		HOUSE_WALL_BOTTOM(false, Tile.HOUSE_WALL_BOTTOM),
+		HOUSE_WALL(false, TileGraphics.HOUSE_WALL),
+		HOUSE_WALL_BOTTOM(false, TileGraphics.HOUSE_WALL_BOTTOM),
 		;
 
 		final boolean passable;
-		final Tile[] tiles;
+		final TileGraphics[] tileGraphics;
 
-		Terrain(boolean passable, Tile... tiles)
+		Terrain(boolean passable, TileGraphics... tileGraphics)
 		{
 			this.passable = passable;
-			this.tiles = tiles;
+			this.tileGraphics = tileGraphics;
 		}
 
-		public Tile getTile(int time)
+		public TileGraphics getTile(int time)
 		{
-			return tiles[time%tiles.length];
+			return tileGraphics[time%tileGraphics.length];
 		}
 	}
 

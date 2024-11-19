@@ -1,5 +1,7 @@
-package pl.pokemoncli.display;
+package pl.pokemoncli.display.side_display;
 
+import pl.pokemoncli.display.BaseDisplay;
+import pl.pokemoncli.display.DoubleBufferedTerminal;
 import pl.pokemoncli.logic.characters.Player;
 
 import java.awt.*;

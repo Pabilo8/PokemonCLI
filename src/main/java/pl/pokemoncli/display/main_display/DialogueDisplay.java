@@ -1,6 +1,9 @@
-package pl.pokemoncli.display;
+package pl.pokemoncli.display.main_display;
 
 import com.googlecode.lanterna.input.Key;
+import pl.pokemoncli.display.BaseDisplay;
+import pl.pokemoncli.display.DoubleBufferedTerminal;
+import pl.pokemoncli.display.KeyHandlingDisplay;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;

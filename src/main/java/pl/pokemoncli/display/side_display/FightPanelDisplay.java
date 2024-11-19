@@ -1,5 +1,6 @@
-package pl.pokemoncli.display;
+package pl.pokemoncli.display.side_display;
 
+import pl.pokemoncli.display.DoubleBufferedTerminal;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.combat.move.Move;
 

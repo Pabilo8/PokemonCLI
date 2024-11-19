@@ -37,6 +37,8 @@ public class Level
 
 	public Terrain getTerrain(int x, int y)
 	{
+		if(x < 0||y < 0||x >= width||y >= height)
+			return Terrain.VOID;
 		return map[x][y];
 	}
 

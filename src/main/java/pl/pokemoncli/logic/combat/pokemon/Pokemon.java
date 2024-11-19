@@ -33,7 +33,7 @@ public class Pokemon
 	private final PokemonSprite front;
 	private final PokemonSprite back;
 
-	private ArrayList<Move> attacks;
+	private ArrayList<Move> moves;
 
 	private final int maxMoves = 4;
 
@@ -54,7 +54,7 @@ public class Pokemon
 		this.speed = speed;
 		this.front = front;
 		this.back = back;
-		this.attacks = new ArrayList<>();
+		this.moves = new ArrayList<>();
 	}
 
 	public Pokemon(PokemonSpecies species, int level)
@@ -80,25 +80,25 @@ public class Pokemon
 
 	public void addAttack(Move attack)
 	{
-		attacks.add(attack);
+		moves.add(attack);
 	}
 
 	public void replaceAttack(Move newAttack, int oldAttackId)
 	{
-		attacks.add(oldAttackId, newAttack);
-		attacks.remove(oldAttackId+1);
+		moves.add(oldAttackId, newAttack);
+		moves.remove(oldAttackId+1);
 	}
 
-	public Pokemon withAttacks(Move... attacks)
+	public Pokemon withMoves(Move... attacks)
 	{
 		for(Move attack : attacks)
 			addAttack(attack);
 		return this;
 	}
 
-	public Pokemon withAttacks(MoveType... attacks)
+	public Pokemon withMoves(MoveType... attacks)
 	{
-		return withAttacks(Arrays.stream(attacks)
+		return withMoves(Arrays.stream(attacks)
 				.map(Move::new)
 				.toArray(Move[]::new)
 		);

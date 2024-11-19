@@ -22,4 +22,9 @@ public abstract class GameObject
 
 	public abstract Tile getCurrentSprite();
 
+	public void setPosition(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+	}
 }

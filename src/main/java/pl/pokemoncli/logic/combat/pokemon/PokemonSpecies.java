@@ -21,7 +21,7 @@ public enum PokemonSpecies
 	CHARMANDER(PokemonType.FIRE, PokemonType.NONE, 39, 52, 43, 60, 50, 65,
 			PokemonSprite.CHARMANDER_FRONT, PokemonSprite.CHARMANDER_BACK),
 	SQUIRLTLE(PokemonType.WATER, PokemonType.NONE, 44, 48, 65, 50, 64, 43,
-			PokemonSprite.SQUIRLTLE_FRONT, PokemonSprite.SQUIRLTLE_BACK),
+			PokemonSprite.SQUIRTLE_FRONT, PokemonSprite.SQUIRTLE_BACK),
 	CATERPIE(PokemonType.BUG, PokemonType.NONE, 45, 30, 35, 20, 20, 45,
 			PokemonSprite.CATERPIE_FRONT, PokemonSprite.CATERPIE_BACK),
 	METAPOD(PokemonType.BUG, PokemonType.NONE, 50, 20, 55, 25, 25, 30,

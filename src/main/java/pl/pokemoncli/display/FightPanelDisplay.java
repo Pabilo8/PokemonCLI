@@ -69,10 +69,10 @@ public class FightPanelDisplay extends PanelDisplay
 	{
 		Move move = switch(button)
 		{
-			case FIGHT -> fight.getCurrPlayerPokemon().getAttacks().get(0);
-			case POKEMON -> fight.getCurrPlayerPokemon().getAttacks().get(1);
-			case ITEM -> fight.getCurrPlayerPokemon().getAttacks().get(2);
-			case RUN -> fight.getCurrPlayerPokemon().getAttacks().get(3);
+			case FIGHT -> fight.getCurrPlayerPokemon().getMoves().get(0);
+			case POKEMON -> fight.getCurrPlayerPokemon().getMoves().get(1);
+			case ITEM -> fight.getCurrPlayerPokemon().getMoves().get(2);
+			case RUN -> fight.getCurrPlayerPokemon().getMoves().get(3);
 		};
 
 		if(fight.getButton()==button)

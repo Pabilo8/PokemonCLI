@@ -2,6 +2,7 @@ package pl.pokemoncli.logic.dialogue;
 
 import lombok.Getter;
 import pl.pokemoncli.logic.characters.GameObject;
+import pl.pokemoncli.logic.characters.NPC;
 
 /**
  * @author Pabilo8
@@ -21,6 +22,11 @@ public class Dialogue
 		this.currentNode = startNode;
 		this.gameObject = gameObject;
 		this.selectedResponseIndex = 0;
+	}
+
+	public Dialogue(NPC npc)
+	{
+		this(npc.getDialogue(), npc);
 	}
 
 	public void selectNextResponse()

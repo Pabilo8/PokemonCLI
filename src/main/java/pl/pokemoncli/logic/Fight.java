@@ -3,8 +3,8 @@ package pl.pokemoncli.logic;
 import lombok.Getter;
 import pl.pokemoncli.logic.characters.Enemy;
 import pl.pokemoncli.logic.characters.Player;
-import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 import pl.pokemoncli.logic.combat.move.MoveCategory;
+import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 
 import java.util.Random;
 
@@ -188,7 +188,7 @@ public class Fight
 						case RUN -> attackId = 3;
 						default -> {return new Level.ActionResult(Level.ResultType.MET_OBSTACLE);}
 					}
-					if(getCurrPlayerPokemon().getAttacks().get(attackId).getCurrentPp() > 0)
+					if(getCurrPlayerPokemon().getMoves().get(attackId).getCurrentPp() > 0)
 					{
 						attack.setId(attackId);
 						userAction(attack);
@@ -224,7 +224,7 @@ public class Fight
 		return new Level.ActionResult(Level.ResultType.MET_OBSTACLE);
 	}
 
-	private void userAction(ActionType actionType)
+	public void userAction(ActionType actionType)
 	{
 		switch(actionType)
 		{
@@ -235,19 +235,19 @@ public class Fight
 				{
 					// player is first
 					useAttack(getCurrPlayerPokemon(), actionType.id, getCurrEnemyPokemon());
-					useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+					useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getMoves().size()), getCurrPlayerPokemon());
 				}
 				else
 				{
 					// enemy is first
-					useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+					useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getMoves().size()), getCurrPlayerPokemon());
 					useAttack(getCurrPlayerPokemon(), actionType.id, getCurrEnemyPokemon());
 				}
 			}
 			case POKEMON_CHANGE ->
 			{
 				// enemy attack
-				useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+				useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getMoves().size()), getCurrPlayerPokemon());
 
 				// change pokemon
 				currPlayerPokemonID = tempPlayerPokemonID;
@@ -255,7 +255,7 @@ public class Fight
 			case ITEM_USAGE ->
 			{
 				// enemy attack
-				useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+				useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getMoves().size()), getCurrPlayerPokemon());
 
 				// use item
 
@@ -265,7 +265,7 @@ public class Fight
 				// player faild to run
 				runAttempts++;
 				// enemy attack
-				useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getAttacks().size()), getCurrPlayerPokemon());
+				useAttack(getCurrEnemyPokemon(), diceRoll.nextInt(getCurrEnemyPokemon().getMoves().size()), getCurrPlayerPokemon());
 			}
 		}
 	}
@@ -273,31 +273,34 @@ public class Fight
 	private void useAttack(Pokemon attackingPokemon, int moveID, Pokemon targetPokemon)
 	{
 		double critical = 1;
-		if(diceRoll.nextInt(100) < attackingPokemon.getAttacks().get(moveID).getAccuracy())
+		if(diceRoll.nextInt(100) < attackingPokemon.getMoves().get(moveID).getAccuracy())
 		{
 			if(diceRoll.nextInt(100) < attackingPokemon.getSpeed())
 				critical = 1.5;
 			calculateDamage(attackingPokemon, moveID, targetPokemon, critical);
 		}
-		attackingPokemon.getAttacks().get(moveID).reduceCurrentPp(1);
+		attackingPokemon.getMoves().get(moveID).reduceCurrentPp(1);
 	}
 
 	public void calculateDamage(Pokemon attackingPokemon, int moveID, Pokemon targetPokemon, double critical)
 	{
-		int L = attackingPokemon.getLevel(), P = attackingPokemon.getAttacks().get(moveID).getPower(), A, D;
-		switch(attackingPokemon.getAttacks().get(moveID).getCategory())
+		int level = attackingPokemon.getLevel();
+		int power = attackingPokemon.getMoves().get(moveID).getPower();
+		int attack, defence;
+
+		switch(attackingPokemon.getMoves().get(moveID).getCategory())
 		{
 			case MoveCategory.PHYSICAL ->
 			{
-				A = attackingPokemon.getAttack();
-				D = targetPokemon.getDefence();
-				targetPokemon.reduceCurrentHp((int)(critical*((((2.0*L/5+2)*A*P/D)/50)+2)));
+				attack = attackingPokemon.getAttack();
+				defence = targetPokemon.getDefence();
+				targetPokemon.reduceCurrentHp((int)(critical*((((2.0*level/5+2)*attack*power/defence)/50)+2)));
 			}
 			case MoveCategory.SPECIAL ->
 			{
-				A = attackingPokemon.getSpAttack();
-				D = targetPokemon.getSpDefence();
-				targetPokemon.reduceCurrentHp((int)(critical*((((2.0*L/5+2)*A*P/D)/50)+2)));
+				attack = attackingPokemon.getSpAttack();
+				defence = targetPokemon.getSpDefence();
+				targetPokemon.reduceCurrentHp((int)(critical*((((2.0*level/5+2)*attack*power/defence)/50)+2)));
 			}
 		}
 	}

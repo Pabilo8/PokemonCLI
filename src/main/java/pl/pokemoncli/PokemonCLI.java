@@ -185,9 +185,9 @@ public class PokemonCLI
 
 		//--- Adding pokemons to player ---//
 		player.addPokemon(new Pokemon(PokemonSpecies.EEVEE, 5)
-				.withAttacks(MoveType.TACKLE, MoveType.GROWL, MoveType.TAIL_WHIP, MoveType.COVET));
+				.withMoves(MoveType.TACKLE, MoveType.GROWL, MoveType.TAIL_WHIP, MoveType.COVET));
 		player.addPokemon(new Pokemon(PokemonSpecies.BULBASAUR, 5)
-				.withAttacks(MoveType.TACKLE, MoveType.GROWL, MoveType.TAIL_WHIP, MoveType.COVET));
+				.withMoves(MoveType.TACKLE, MoveType.GROWL, MoveType.TAIL_WHIP, MoveType.COVET));
 
 		//--- House Interior 1 ---//
 		Level houseInside = new Level(7, 7, Terrain.VOID);
@@ -225,10 +225,10 @@ public class PokemonCLI
 		level.placeHouse(17, 3, 1, 3, 1, 4, houseInside2, 14, 5);
 
 		level.addCharacter(new Enemy("Psi Syn", 10, 5, 1)
-				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withAttacks(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withMoves(MoveType.TACKLE, MoveType.GROWL))
 		);
 		level.addCharacter(new Enemy("Czlowiek", 3, 14, 1)
-				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withAttacks(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withMoves(MoveType.TACKLE, MoveType.GROWL))
 		);
 
 		level.paintTerrain(0, 6, 31, 15, Terrain.BEACH, Terrain.BEACH2);
@@ -270,12 +270,12 @@ public class PokemonCLI
 
 		level.placeHouse(11, 26, 1, 5, 2, 4);
 		level.addCharacter(new Enemy("Pies1", 9, 17, 3)
-				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withAttacks(MoveType.TACKLE, MoveType.GROWL))
-				.withPokemon(new Pokemon(PokemonSpecies.BULBASAUR, 2).withAttacks(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withMoves(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.BULBASAUR, 2).withMoves(MoveType.TACKLE, MoveType.GROWL))
 		);
 		level.addCharacter(new Enemy("Pies2", 9, 21, 3)
-				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withAttacks(MoveType.TACKLE, MoveType.GROWL))
-				.withPokemon(new Pokemon(PokemonSpecies.BULBASAUR, 2).withAttacks(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withMoves(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.BULBASAUR, 2).withMoves(MoveType.TACKLE, MoveType.GROWL))
 		);
 
 		level.paintTerrain(7, 18, 12, 18, Terrain.ROAD);

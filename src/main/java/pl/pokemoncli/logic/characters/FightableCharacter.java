@@ -36,12 +36,6 @@ public abstract class FightableCharacter extends GameObject
 			usablePokemons++;
 	}
 
-	public void setPosition(int x, int y)
-	{
-		this.x = x;
-		this.y = y;
-	}
-
 	public void addPokemon(Pokemon newPokemon)
 	{
 		if(pokemons.size() < maxPokemons)

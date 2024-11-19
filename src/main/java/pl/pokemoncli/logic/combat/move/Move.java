@@ -27,7 +27,7 @@ public class Move
 
 	public String getName()
 	{
-		return type.name();
+		return type.getName();
 	}
 
 	public PokemonType getType()

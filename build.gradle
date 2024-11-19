@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id("io.freefair.lombok") version "8.10.2"
+}
+
+group = 'pl.pokemoncli'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //Code and organisation
+    implementation 'com.googlecode.lanterna:lanterna:2.1.9'
+    compileOnly 'org.projectlombok:lombok:1.18.34' //Annotations for code generation
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2' //Javax Annotations (NonNull, Nullable, etc.)
+
+    //Tests
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testCompileOnly 'org.projectlombok:lombok:1.18.34'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+    systemProperty 'file.encoding', 'UTF-8'
+}
+
+tasks.withType(JavaExec) {
+    systemProperty 'file.encoding', 'UTF-8'
+}

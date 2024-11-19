@@ -30,7 +30,7 @@ public class AudioSystem
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 			clip.start();
 			currentTrack = musicTrack;
-		} catch(UnsupportedAudioFileException|IOException|LineUnavailableException e)
+		} catch(UnsupportedAudioFileException|IOException|LineUnavailableException|IllegalArgumentException e)
 		{
 			System.out.printf("Error while playing track %s: %s%n", musicTrack.name(), e.getMessage());
 		}
@@ -52,7 +52,7 @@ public class AudioSystem
 
 		public String getPath()
 		{
-			return "src/pl/pokemoncli/resources/"+name().toLowerCase()+".wav";
+			return "src/main/resources/"+name().toLowerCase()+".wav";
 		}
 	}
 }

@@ -3,13 +3,19 @@ package pl.pokemoncli.logic.characters;
 import lombok.Getter;
 import pl.pokemoncli.display.graphics.TileGraphics;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * @author Pabilo8
  * @since 04.11.2024
  */
 @Getter
-public abstract class GameObject
+public abstract class GameObject implements Serializable
 {
+	@Serial
+	private static final long serialVersionUID = 1L;
+
 	protected String name;
 	protected int x, y;
 

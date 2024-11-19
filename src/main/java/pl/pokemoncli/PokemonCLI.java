@@ -2,6 +2,7 @@ package pl.pokemoncli;
 
 import com.googlecode.lanterna.input.Key;
 import pl.pokemoncli.display.DoubleBufferedTerminal;
+import pl.pokemoncli.display.MainMenuDisplay;
 import pl.pokemoncli.display.graphics.PokemonGraphics;
 import pl.pokemoncli.display.graphics.TileGraphics;
 import pl.pokemoncli.display.main_display.DialogueDisplay;
@@ -14,10 +15,10 @@ import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.characters.*;
+import pl.pokemoncli.logic.combat.move.Move;
 import pl.pokemoncli.logic.combat.move.MoveType;
 import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
-import pl.pokemoncli.logic.combat.move.Move;
 import pl.pokemoncli.logic.dialogue.Dialogue;
 import pl.pokemoncli.logic.dialogue.DialogueNode;
 import pl.pokemoncli.logic.dialogue.DialogueResponse;
@@ -34,6 +35,7 @@ public class PokemonCLI
 {
 	private final DoubleBufferedTerminal terminal;
 
+	private final MainMenuDisplay mainMenuDisplay;
 	private final DialogueDisplay dialogueDisplay;
 	private final FightDisplay fightDisplay;
 	private final FightPanelDisplay fightPanelDisplay;
@@ -48,12 +50,14 @@ public class PokemonCLI
 	private Dialogue dialogue;
 	private Fight fight;
 	private final Random diceRoll = new Random();
+	boolean exitGame = false;
 
 	int tickTimer = 0;
 
 	public PokemonCLI(DoubleBufferedTerminal terminal)
 	{
 		this.terminal = terminal;
+		this.mainMenuDisplay = new MainMenuDisplay(terminal);
 		this.panelDisplay = new PanelDisplay(terminal);
 		this.gameDisplay = new GameDisplay(terminal);
 		this.fightDisplay = new FightDisplay(terminal);
@@ -75,6 +79,7 @@ public class PokemonCLI
 
 		//Display the Game
 		instance.displayMenu();
+		dbTerminal.flush();
 		instance.displayGame();
 	}
 
@@ -88,17 +93,44 @@ public class PokemonCLI
 
 	private void displayMenu()
 	{
-		//TODO: 16.11.2024 main menu
+		boolean continueLoop = true;
+		terminal.init();
+
+		while(continueLoop)
+		{
+			mainMenuDisplay.drawMainMenu();
+			terminal.flush();
+			Key key;
+			while((key = terminal.readInput())!=null)
+			{
+				ActionResult result = mainMenuDisplay.handleKeyInput(level, player, dialogue, fight, key);
+				if(result!=null)
+				{
+					switch(result.getResult())
+					{
+						case NEW_GAME -> continueLoop = false;
+						case LOAD_GAME -> continueLoop = false;
+						case EXIT_GAME ->
+						{
+							terminal.end();
+							System.exit(0);
+						}
+						default -> {}
+					}
+					break;
+				}
+			}
+		}
+
 	}
 
 	private void displayGame() throws InterruptedException
 	{
-		terminal.init();
 		GAME_Y = Math.min(terminal.getWidth(), terminal.getHeight());
 		GAME_X = (int)(GAME_Y*(TileGraphics.TILE_SIZE_X/(float)TileGraphics.TILE_SIZE_Y));
 
 		//TODO: 19.11.2024 game end condition / return to main menu
-		while(true)
+		while(!exitGame)
 		{
 			//ORDER: DIALOGUE, FIGHT, WORLD
 			panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
@@ -127,7 +159,7 @@ public class PokemonCLI
 			tickTimer = (tickTimer+1)%20;
 		}
 
-//		terminal.end();
+		terminal.end();
 	}
 
 	private void handleMusic()
@@ -135,7 +167,7 @@ public class PokemonCLI
 		if(this.fight!=null)
 			audioSystem.play(Track.FIGHT);
 		else
-			audioSystem.play(AudioSystem.Track.GAME);
+			audioSystem.play(Track.GAME);
 	}
 
 	private boolean handleKeyInput(Key key)
@@ -192,7 +224,8 @@ public class PokemonCLI
 					this.dialogue = null;
 				yield true;
 			}
-			case WILD_POKEMON -> {
+			case WILD_POKEMON ->
+			{
 				// display message that wild pokemon appeared, start fight
 				fight = new Fight(player, (WildPokemon)contacted);
 				level.removeCharacter(contacted);
@@ -204,10 +237,22 @@ public class PokemonCLI
 					false;
 			case null -> false;
 
+			case NEW_GAME, SAVE_GAME -> false;
+			case LOAD_GAME ->
+			{
+				//TODO: 19.11.2024 game loading
+				yield false;
+			}
+			case EXIT_GAME ->
+			{
+				this.exitGame = true;
+				yield true;
+			}
 		};
 	}
 
-	private void generateWildPokemon() {
+	private void generateWildPokemon()
+	{
 		WildPokemon newPokemon = new WildPokemon(new Pokemon(level.getPokemonSpawnList().get(diceRoll.nextInt(level.getPokemonSpawnList().size()-1)),
 				diceRoll.nextInt(5)),
 				diceRoll.nextInt(4),
@@ -308,8 +353,9 @@ public class PokemonCLI
 		level.paintTerrain(6, 8, 6, 13, Terrain.BRIDGE2);
 
 		// draw pokemon search panels
-		level.paintTerrain(0,19,4,27, Terrain.BUSH1);
-		for(int i = 0; i < 8; i++){
+		level.paintTerrain(0, 19, 4, 27, Terrain.BUSH1);
+		for(int i = 0; i < 8; i++)
+		{
 			generateWildPokemon();
 		}
 

@@ -6,6 +6,8 @@ import pl.pokemoncli.display.graphics.PokemonGraphics;
 import pl.pokemoncli.logic.combat.move.Move;
 import pl.pokemoncli.logic.combat.move.MoveType;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -16,8 +18,11 @@ import java.util.Arrays;
 
 @Getter
 @Setter
-public class Pokemon
+public class Pokemon implements Serializable
 {
+	@Serial
+	private static final long serialVersionUID = 1L;
+
 	private String name;
 	private final PokemonType type1;
 	private final PokemonType type2;

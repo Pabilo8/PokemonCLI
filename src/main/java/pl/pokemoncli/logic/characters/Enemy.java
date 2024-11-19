@@ -16,6 +16,6 @@ public class Enemy extends FightableCharacter
 	@Override
 	public TileGraphics getCurrentSprite()
 	{
-		return TileGraphics.PLAYER_VERTICAL;
+		return TileGraphics.ENEMY_VERTICAL;
 	}
 }

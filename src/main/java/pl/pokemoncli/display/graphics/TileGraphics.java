@@ -61,7 +61,10 @@ public enum TileGraphics
 	//--- Characters ---//
 	PLAYER_VERTICAL("tiles/player_vertical.txt", new Color(0xAF6464), new Color(0xB5A5A5)),
 	PLAYER_LEFT("tiles/player_left.txt", new Color(0xAF6464), new Color(0xB5A5A5)),
-	PLAYER_RIGHT("tiles/player_right.txt", new Color(0xAF6464), new Color(0xB5A5A5));
+	PLAYER_RIGHT("tiles/player_right.txt", new Color(0xAF6464), new Color(0xB5A5A5)),
+
+	ENEMY_VERTICAL("tiles/player_vertical.txt", new Color(0x6464AF), new Color(0xA5A5B5)),
+	NPC_VERTICAL("tiles/player_vertical.txt", new Color(0xAF9A64), new Color(0xA5A5B5));
 
 	public static final int TILE_SIZE_X = 6;
 	public static final int TILE_SIZE_Y = 3;

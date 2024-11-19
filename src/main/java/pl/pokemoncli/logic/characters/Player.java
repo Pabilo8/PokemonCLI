@@ -1,7 +1,6 @@
 package pl.pokemoncli.logic.characters;
 
 import pl.pokemoncli.display.graphics.TileGraphics;
-import pl.pokemoncli.logic.combat.item.ItemType;
 
 /**
  * @author Pabilo8
@@ -9,8 +8,6 @@ import pl.pokemoncli.logic.combat.item.ItemType;
  */
 public class Player extends FightableCharacter
 {
-	protected final ItemType[] equipment = new ItemType[3];
-
 	TileGraphics currentSprite = TileGraphics.PLAYER_VERTICAL;
 
 	public Player(String name, int y, int x, int maxPokemons)

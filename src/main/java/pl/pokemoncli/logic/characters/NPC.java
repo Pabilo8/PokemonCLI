@@ -29,6 +29,6 @@ public class NPC extends GameObject
 	@Override
 	public TileGraphics getCurrentSprite()
 	{
-		return TileGraphics.PLAYER_VERTICAL;
+		return TileGraphics.NPC_VERTICAL;
 	}
 }

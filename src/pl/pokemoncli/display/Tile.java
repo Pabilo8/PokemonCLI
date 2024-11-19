@@ -75,10 +75,37 @@ public enum Tile
 			"░░░░░░",
 			"░░░░░░"
 	}),
-	ROAD(new Color(0x56594F), new Color(0x717167), new String[]{
-			"░▓▓░  ",
+	BEACH2(new Color(0xBDBD9E), new Color(0x8B8B4C), new String[]{
+			"░░░░░░",
+			"░░░░░░",
+			"░░░░░░"
+	}),
+	ROAD(new Color(0x65675A), new Color(0x717167), new String[]{
+			"░  ░▓ ",
 			"░░ ░░░",
-			"░   ▓░"
+			"░▓  ▓░"
+	}),
+
+	//--- Forest ---//
+	BUSH1(new Color(0x3A5736), new Color(0x68916C), new String[]{
+			"..▒▒,,",
+			";▒░█▒.",
+			"▒████▒"
+	}),
+	BUSH2(new Color(0x3A5736), new Color(0x68916C), new String[]{
+			"'.▒▒░'",
+			".░▒██;",
+			"▒████▒"
+	}),
+	TREE_TRUNK(new Color(0x4E4138), new Color(0x68916C), new String[]{
+			".░██░;",
+			",░██░.",
+			",░██░_"
+	}),
+	TREE_LEAVES(new Color(0x3A5736), new Color(0x68916C), new String[]{
+			" █▓██ ",
+			"█▓█▓▓█",
+			"██▓█▓█"
 	}),
 
 	//--- House ---//

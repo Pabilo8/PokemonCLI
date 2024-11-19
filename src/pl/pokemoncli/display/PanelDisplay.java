@@ -27,6 +27,8 @@ public class PanelDisplay extends BaseDisplay
 
 		// Draw Stats
 		drawString("Name: "+player.getName(), gameX+2, 1);
+		drawString("X: "+player.getX(), gameX+2, 2);
+		drawString("Y: "+player.getY(), gameX+20, 2);
 
 		//Draw Pokemon list
 		drawString("Pokemons:", gameX+2, 3);

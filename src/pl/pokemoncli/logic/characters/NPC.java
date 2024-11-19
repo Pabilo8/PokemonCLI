@@ -1,6 +1,9 @@
 package pl.pokemoncli.logic.characters;
 
+import lombok.Getter;
+import lombok.Setter;
 import pl.pokemoncli.display.Tile;
+import pl.pokemoncli.logic.dialogue.DialogueNode;
 
 /**
  * @author Pabilo8
@@ -8,9 +11,19 @@ import pl.pokemoncli.display.Tile;
  */
 public class NPC extends Character
 {
+	@Getter
+	@Setter
+	DialogueNode dialogue;
+
 	public NPC(String name, int x, int y)
 	{
 		super(name, x, y, 0);
+	}
+
+	public NPC withDialogue(DialogueNode dialogue)
+	{
+		this.dialogue = dialogue;
+		return this;
 	}
 
 	@Override

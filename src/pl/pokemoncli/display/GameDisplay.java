@@ -1,15 +1,19 @@
 package pl.pokemoncli.display;
 
+import com.googlecode.lanterna.input.Key;
+import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
+import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.characters.Character;
 import pl.pokemoncli.logic.characters.Player;
+import pl.pokemoncli.logic.dialogue.Dialogue;
 
 /**
  * @author Pabilo8
  * @since 15.11.2024
  */
-public class GameDisplay extends BaseDisplay
+public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 {
 	public GameDisplay(DoubleBufferedTerminal terminal)
 	{
@@ -40,22 +44,29 @@ public class GameDisplay extends BaseDisplay
 		});
 	}
 
-/*	public void updateDrawTile(int x, int y)
-	{
-		Tile tile = level.getMap()[x][y].getTile();
-		tile.draw(x*Tile.TILE_SIZE_X, y*Tile.TILE_SIZE_Y, terminal);
-	}*/
-
 	public void updateDrawCharacter(int playerX, int playerY, Character character, int gameX, int gameY)
 	{
 		int startX = Math.max(0, playerX-gameX/Tile.TILE_SIZE_X/2);
 		int startY = Math.max(0, playerY-gameY/Tile.TILE_SIZE_Y/2);
 		int cX = character.getX()-startX, cY = character.getY()-startY;
 
-		if(cX < 0||cY < 0||cX*Tile.TILE_SIZE_X > gameX||cY*Tile.TILE_SIZE_Y > gameY)
+		if(cX < 0||cY < 0||cX*Tile.TILE_SIZE_X >= gameX||cY*Tile.TILE_SIZE_Y >= gameY)
 			return;
 
 		Tile sprite = character.getCurrentSprite();
 		sprite.drawTrnsparent(cX*Tile.TILE_SIZE_X, cY*Tile.TILE_SIZE_Y, terminal);
+	}
+
+	@Override
+	public ActionResult handleKeyInput(Level level, Player player, Dialogue dialogue, Fight fight, Key key)
+	{
+		return switch(key.getCharacter())
+		{
+			case 'w' -> level.moveCharacterBy(player, 0, -1);
+			case 'a' -> level.moveCharacterBy(player, -1, 0);
+			case 's' -> level.moveCharacterBy(player, 0, 1);
+			case 'd' -> level.moveCharacterBy(player, 1, 0);
+			default -> null;
+		};
 	}
 }

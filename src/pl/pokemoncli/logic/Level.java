@@ -25,7 +25,7 @@ public class Level
 	private final Terrain[][] map;
 	private final List<Character> characters;
 
-	public Level(int width, int height)
+	public Level(int width, int height, Terrain defaultTile)
 	{
 		this.width = width;
 		this.height = height;
@@ -35,7 +35,7 @@ public class Level
 		// Initialize the map with default tiles
 		for(int x = 0; x < width; x++)
 			for(int y = 0; y < height; y++)
-				map[x][y] = Terrain.GRASS;
+				map[x][y] = defaultTile;
 	}
 
 	public Terrain getTerrain(int x, int y)
@@ -268,6 +268,7 @@ public class Level
 		DIALOG,
 		WILD_POKEMON,
 		COLLECT_ITEM,
+		DIALOG_PROGRESS,
 		END_OF_BATTLE
 	}
 }

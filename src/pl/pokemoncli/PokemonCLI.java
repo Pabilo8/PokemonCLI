@@ -1,16 +1,19 @@
 package pl.pokemoncli;
 
 import com.googlecode.lanterna.input.Key;
-import com.googlecode.lanterna.input.Key.Kind;
 import pl.pokemoncli.display.*;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
+import pl.pokemoncli.logic.characters.Character;
 import pl.pokemoncli.logic.characters.Door;
 import pl.pokemoncli.logic.characters.Enemy;
 import pl.pokemoncli.logic.characters.NPC;
 import pl.pokemoncli.logic.characters.Player;
+import pl.pokemoncli.logic.dialogue.Dialogue;
+import pl.pokemoncli.logic.dialogue.DialogueNode;
+import pl.pokemoncli.logic.dialogue.DialogueResponse;
 import pl.pokemoncli.logic.pokemon.MoveList;
 import pl.pokemoncli.logic.pokemon.Pokedex;
 import pl.pokemoncli.logic.pokemon.Pokemon;
@@ -25,15 +28,19 @@ public class PokemonCLI
 {
 	private static PokemonCLI INSTANCE;
 	private final DoubleBufferedTerminal terminal;
+
+	private final DialogueDisplay dialogueDisplay;
 	private final FightDisplay fightDisplay;
 	private final FightMenuDisplay fightMenuDisplay;
 	private final PanelDisplay panelDisplay;
 	private final GameDisplay gameDisplay;
+
 	private final AudioSystem audioSystem;
 
-	static int GAME_X, GAME_Y;
+	public static int GAME_X, GAME_Y;
 	private Level level;
 	private Player player;
+	private Dialogue dialogue;
 	private Fight fight;
 
 	public Pokedex pokedex;
@@ -41,13 +48,14 @@ public class PokemonCLI
 
 	int tickTimer = 0;
 
-	public PokemonCLI(DoubleBufferedTerminal terminal, PanelDisplay panelDisplay, GameDisplay gameDisplay, FightDisplay fightDisplay, FightMenuDisplay fightMenuDisplay)
+	public PokemonCLI(DoubleBufferedTerminal terminal)
 	{
 		this.terminal = terminal;
-		this.panelDisplay = panelDisplay;
-		this.gameDisplay = gameDisplay;
-		this.fightDisplay = fightDisplay;
-		this.fightMenuDisplay = fightMenuDisplay;
+		this.panelDisplay = new PanelDisplay(terminal);
+		this.gameDisplay = new GameDisplay(terminal);
+		this.fightDisplay = new FightDisplay(terminal);
+		this.fightMenuDisplay = new FightMenuDisplay(terminal);
+		this.dialogueDisplay = new DialogueDisplay(terminal);
 		this.audioSystem = new AudioSystem();
 		this.pokedex = new Pokedex();
 		this.moveList = new MoveList();
@@ -56,7 +64,7 @@ public class PokemonCLI
 	public static void main(String[] args) throws InterruptedException
 	{
 		DoubleBufferedTerminal dbTerminal = new DoubleBufferedTerminal();
-		INSTANCE = new PokemonCLI(dbTerminal, new PanelDisplay(dbTerminal), new GameDisplay(dbTerminal), new FightDisplay(dbTerminal), new FightMenuDisplay(dbTerminal));
+		INSTANCE = new PokemonCLI(dbTerminal);
 		INSTANCE.loadGame();
 		INSTANCE.displayMenu();
 		INSTANCE.displayGame();
@@ -75,16 +83,20 @@ public class PokemonCLI
 
 		while(true)
 		{
-			if(fight!=null)
+			//ORDER: DIALOGUE, FIGHT, WORLD
+			panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
+			if(dialogue!=null)
+			{
+				dialogueDisplay.drawDialogue(dialogue, GAME_X, GAME_Y);
+			}
+			else if(fight!=null)
 			{
 				fightDisplay.drawFightScreen(fight, GAME_X, GAME_Y);
-				panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
 				fightMenuDisplay.drawMenuPanel(fight, GAME_X, GAME_Y);
 			}
 			else
 			{
 				gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y, tickTimer);
-				panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
 			}
 			terminal.flush();
 
@@ -115,56 +127,36 @@ public class PokemonCLI
 
 	private boolean handleKeyInput(Key key)
 	{
-		//TODO: 16.11.2024 current screen enum (?)
 		ActionResult result;
-		if(fight!=null)
-		{
-			if(key.getKind().equals(Kind.Escape))
-				result = fight.goBack(true, fight.getButton());
-			else result = switch(key.getCharacter())
-			{
-				case 'w' -> fight.moveButton(0, 1);
-				case 'a' -> fight.moveButton(-1, 0);
-				case 's' -> fight.moveButton(0, -1);
-				case 'd' -> fight.moveButton(1, 0);
-				case ' ' -> {
-					if(fight.getButton()==Fight.Button.RUN&&fight.isMainMenu()) { yield new Level.ActionResult(Level.ResultType.END_OF_BATTLE);}
-					else { yield fight.selectButton();}
-				}
-				default -> null;
-			};
-		}
+		if(dialogue!=null)
+			result = dialogueDisplay.handleKeyInput(level, player, dialogue, fight, key);
+		else if(fight!=null)
+			result = fightDisplay.handleKeyInput(level, player, dialogue, fight, key);
 		else
-		{
-			result = switch(key.getCharacter())
-			{
-				case 'w' -> level.moveCharacterBy(player, 0, -1);
-				case 'a' -> level.moveCharacterBy(player, -1, 0);
-				case 's' -> level.moveCharacterBy(player, 0, 1);
-				case 'd' -> level.moveCharacterBy(player, 1, 0);
-				default -> null;
-			};
-		}
+			result = gameDisplay.handleKeyInput(level, player, dialogue, fight, key);
 
 		if(result==null)
 			return false;
-
+		final Character contacted = result.getContactedCharacter();
 		return switch(result.getResult())
 		{
 			case MOVE -> true;
 			case MET_OBSTACLE -> false;
-			case FIGHT -> {
+			case FIGHT ->
+			{
 				//start fight
-				if (result.getContactedCharacter().isFightable()) {
-					if((result.getContactedCharacter()).getUsablePokemons() > 0) {
-						//TODO: 18.11.2024 dialogue before battle
-						fight = new Fight(player, ((Enemy)result.getContactedCharacter()));
-					} else {
+				if(contacted.isFightable())
+					if(contacted.getUsablePokemons() > 0)
+					{
+						//dialogue = new Dialogue();
+						fight = new Fight(player, ((Enemy)contacted));
+						//dialogue =
+					}
+					else
+					{
+						//dialogue = new Dialogue();
 						//TODO: 18.11.2024 dialogue after defeat
 					}
-				} else {
-					//TODO: 16.11.2024 other characters that have dialogues
-				}
 				yield true;
 			}
 			case END_OF_BATTLE ->
@@ -174,7 +166,7 @@ public class PokemonCLI
 			}
 			case CHANGE_LEVEL ->
 			{
-				Door door = (Door)result.getContactedCharacter();
+				Door door = (Door)contacted;
 				this.level.removeCharacter(player);
 				this.level = door.getLevel();
 				this.level.addCharacter(player);
@@ -182,7 +174,22 @@ public class PokemonCLI
 					this.player.setPosition(door.getDestX(), door.getDestY());
 				yield true;
 			}
-			case DIALOG -> false;
+			case DIALOG ->
+			{
+				if(!(contacted instanceof NPC))
+					yield false;
+				if(((NPC)contacted).getDialogue()==null)
+					yield false;
+				this.dialogue = new Dialogue(((NPC)contacted).getDialogue(),
+						contacted);
+				yield true;
+			}
+			case DIALOG_PROGRESS ->
+			{
+				if(dialogue.getCurrentNode()==null)
+					this.dialogue = null;
+				yield true;
+			}
 			case WILD_POKEMON ->
 			{
 				//display message that wild pokemon appeared, start fight
@@ -200,26 +207,32 @@ public class PokemonCLI
 
 	private void loadGame()
 	{
-
-		level = new Level(32, 32);
+		level = new Level(32, 32, Terrain.GRASS);
 		level.addCharacter(player = new Player("Ash", 5, 5, 6));
 		fight = null;
 
-		Level houseInside = new Level(7, 7);
-		houseInside.paintTerrain(0, 0, 10, 10, Terrain.FLOOR);
+		Level houseInside = new Level(7, 7, Terrain.VOID);
+		houseInside.paintTerrain(0, 0, 10, 5, Terrain.FLOOR);
 		houseInside.addDoor(3, 6, level, 8, 4);
-		houseInside.addCharacter(new NPC("Pies", 3, 3));
+		houseInside.setTerrain(3, 6, Terrain.DOOR);
+		houseInside.addCharacter(new NPC("Pies", 3, 3)
+				.withDialogue(new DialogueNode("Wrrrrr",
+						new DialogueResponse("Onie", null),
+						new DialogueResponse("Otak", new DialogueNode("(starts doing dog stuff)",
+								new DialogueResponse("Creature of Dog, My gratitude upon thee for thy tricks, but the crimes-", null)
+						))
+				))
+		);
 		houseInside.addCharacter(new NPC("Psi Syn", 5, 5));
 		houseInside.addCharacter(new NPC("Czlowiek", 1, 1));
 
-		Level houseInside2 = new Level(17, 7);
-		houseInside2.paintTerrain(0, 0, 17, 7, Terrain.VOID);
+		Level houseInside2 = new Level(17, 7, Terrain.VOID);
 		houseInside2.paintTerrain(0, 0, 4, 5, Terrain.FLOOR);
 		houseInside2.paintTerrain(6, 0, 10, 5, Terrain.FLOOR);
 		houseInside2.paintTerrain(12, 0, 17, 5, Terrain.FLOOR);
-		houseInside2.setTerrain(2, 6, Terrain.FLOOR);
-		houseInside2.setTerrain(8, 6, Terrain.FLOOR);
-		houseInside2.setTerrain(14, 6, Terrain.FLOOR);
+		houseInside2.setTerrain(2, 6, Terrain.DOOR);
+		houseInside2.setTerrain(8, 6, Terrain.DOOR);
+		houseInside2.setTerrain(14, 6, Terrain.DOOR);
 		houseInside2.addDoor(2, 6, level, 12, 4);
 		houseInside2.addDoor(8, 6, level, 15, 4);
 		houseInside2.addDoor(14, 6, level, 18, 4);

@@ -1,7 +1,7 @@
 package pl.pokemoncli.display;
 
 import pl.pokemoncli.logic.Fight;
-import pl.pokemoncli.logic.pokemon.Move;
+import pl.pokemoncli.logic.combat.move.Move;
 
 import java.awt.*;
 
@@ -89,7 +89,8 @@ public class FightPanelDisplay extends PanelDisplay
 	private void drawPokemonList(Fight fight, int gameX, int gameY, int currPokemon)
 	{
 		for(int i = 0; i < fight.getPlayer().getMaxPokemons(); i++)
-			if(fight.getPlayer().getPokemon(i).getId()!=0)
+			//TODO: 19.11.2024 check, unsure
+			if(i < fight.getPlayer().getPokemons().size())
 				if(i==currPokemon)
 					drawStringColor("⮚ "+fight.getPlayer().getPokemon(i).getName(), gameX, gameY+i, COLOR_SELECT, COLOR_BACKGROUND);
 				else

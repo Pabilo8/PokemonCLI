@@ -10,10 +10,9 @@ import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.dialogue.Dialogue;
 import pl.pokemoncli.logic.dialogue.DialogueNode;
 import pl.pokemoncli.logic.dialogue.DialogueResponse;
-import pl.pokemoncli.logic.pokemon.Move;
-import pl.pokemoncli.logic.pokemon.MoveList;
-import pl.pokemoncli.logic.pokemon.Pokedex;
-import pl.pokemoncli.logic.pokemon.Pokemon;
+import pl.pokemoncli.logic.combat.pokemon.Pokemon;
+import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
+import pl.pokemoncli.logic.combat.move.MoveType;
 import pl.pokemoncli.sound.AudioSystem;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
@@ -39,9 +38,6 @@ public class PokemonCLI
 	private Dialogue dialogue;
 	private Fight fight;
 
-	public final Pokedex pokedex;
-	public final MoveList moveList;
-
 	int tickTimer = 0;
 
 	public PokemonCLI(DoubleBufferedTerminal terminal)
@@ -53,8 +49,6 @@ public class PokemonCLI
 		this.fightPanelDisplay = new FightPanelDisplay(terminal);
 		this.dialogueDisplay = new DialogueDisplay(terminal);
 		this.audioSystem = new AudioSystem();
-		this.pokedex = new Pokedex();
-		this.moveList = new MoveList();
 	}
 
 	public static void main(String[] args) throws InterruptedException
@@ -188,18 +182,12 @@ public class PokemonCLI
 		level = new Level(32, 32, Terrain.GRASS);
 		level.addCharacter(player = new Player("Ash", 5, 5, 6));
 		fight = null;
-		//Adding pokemons to player
-		for(int i = 0; i < player.getMaxPokemons(); i++)
-		{
-			switch(i)
-			{
-				case 0 -> player.addPokemon(new Pokemon(pokedex.getPokemon(133), 5));
-				case 1 -> player.addPokemon(new Pokemon(pokedex.getPokemon(1), 5));
-				default -> player.addPokemon(new Pokemon(pokedex.getPokemon(0), 1));
-			}
-			for(int j = 0; j < player.getPokemon(i).getMaxMoves(); j++)
-				player.getPokemon(i).addAttack(new Move(moveList.getMove(j+1)));
-		}
+
+		//--- Adding pokemons to player ---//
+		player.addPokemon(new Pokemon(PokemonSpecies.EEVEE, 5)
+				.withAttacks(MoveType.TACKLE, MoveType.GROWL, MoveType.TAIL_WHIP, MoveType.COVET));
+		player.addPokemon(new Pokemon(PokemonSpecies.BULBASAUR, 5)
+				.withAttacks(MoveType.TACKLE, MoveType.GROWL, MoveType.TAIL_WHIP, MoveType.COVET));
 
 		//--- House Interior 1 ---//
 		Level houseInside = new Level(7, 7, Terrain.VOID);
@@ -237,10 +225,10 @@ public class PokemonCLI
 		level.placeHouse(17, 3, 1, 3, 1, 4, houseInside2, 14, 5);
 
 		level.addCharacter(new Enemy("Psi Syn", 10, 5, 1)
-				.withPokemon(new Pokemon(pokedex.getPokemon(1), 1).withAttacks(moveList.getMove(0), moveList.getMove(1), moveList.getMove(2)))
+				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withAttacks(MoveType.TACKLE, MoveType.GROWL))
 		);
 		level.addCharacter(new Enemy("Czlowiek", 3, 14, 1)
-				.withPokemon(new Pokemon(pokedex.getPokemon(1), 2).withAttacks(moveList.getMove(0), moveList.getMove(1), moveList.getMove(2)))
+				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withAttacks(MoveType.TACKLE, MoveType.GROWL))
 		);
 
 		level.paintTerrain(0, 6, 31, 15, Terrain.BEACH, Terrain.BEACH2);
@@ -282,12 +270,12 @@ public class PokemonCLI
 
 		level.placeHouse(11, 26, 1, 5, 2, 4);
 		level.addCharacter(new Enemy("Pies1", 9, 17, 3)
-				.withPokemon(new Pokemon(pokedex.getPokemon(1), 1).withAttacks(moveList.getMove(0)))
-				.withPokemon(new Pokemon(pokedex.getPokemon(1), 2).withAttacks(moveList.getMove(0)))
+				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withAttacks(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.BULBASAUR, 2).withAttacks(MoveType.TACKLE, MoveType.GROWL))
 		);
 		level.addCharacter(new Enemy("Pies2", 9, 21, 3)
-				.withPokemon(new Pokemon(pokedex.getPokemon(1), 1).withAttacks(moveList.getMove(0)))
-				.withPokemon(new Pokemon(pokedex.getPokemon(1), 2).withAttacks(moveList.getMove(0)))
+				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withAttacks(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.BULBASAUR, 2).withAttacks(MoveType.TACKLE, MoveType.GROWL))
 		);
 
 		level.paintTerrain(7, 18, 12, 18, Terrain.ROAD);

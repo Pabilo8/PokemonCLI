@@ -1,10 +1,13 @@
-package pl.pokemoncli.logic.pokemon;
+package pl.pokemoncli.logic.combat.pokemon;
 
 import lombok.Getter;
 import lombok.Setter;
 import pl.pokemoncli.display.PokemonSprite;
+import pl.pokemoncli.logic.combat.move.Move;
+import pl.pokemoncli.logic.combat.move.MoveType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author Pabilo8
@@ -15,7 +18,6 @@ import java.util.ArrayList;
 @Setter
 public class Pokemon
 {
-	private final int id;
 	private String name;
 	private final PokemonType type1;
 	private final PokemonType type2;
@@ -27,15 +29,18 @@ public class Pokemon
 	private int spAttack;
 	private int spDefence;
 	private int speed;
+
 	private final PokemonSprite front;
 	private final PokemonSprite back;
-	private ArrayList<Move> Attacks;
-	private final int maxMoves = 4;
-	private final ArrayList<Move> moveSet;
 
-	public Pokemon(int id, String name, PokemonType type1, PokemonType type2, int hp, int attack, int defence, int spAttack, int spDefence, int speed, PokemonSprite front, PokemonSprite back, ArrayList<Move> moveSet)
+	private ArrayList<Move> attacks;
+
+	private final int maxMoves = 4;
+
+	public Pokemon(String name, PokemonType type1, PokemonType type2,
+				   int hp, int attack, int defence, int spAttack, int spDefence, int speed,
+				   PokemonSprite front, PokemonSprite back)
 	{
-		this.id = id;
 		this.name = name;
 		this.type1 = type1;
 		this.type2 = type2;
@@ -49,28 +54,15 @@ public class Pokemon
 		this.speed = speed;
 		this.front = front;
 		this.back = back;
-		this.Attacks = new ArrayList<>();
-		this.moveSet = moveSet;
+		this.attacks = new ArrayList<>();
 	}
 
-	public Pokemon(Pokemon pokemon, int level)
+	public Pokemon(PokemonSpecies species, int level)
 	{
-		this.id = pokemon.id;
-		this.name = pokemon.name;
-		this.type1 = pokemon.type1;
-		this.type2 = pokemon.type2;
+		this(species.name(), species.getType1(), species.getType2(),
+				species.getHp(), species.getAttack(), species.getDefence(), species.getSpAttack(), species.getSpDefence(), species.getSpeed(),
+				species.getFront(), species.getBack());
 		this.level = level;
-		this.hp = pokemon.hp;
-		this.currentHp = pokemon.hp;
-		this.attack = pokemon.attack;
-		this.defence = pokemon.defence;
-		this.spAttack = pokemon.spAttack;
-		this.spDefence = pokemon.spDefence;
-		this.speed = pokemon.speed;
-		this.front = pokemon.front;
-		this.back = pokemon.back;
-		this.Attacks = new ArrayList<>();
-		this.moveSet = pokemon.moveSet;
 	}
 
 	public void reduceCurrentHp(int amount)
@@ -88,13 +80,13 @@ public class Pokemon
 
 	public void addAttack(Move attack)
 	{
-		Attacks.add(attack);
+		attacks.add(attack);
 	}
 
 	public void replaceAttack(Move newAttack, int oldAttackId)
 	{
-		Attacks.add(oldAttackId, newAttack);
-		Attacks.remove(oldAttackId+1);
+		attacks.add(oldAttackId, newAttack);
+		attacks.remove(oldAttackId+1);
 	}
 
 	public Pokemon withAttacks(Move... attacks)
@@ -102,5 +94,25 @@ public class Pokemon
 		for(Move attack : attacks)
 			addAttack(attack);
 		return this;
+	}
+
+	public Pokemon withAttacks(MoveType... attacks)
+	{
+		return withAttacks(Arrays.stream(attacks)
+				.map(Move::new)
+				.toArray(Move[]::new)
+		);
+	}
+
+	public void levelUp()
+	{
+		level++;
+		hp += 2;
+		attack += 1;
+		defence += 1;
+		spAttack += 1;
+		spDefence += 1;
+		speed += 1;
+		currentHp = hp;
 	}
 }

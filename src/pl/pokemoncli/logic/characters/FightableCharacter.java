@@ -1,7 +1,7 @@
 package pl.pokemoncli.logic.characters;
 
 import lombok.Getter;
-import pl.pokemoncli.logic.pokemon.Pokemon;
+import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 
 import java.util.ArrayList;
 

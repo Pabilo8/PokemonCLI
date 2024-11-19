@@ -33,7 +33,7 @@ public class PanelDisplay extends BaseDisplay
 		//Draw Pokemon list
 		drawString("Pokemons:", gameX+2, 3);
 		for(int i = 0; i < player.getMaxPokemons(); i++)
-			if(player.getPokemon(i).getId()!=0)
+			if(i < player.getPokemons().size())
 				drawString("⮚ "+player.getPokemon(i).getName(), gameX+2, 4+i);
 			else
 				drawString("⮚ ", gameX+2, 4+i);

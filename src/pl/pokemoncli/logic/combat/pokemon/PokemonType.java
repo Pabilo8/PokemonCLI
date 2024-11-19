@@ -1,4 +1,4 @@
-package pl.pokemoncli.logic.pokemon;
+package pl.pokemoncli.logic.combat.pokemon;
 
 public enum PokemonType
 {

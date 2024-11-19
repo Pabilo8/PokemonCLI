@@ -1,4 +1,4 @@
-package pl.pokemoncli.logic.equipment;
+package pl.pokemoncli.logic.combat.item;
 
 /**
  * @author Pabilo8

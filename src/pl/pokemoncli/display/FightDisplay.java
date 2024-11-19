@@ -7,7 +7,7 @@ import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.logic.dialogue.Dialogue;
-import pl.pokemoncli.logic.pokemon.Pokemon;
+import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 
 import java.awt.*;
 

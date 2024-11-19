@@ -3,7 +3,8 @@ package pl.pokemoncli.logic;
 import lombok.Getter;
 import pl.pokemoncli.logic.characters.Enemy;
 import pl.pokemoncli.logic.characters.Player;
-import pl.pokemoncli.logic.pokemon.Pokemon;
+import pl.pokemoncli.logic.combat.pokemon.Pokemon;
+import pl.pokemoncli.logic.combat.move.MoveCategory;
 
 import java.util.Random;
 
@@ -286,13 +287,13 @@ public class Fight
 		int L = attackingPokemon.getLevel(), P = attackingPokemon.getAttacks().get(moveID).getPower(), A, D;
 		switch(attackingPokemon.getAttacks().get(moveID).getCategory())
 		{
-			case PHISICAL ->
+			case MoveCategory.PHYSICAL ->
 			{
 				A = attackingPokemon.getAttack();
 				D = targetPokemon.getDefence();
 				targetPokemon.reduceCurrentHp((int)(critical*((((2.0*L/5+2)*A*P/D)/50)+2)));
 			}
-			case SPECIAL ->
+			case MoveCategory.SPECIAL ->
 			{
 				A = attackingPokemon.getSpAttack();
 				D = targetPokemon.getSpDefence();

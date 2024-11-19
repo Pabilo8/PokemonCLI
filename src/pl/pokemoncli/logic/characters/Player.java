@@ -1,7 +1,7 @@
 package pl.pokemoncli.logic.characters;
 
 import pl.pokemoncli.display.Tile;
-import pl.pokemoncli.logic.equipment.ItemType;
+import pl.pokemoncli.logic.combat.item.ItemType;
 
 /**
  * @author Pabilo8

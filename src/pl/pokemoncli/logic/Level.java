@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import pl.pokemoncli.display.Tile;
 import pl.pokemoncli.logic.characters.*;
-import pl.pokemoncli.logic.equipment.ItemType;
+import pl.pokemoncli.logic.combat.item.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;

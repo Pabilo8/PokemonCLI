@@ -17,11 +17,14 @@ import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.move.MoveType;
 import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
+import pl.pokemoncli.logic.combat.move.Move;
 import pl.pokemoncli.logic.dialogue.Dialogue;
 import pl.pokemoncli.logic.dialogue.DialogueNode;
 import pl.pokemoncli.logic.dialogue.DialogueResponse;
 import pl.pokemoncli.sound.AudioSystem;
 import pl.pokemoncli.sound.AudioSystem.Track;
+
+import java.util.Random;
 
 /**
  * @author Pabilo8
@@ -44,6 +47,7 @@ public class PokemonCLI
 	private Player player;
 	private Dialogue dialogue;
 	private Fight fight;
+	private final Random diceRoll = new Random();
 
 	int tickTimer = 0;
 
@@ -188,15 +192,29 @@ public class PokemonCLI
 					this.dialogue = null;
 				yield true;
 			}
-			case WILD_POKEMON ->
-				//display message that wild pokemon appeared, start fight
-					false;
+			case WILD_POKEMON -> {
+				// display message that wild pokemon appeared, start fight
+				fight = new Fight(player, (WildPokemon)contacted);
+				level.removeCharacter(contacted);
+				generateWildPokemon();
+				yield true;
+			}
 			case COLLECT_ITEM ->
-				//display message that item was acquired, add item to player's inventory
+				// display message that item was acquired, add item to player's inventory
 					false;
 			case null -> false;
 
 		};
+	}
+
+	private void generateWildPokemon() {
+		WildPokemon newPokemon = new WildPokemon(new Pokemon(level.getPokemonSpawnList().get(diceRoll.nextInt(level.getPokemonSpawnList().size()-1)),
+				diceRoll.nextInt(5)),
+				diceRoll.nextInt(4),
+				diceRoll.nextInt(9)+19);
+		newPokemon.getPokemons().get(0).addAttack(new Move(MoveType.TACKLE));
+		newPokemon.getPokemons().get(0).addAttack(new Move(MoveType.GROWL));
+		level.addCharacter(newPokemon);
 	}
 
 	private void loadGame()
@@ -263,7 +281,7 @@ public class PokemonCLI
 		level.paintTerrain(24, 2, 31, 2, Terrain.ROAD);
 		level.paintTerrain(5, 14, 6, 31, Terrain.ROAD);
 
-		level.paintTerrain(21, 0, 21, 2, Terrain.BUSH1, Terrain.BUSH2);
+		level.paintTerrain(21, 0, 21, 2, Terrain.BUSH2);
 		level.paintTerrain(24, 0, 31, 0, Terrain.TREE_TRUNK);
 		level.paintTerrain(24, 3, 31, 3, Terrain.TREE_LEAVES);
 		level.paintTerrain(24, 4, 31, 4, Terrain.TREE_TRUNK);
@@ -282,13 +300,18 @@ public class PokemonCLI
 		level.setTerrain(8, 15, Terrain.BLOCKED);
 		level.setTerrain(13, 14, Terrain.BLOCKED);
 
-		level.paintTerrain(0, 19, 4, 31, Terrain.BUSH1, Terrain.BUSH2, Terrain.GRASS, Terrain.GRASS, Terrain.GRASS);
+		level.paintTerrain(0, 29, 4, 31, Terrain.BUSH2, Terrain.GRASS, Terrain.GRASS, Terrain.GRASS);
 
 		level.paintTerrain(0, 9, 20, 12, Terrain.WATER_FLOWING);
 		level.paintTerrain(20, 8, 31, 11, Terrain.WATER_FLOWING);
 		level.paintTerrain(5, 8, 5, 13, Terrain.BRIDGE1);
 		level.paintTerrain(6, 8, 6, 13, Terrain.BRIDGE2);
 
+		// draw pokemon search panels
+		level.paintTerrain(0,19,4,27, Terrain.BUSH1);
+		for(int i = 0; i < 8; i++){
+			generateWildPokemon();
+		}
 
 		level.placeHouse(11, 26, 1, 5, 2, 4);
 		level.addCharacter(new Enemy("Pies1", 9, 17, 3)

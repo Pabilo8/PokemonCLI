@@ -5,6 +5,8 @@ import lombok.Getter;
 import pl.pokemoncli.display.Tile;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.item.ItemType;
+import pl.pokemoncli.logic.combat.pokemon.Pokemon;
+import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ public class Level
 	private final int width, height;
 	private final Terrain[][] map;
 	private final List<GameObject> gameObjects;
+	private final List<PokemonSpecies> pokemonSpawnList;
+	private final List<WildPokemon>	wildPokemons;
 
 	public Level(int width, int height, Terrain defaultTile)
 	{
@@ -28,11 +32,21 @@ public class Level
 		this.height = height;
 		this.map = new Terrain[width][height];
 		this.gameObjects = new ArrayList<>();
+		this.pokemonSpawnList = new ArrayList<>();
+		this.wildPokemons = new ArrayList<>();
 
 		// Initialize the map with default tiles
 		for(int x = 0; x < width; x++)
 			for(int y = 0; y < height; y++)
 				map[x][y] = defaultTile;
+
+		// Initialize the pokemon spawn list
+		pokemonSpawnList.add(PokemonSpecies.CATERPIE);
+		pokemonSpawnList.add(PokemonSpecies.METAPOD);
+		pokemonSpawnList.add(PokemonSpecies.WEEDLE);
+		pokemonSpawnList.add(PokemonSpecies.KAKUNA);
+		pokemonSpawnList.add(PokemonSpecies.PIDGEY);
+		pokemonSpawnList.add(PokemonSpecies.RATTATA);
 	}
 
 	public Terrain getTerrain(int x, int y)
@@ -103,6 +117,7 @@ public class Level
 		if((c = findCharacterAt(gameObject, newX, newY))!=null)
 			return switch(c)
 			{
+				case WildPokemon wildPokemon -> new ActionResult(ResultType.WILD_POKEMON, wildPokemon);
 				case Enemy enemy -> new ActionResult(ResultType.FIGHT, enemy);
 				case Door door -> new ActionResult(ResultType.CHANGE_LEVEL, door);
 				case NPC npc -> new ActionResult(ResultType.DIALOG, npc);

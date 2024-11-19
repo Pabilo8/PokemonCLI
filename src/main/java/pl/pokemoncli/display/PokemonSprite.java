@@ -78,7 +78,7 @@ public enum PokemonSprite
 			"           ▀▀▀         ",
 			"                       "
 	}),
-	SQUIRTLE_BACK(new Color(0x0A2A0A), new Color(0x4C7C4F), new String[]{
+	SQUIRLTLE_BACK(new Color(0x0A2A0A), new Color(0x4C7C4F), new String[]{
 			"                       ",
 			"               ▄▄▄▄    ",
 			" ▄▀▀▀▄     ▄▄▀▀    ▀▄  ",
@@ -92,7 +92,7 @@ public enum PokemonSprite
 			"        ▀▀▀            ",
 			"                       "
 	}),
-	SQUIRTLE_FRONT(new Color(0x0A2A0A), new Color(0x4C7C4F), new String[]{
+	SQUIRLTLE_FRONT(new Color(0x0A2A0A), new Color(0x4C7C4F), new String[]{
 			"                       ",
 			"    ▄▄▄▄               ",
 			"  ▄▀    ▀▀▄▄     ▄▀▀▀▄ ",

@@ -91,4 +91,11 @@ public class Pokemon
         Attacks.add(oldAttackId, newAttack);
         Attacks.remove(oldAttackId+1);
     }
+
+    public Pokemon withAttacks(Move... attacks)
+    {
+        for(Move attack : attacks)
+            addAttack(attack);
+        return this;
+    }
 }

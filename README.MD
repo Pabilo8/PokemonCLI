@@ -2,7 +2,7 @@
 A Pokemon-inspired TUI game written in Java using Google's Lanterna library.
 Uses Lombok for boilerplate code reduction and JUnit for testing.
 ## Building
-The project is built using Gradle, so you can build it using the following command:
+The project is built using Gradle, so you can build it using the following command: `gradle build`
 ```shell
 gradle build
 ```

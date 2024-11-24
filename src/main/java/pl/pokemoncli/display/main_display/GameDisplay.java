@@ -9,6 +9,7 @@ import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
+import pl.pokemoncli.logic.SaveStateUtils;
 import pl.pokemoncli.logic.characters.GameObject;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.logic.dialogue.Dialogue;
@@ -70,6 +71,7 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 			case 'a' -> level.moveCharacterBy(player, -1, 0);
 			case 's' -> level.moveCharacterBy(player, 0, 1);
 			case 'd' -> level.moveCharacterBy(player, 1, 0);
+			case 'p' -> new ActionResult(Level.ResultType.SAVE_GAME);
 			default -> null;
 		};
 	}

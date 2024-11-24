@@ -3,8 +3,10 @@ package pl.pokemoncli.logic.combat.move;
 import lombok.Getter;
 import pl.pokemoncli.logic.combat.pokemon.PokemonType;
 
+import java.io.Serializable;
+
 @Getter
-public class Move
+public class Move implements Serializable
 {
 	private final MoveType type;
 	private int currentPp;

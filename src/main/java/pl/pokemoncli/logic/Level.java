@@ -5,7 +5,6 @@ import lombok.Getter;
 import pl.pokemoncli.display.graphics.TileGraphics;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.item.ItemType;
-import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
 
 import java.util.ArrayList;
@@ -120,7 +119,12 @@ public class Level
 			return switch(c)
 			{
 				case WildPokemon wildPokemon -> new ActionResult(ResultType.WILD_POKEMON, wildPokemon);
-				case Enemy enemy -> new ActionResult(ResultType.FIGHT, enemy);
+				case Enemy enemy ->
+				{
+					if(enemy.getUsablePokemons() > 0)
+						yield new ActionResult(ResultType.FIGHT, enemy);
+					yield new ActionResult(ResultType.MET_OBSTACLE, enemy);
+				}
 				case Door door -> new ActionResult(ResultType.CHANGE_LEVEL, door);
 				case NPC npc -> new ActionResult(ResultType.DIALOG, npc);
 				default -> new ActionResult(ResultType.MET_OBSTACLE);

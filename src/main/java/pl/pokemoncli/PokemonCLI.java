@@ -14,6 +14,7 @@ import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
+import pl.pokemoncli.logic.SaveStateUtils;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.move.Move;
 import pl.pokemoncli.logic.combat.move.MoveType;
@@ -100,6 +101,7 @@ public class PokemonCLI
 		{
 			mainMenuDisplay.drawMainMenu();
 			terminal.flush();
+			audioSystem.play(Track.MAIN_MENU);
 			Key key;
 			while((key = terminal.readInput())!=null)
 			{
@@ -109,7 +111,13 @@ public class PokemonCLI
 					switch(result.getResult())
 					{
 						case NEW_GAME -> continueLoop = false;
-						case LOAD_GAME -> continueLoop = false;
+						case LOAD_GAME ->
+						{
+							level.removeCharacter(player);
+							player = SaveStateUtils.loadGame(player);
+							level.addCharacter(player);
+							continueLoop = false;
+						}
 						case EXIT_GAME ->
 						{
 							terminal.end();
@@ -134,15 +142,18 @@ public class PokemonCLI
 		{
 			//ORDER: DIALOGUE, FIGHT, WORLD
 			panelDisplay.drawSidePanel(player, GAME_X, GAME_Y);
-			if(dialogue!=null)
-				dialogueDisplay.drawDialogue(dialogue, GAME_X, GAME_Y);
-			else if(fight!=null)
+			if(fight!=null)
 			{
 				fightDisplay.drawFightScreen(fight, GAME_X, GAME_Y);
 				fightPanelDisplay.drawMenuPanel(fight, GAME_X, GAME_Y);
 			}
 			else
 				gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y, tickTimer);
+
+
+			if(dialogue!=null)
+				dialogueDisplay.drawDialogue(dialogue, GAME_X, GAME_Y);
+
 			terminal.flush();
 
 			handleMusic();
@@ -237,7 +248,12 @@ public class PokemonCLI
 					false;
 			case null -> false;
 
-			case NEW_GAME, SAVE_GAME -> false;
+			case NEW_GAME -> false;
+			case SAVE_GAME ->
+			{
+				SaveStateUtils.saveGame(player);
+				yield false;
+			}
 			case LOAD_GAME ->
 			{
 				//TODO: 19.11.2024 game loading
@@ -287,7 +303,15 @@ public class PokemonCLI
 						))
 				))
 		);
-		houseInside.addCharacter(new NPC("Psi Syn", 5, 5));
+		houseInside.addCharacter(new NPC("Big Smoke", 5, 5)
+				.withDialogue(new DialogueNode("YOU'VE PICKED THE WRONG HOUSE, FOOL!",
+						new DialogueResponse("[nadstawia głowę i dostaje krzesłem]", null),
+						new DialogueResponse("Big Smoke, chill, it's me, CJ", new DialogueNode("CJ?!",
+								new DialogueResponse("...",
+										new DialogueNode("OH MY DOG, CJ?! WHAT'S UP MAN. HEY, BABY, YOU OK?", new DialogueResponse("ja nie panimaju pa Anglijski", null))
+								)))
+				))
+		);
 		houseInside.addCharacter(new NPC("Czlowiek", 1, 1));
 
 		//--- House Interior 2 ---//
@@ -310,10 +334,10 @@ public class PokemonCLI
 		level.placeHouse(17, 3, 1, 3, 1, 4, houseInside2, 14, 5);
 
 		level.addCharacter(new Enemy("Psi Syn", 10, 5, 1)
-				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withMoves(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.BUTTERFREE, 1).withMoves(MoveType.TACKLE, MoveType.GROWL))
 		);
 		level.addCharacter(new Enemy("Czlowiek", 3, 14, 1)
-				.withPokemon(new Pokemon(PokemonSpecies.EEVEE, 1).withMoves(MoveType.TACKLE, MoveType.GROWL))
+				.withPokemon(new Pokemon(PokemonSpecies.CHARMANDER, 1).withMoves(MoveType.TACKLE, MoveType.GROWL))
 		);
 
 		level.paintTerrain(0, 6, 31, 15, Terrain.BEACH, Terrain.BEACH2);

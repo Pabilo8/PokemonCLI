@@ -23,23 +23,23 @@ public enum PokemonGraphics
 	METAPOD_FRONT("pokemon/metapod.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), true),
 	BUTTERFREE_BACK("pokemon/butterfree.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), false),
 	BUTTERFREE_FRONT("pokemon/butterfree.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), true),
-	WEEDLE_BACK(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	WEEDLE_FRONT(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	KAKUNA_BACK(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	KAKUNA_FRONT(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	BEEDRILL_BACK(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	BEEDRILL_FRONT(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	PIDGEY_BACK(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	PIDGEY_FRONT(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	RATTATA_BACK(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	RATTATA_FRONT(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
-	EEVEE_BACK("pokemon/eevee.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), true),
-	EEVEE_FRONT("pokemon/eevee.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), false);
+	WEEDLE_BACK("pokemon/weedle.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), false),
+	WEEDLE_FRONT("pokemon/weedle.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), true),
+	KAKUNA_BACK("pokemon/kakuna.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), false),
+	KAKUNA_FRONT("pokemon/kakuna.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), true),
+	BEEDRILL_BACK("pokemon/beedrill.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), false),
+	BEEDRILL_FRONT("pokemon/beedrill.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), true),
+	PIDGEY_BACK("pokemon/pidgey.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), false),
+	PIDGEY_FRONT("pokemon/pidgey.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), true),
+	RATTATA_BACK("pokemon/rattata.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), false),
+	RATTATA_FRONT("pokemon/rattata.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), true),
+	EEVEE_BACK("pokemon/eevee.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), false),
+	EEVEE_FRONT("pokemon/eevee.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), true);
 	public static final int POKEMON_SIZE_X = 23;
 	public static final int POKEMON_SIZE_Y = 12;
 	private final Color foreground;
 	private final Color background;
-	private final boolean unMirrored;
+	private final boolean mirrored;
 	private final String filePath;
 	String[] graphics;
 
@@ -50,15 +50,15 @@ public enum PokemonGraphics
 		this.foreground = foreground;
 		this.background = background;
 		this.filePath = null;
-		this.unMirrored = false;
+		this.mirrored = false;
 	}
 
-	PokemonGraphics(String filePath, Color foreground, Color background, boolean unMirrored)
+	PokemonGraphics(String filePath, Color foreground, Color background, boolean mirrored)
 	{
 		this.filePath = filePath;
 		this.foreground = foreground;
 		this.background = background;
-		this.unMirrored = unMirrored;
+		this.mirrored = mirrored;
 		this.graphics = null;
 	}
 
@@ -67,7 +67,7 @@ public enum PokemonGraphics
 		if(filePath!=null)
 		{
 			this.graphics = AsciiArtLoader.loadAsciiArt(filePath, POKEMON_SIZE_X, POKEMON_SIZE_Y, AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS);
-			if(!unMirrored)
+			if(mirrored)
 				this.graphics = AsciiArtLoader.mirrorAsciiArt(graphics);
 		}
 	}

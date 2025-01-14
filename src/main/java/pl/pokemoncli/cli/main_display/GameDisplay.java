@@ -1,15 +1,14 @@
-package pl.pokemoncli.display.main_display;
+package pl.pokemoncli.cli.main_display;
 
 import com.googlecode.lanterna.input.Key;
-import pl.pokemoncli.display.BaseDisplay;
-import pl.pokemoncli.display.DoubleBufferedTerminal;
-import pl.pokemoncli.display.KeyHandlingDisplay;
-import pl.pokemoncli.display.graphics.TileGraphics;
+import pl.pokemoncli.cli.BaseDisplay;
+import pl.pokemoncli.cli.DoubleBufferedTerminal;
+import pl.pokemoncli.cli.KeyHandlingDisplay;
+import pl.pokemoncli.cli.graphics.TileGraphics;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
-import pl.pokemoncli.logic.SaveStateUtils;
 import pl.pokemoncli.logic.characters.GameObject;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.logic.dialogue.Dialogue;

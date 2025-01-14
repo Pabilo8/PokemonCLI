@@ -1,7 +1,7 @@
-package pl.pokemoncli.display;
+package pl.pokemoncli.cli;
 
 import com.googlecode.lanterna.input.Key;
-import pl.pokemoncli.display.graphics.AsciiArtLoader;
+import pl.pokemoncli.cli.graphics.AsciiArtLoader;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;

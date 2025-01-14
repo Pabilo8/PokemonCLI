@@ -1,6 +1,6 @@
-package pl.pokemoncli.display.side_display;
+package pl.pokemoncli.cli.side_display;
 
-import pl.pokemoncli.display.DoubleBufferedTerminal;
+import pl.pokemoncli.cli.DoubleBufferedTerminal;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.combat.move.Move;
 
@@ -10,7 +10,7 @@ import java.awt.*;
  * @author KitsuneOkami
  * @since 17.11.2024
  */
-public class FightPanelDisplay extends PanelDisplay
+public class FightPanelDisplay extends GamePanelDisplay
 {
 	private static final int BUTTON_WIDTH = 17;
 	private static final int BUTTON_HEIGHT = 5;

@@ -1,6 +1,6 @@
-package pl.pokemoncli.display.graphics;
+package pl.pokemoncli.cli.graphics;
 
-import pl.pokemoncli.display.DoubleBufferedTerminal;
+import pl.pokemoncli.cli.DoubleBufferedTerminal;
 
 import java.awt.*;
 

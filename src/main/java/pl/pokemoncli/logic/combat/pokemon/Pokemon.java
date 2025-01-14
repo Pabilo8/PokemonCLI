@@ -2,7 +2,7 @@ package pl.pokemoncli.logic.combat.pokemon;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.pokemoncli.display.graphics.PokemonGraphics;
+import pl.pokemoncli.cli.graphics.PokemonGraphics;
 import pl.pokemoncli.logic.combat.move.Move;
 import pl.pokemoncli.logic.combat.move.MoveType;
 

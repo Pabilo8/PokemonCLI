@@ -1,4 +1,4 @@
-package pl.pokemoncli.display;
+package pl.pokemoncli.cli;
 
 import com.googlecode.lanterna.input.Key;
 import pl.pokemoncli.logic.Fight;

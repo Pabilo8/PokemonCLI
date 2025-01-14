@@ -1,7 +1,7 @@
-package pl.pokemoncli.display.side_display;
+package pl.pokemoncli.cli.side_display;
 
-import pl.pokemoncli.display.BaseDisplay;
-import pl.pokemoncli.display.DoubleBufferedTerminal;
+import pl.pokemoncli.cli.BaseDisplay;
+import pl.pokemoncli.cli.DoubleBufferedTerminal;
 import pl.pokemoncli.logic.characters.Player;
 
 import java.awt.*;
@@ -10,12 +10,12 @@ import java.awt.*;
  * @author Pabilo8
  * @since 15.11.2024
  */
-public class PanelDisplay extends BaseDisplay
+public class GamePanelDisplay extends BaseDisplay
 {
 	private final Color backgroundColor = new Color(127, 127, 127);
 	private final Color textColor = new Color(255, 255, 255);
 
-	public PanelDisplay(DoubleBufferedTerminal terminal)
+	public GamePanelDisplay(DoubleBufferedTerminal terminal)
 	{
 		super(terminal);
 	}

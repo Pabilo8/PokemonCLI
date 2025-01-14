@@ -1,4 +1,4 @@
-package pl.pokemoncli.display.graphics;
+package pl.pokemoncli.cli.graphics;
 
 import org.junit.jupiter.api.Test;
 

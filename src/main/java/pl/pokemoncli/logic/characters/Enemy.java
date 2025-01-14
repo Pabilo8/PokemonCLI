@@ -1,6 +1,6 @@
 package pl.pokemoncli.logic.characters;
 
-import pl.pokemoncli.display.graphics.TileGraphics;
+import pl.pokemoncli.cli.graphics.TileGraphics;
 
 /**
  * @author Pabilo8

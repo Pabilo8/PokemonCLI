@@ -2,7 +2,7 @@ package pl.pokemoncli.logic.combat.pokemon;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import pl.pokemoncli.display.graphics.PokemonGraphics;
+import pl.pokemoncli.cli.graphics.PokemonGraphics;
 
 /**
  * @author Pabilo8

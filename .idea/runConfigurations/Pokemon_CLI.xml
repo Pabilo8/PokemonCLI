@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Gra" type="Application" factoryName="Application">
+  <configuration default="false" name="Pokemon CLI" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="pl.pokemoncli.PokemonCLI" />
     <module name="PokemonCLI.main" />
     <extension name="coverage">

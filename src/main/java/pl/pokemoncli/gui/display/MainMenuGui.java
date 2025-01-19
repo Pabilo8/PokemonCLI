@@ -4,6 +4,7 @@ import com.esotericsoftware.minlog.Log;
 import lombok.AccessLevel;
 import lombok.Getter;
 import pl.pokemoncli.PokemonGUI;
+import pl.pokemoncli.gui.graphics.ImageLoader;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
 import javax.swing.*;
@@ -61,7 +62,12 @@ public class MainMenuGui implements IPokemonGui
 
 	private void createUIComponents()
 	{
-		// TODO: place custom component creation code here
+		ImageLoader loader = ImageLoader.getInstance();
+		loader.loadImage("background", "/gui/mainmenu/background.png");
+		loader.loadImage("logo", "/gui/mainmenu/logo.png");
+
+		mainPanel = new ImagePanel("background");
+		imagePanel = new ImagePanel("logo");
 	}
 
 	@Override

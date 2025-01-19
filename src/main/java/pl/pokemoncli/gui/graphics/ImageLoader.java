@@ -25,7 +25,7 @@ public class ImageLoader
 
 	public void loadImage(String key, String path)
 	{
-		ImageIcon icon = new ImageIcon(getClass().getResource(path));
+		ImageIcon icon = new ImageIcon(this.getClass().getResource(path));
 		imageMap.put(key, icon.getImage());
 	}
 

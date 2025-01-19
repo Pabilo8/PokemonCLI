@@ -2,6 +2,7 @@
   <configuration default="false" name="Pokemon CLI" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="pl.pokemoncli.PokemonCLI" />
     <module name="PokemonCLI.main" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="pl.pokemoncli.*" />

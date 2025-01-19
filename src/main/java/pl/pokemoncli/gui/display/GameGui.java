@@ -9,11 +9,11 @@ import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.characters.Player;
+import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 import pl.pokemoncli.logic.dialogue.Dialogue;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author Pabilo8
@@ -24,7 +24,8 @@ public class GameGui implements KeyHandlingDisplay, IPokemonGui
 	@Getter(AccessLevel.PUBLIC)
 	private JPanel mainPanel;
 	private JPanel sidePanel;
-	private JPanel gameDrawPanel;
+	private GameDrawPanel gameDrawPanel;
+	private JList<Pokemon> pokemonList;
 
 	@Override
 	public ActionResult handleKeyInput(Level level, Player player, Dialogue dialogue, Fight fight, Key key)
@@ -44,22 +45,4 @@ public class GameGui implements KeyHandlingDisplay, IPokemonGui
 		PokemonGUI.getInstance().getAudioSystem().play(Track.GAME);
 	}
 
-	/**
-	 * @author Pabilo8
-	 * @since 19.01.2025
-	 */
-	public static class GameDrawPanel extends JPanel
-	{
-		public GameDrawPanel()
-		{
-
-		}
-
-		@Override
-		public void paintComponents(Graphics g)
-		{
-			g.setColor(Color.BLACK);
-			g.drawRect(0, 0, 100, 100);
-		}
-	}
 }

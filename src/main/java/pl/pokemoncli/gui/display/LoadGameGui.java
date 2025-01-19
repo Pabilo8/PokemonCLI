@@ -10,6 +10,8 @@ import pl.pokemoncli.logic.characters.Player;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -53,11 +55,31 @@ public class LoadGameGui implements IPokemonGui
 
 		saveList.setListData(saveObjects.toArray(new SaveObject[0]));
 		saveList.setCellRenderer(new SaveObjectRenderer());
+		saveList.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				if(e.getClickCount()==2)
+				{
+					int index = saveList.locationToIndex(e.getPoint());
+					saveList.setSelectedIndex(index);
+					loadGame(null);
+				}
+			}
+		});
 	}
 
 	private void loadGame(ActionEvent actionEvent)
 	{
 		// Implement the logic to load the selected game
+		SaveObject selectedSave = saveList.getSelectedValue();
+		if(selectedSave!=null)
+		{
+			PokemonGUI pok = PokemonGUI.getInstance();
+			pok.loadSaveFile(selectedSave);
+			pok.changeGui(pok.getGameDisplay());
+		}
 	}
 
 	private void backToMenu(ActionEvent actionEvent)

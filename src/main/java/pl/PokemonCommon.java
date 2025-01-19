@@ -274,6 +274,15 @@ public abstract class PokemonCommon
 
 	}
 
+	public void loadSaveFile(SaveObject save)
+	{
+		loadGame();
+		level.removeCharacter(player);
+		if(save.getPlayer()!=null)
+			player = save.getPlayer();
+		level.addCharacter(player);
+	}
+
 	protected abstract void loadGraphics();
 
 	protected abstract KeyHandlingDisplay getDialogueDisplay();

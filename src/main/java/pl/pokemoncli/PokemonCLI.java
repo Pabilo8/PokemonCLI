@@ -102,11 +102,7 @@ public class PokemonCLI extends PokemonCommon
 						case NEW_GAME -> continueLoop = false;
 						case LOAD_GAME ->
 						{
-							level.removeCharacter(player);
-							SaveObject save = SaveStateUtils.loadGame(new File("saves/player.pok"));
-							if(save.getPlayer()!=null)
-								player = save.getPlayer();
-							level.addCharacter(player);
+							loadSaveFile(SaveStateUtils.loadGame(new File("saves/player.pok")));
 							continueLoop = false;
 						}
 						case EXIT_GAME ->

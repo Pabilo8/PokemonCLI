@@ -26,12 +26,19 @@ public class GameGui implements KeyHandlingDisplay, IPokemonGui
 	private JPanel sidePanel;
 	private JList<Pokemon> pokemonList;
 	private JLabel labelPlayerName;
-	private JPanel gamePanel;
+	private JLabel labelXPos;
+	private JLabel labelYPos;
+	private GameDrawPanel gamePanel;
 
 	@Override
 	public ActionResult handleKeyInput(Level level, Player player, Dialogue dialogue, Fight fight, Key key)
 	{
 		return null;
+	}
+
+	public GameGui()
+	{
+		pokemonList.setCellRenderer(new PokemonListCellRenderer());
 	}
 
 	private void createUIComponents()
@@ -43,7 +50,20 @@ public class GameGui implements KeyHandlingDisplay, IPokemonGui
 	@Override
 	public void onInit()
 	{
-		PokemonGUI.getInstance().getAudioSystem().play(Track.GAME);
+		PokemonGUI pok = PokemonGUI.getInstance();
+		pok.getAudioSystem().play(Track.GAME);
+
+		pokemonList.setListData(pok.getPlayer().getPokemons().toArray(new Pokemon[0]));
+		labelPlayerName.setText(pok.getPlayer().getName());
+		//TODO: 19.01.2025 dynamic updates for x,y
+		labelXPos.setText("X: "+pok.getPlayer().getX());
+		labelYPos.setText("Y: "+pok.getPlayer().getY());
+		gamePanel.onInit();
 	}
 
+	@Override
+	public void onExit()
+	{
+		gamePanel.onExit();
+	}
 }

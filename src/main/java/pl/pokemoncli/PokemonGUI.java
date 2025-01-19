@@ -29,6 +29,8 @@ public class PokemonGUI extends PokemonCommon
 	private final DialogueGui dialogueDisplay;
 	private final FightGui fightDisplay;
 	private final GameGui gameDisplay;
+
+	private IPokemonGui currentGui;
 	private final IPokemonGui[] allGuis;
 
 	public PokemonGUI()
@@ -86,9 +88,15 @@ public class PokemonGUI extends PokemonCommon
 	public void changeGui(IPokemonGui gui)
 	{
 		SwingUtilities.invokeLater(() -> {
+			//Exit parent container
+			if(currentGui!=null)
+				currentGui.onExit();
+			//Change GUI
 			window.setContentPane(gui.getMainPanel());
+			currentGui = gui;
 			window.revalidate();
 			window.repaint();
+			//Init new GUI
 			gui.onInit();
 		});
 	}

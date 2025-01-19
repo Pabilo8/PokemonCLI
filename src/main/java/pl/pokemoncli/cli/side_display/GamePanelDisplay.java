@@ -22,12 +22,12 @@ public class GamePanelDisplay extends BaseDisplay
 
 	public void drawSidePanel(Player player, int gameX, int gameY)
 	{
-		// Draw Frame
+		//Draw Frame
 		for(int y = 0; y < gameY; y++)
 			for(int x = gameX; x < terminal.getWidth(); x++)
 				terminal.drawColor(x, y, ' ', textColor, backgroundColor);
 
-		// Draw Stats
+		//Draw Stats
 		drawString("Name: "+player.getName(), gameX+2, 1);
 		drawString("X: "+player.getX(), gameX+2, 2);
 		drawString("Y: "+player.getY(), gameX+20, 2);

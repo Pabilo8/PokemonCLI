@@ -7,7 +7,6 @@ import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
-import pl.pokemoncli.logic.SaveStateUtils;
 import pl.pokemoncli.logic.SaveStateUtils.SaveObject;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.move.Move;
@@ -20,7 +19,6 @@ import pl.pokemoncli.logic.dialogue.DialogueResponse;
 import pl.pokemoncli.sound.AudioSystem;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
-import java.io.File;
 import java.util.Random;
 
 /**
@@ -29,10 +27,15 @@ import java.util.Random;
  */
 public abstract class PokemonCommon
 {
+	@Getter
 	protected Level level;
+	@Getter
 	protected Player player;
+	@Getter
 	protected Dialogue dialogue;
+	@Getter
 	protected Fight fight;
+
 	@Getter
 	protected final AudioSystem audioSystem = new AudioSystem();
 	protected final Random diceRoll = new Random();

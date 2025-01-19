@@ -15,6 +15,11 @@ public interface IPokemonGui
 
 	}
 
+	default void onExit()
+	{
+
+	}
+
 	default void loadGraphics()
 	{
 

@@ -24,8 +24,9 @@ public class GameGui implements KeyHandlingDisplay, IPokemonGui
 	@Getter(AccessLevel.PUBLIC)
 	private JPanel mainPanel;
 	private JPanel sidePanel;
-	private GameDrawPanel gameDrawPanel;
 	private JList<Pokemon> pokemonList;
+	private JLabel labelPlayerName;
+	private JPanel gamePanel;
 
 	@Override
 	public ActionResult handleKeyInput(Level level, Player player, Dialogue dialogue, Fight fight, Key key)
@@ -36,7 +37,7 @@ public class GameGui implements KeyHandlingDisplay, IPokemonGui
 	private void createUIComponents()
 	{
 		// TODO: place custom component creation code here
-		gameDrawPanel = new GameDrawPanel();
+		gamePanel = new GameDrawPanel();
 	}
 
 	@Override

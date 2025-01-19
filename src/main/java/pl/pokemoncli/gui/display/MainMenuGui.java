@@ -4,6 +4,7 @@ import com.esotericsoftware.minlog.Log;
 import lombok.AccessLevel;
 import lombok.Getter;
 import pl.pokemoncli.PokemonGUI;
+import pl.pokemoncli.sound.AudioSystem.Track;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,7 +13,7 @@ import java.awt.event.ActionEvent;
  * Author: Pabilo8
  * Since: 14.01.2025
  */
-public class MainMenuGui
+public class MainMenuGui implements IPokemonGui
 {
 	@Getter(AccessLevel.PUBLIC)
 	private JPanel mainPanel;
@@ -25,6 +26,7 @@ public class MainMenuGui
 	public MainMenuGui()
 	{
 		newGameButton.addActionListener(this::startNewGame);
+		newGameButton.setDefaultCapable(true);
 		loadGameButton.addActionListener(this::loadGame);
 		settingsButton.addActionListener(this::openSettings);
 		exitButton.addActionListener(this::exitGame);
@@ -34,21 +36,21 @@ public class MainMenuGui
 	{
 		PokemonGUI pok = PokemonGUI.getInstance();
 		Log.info("Starting new game...");
-		pok.changeGui(pok.getGameDisplay().getMainPanel());
+		pok.changeGui(pok.getGameDisplay());
 	}
 
 	private void loadGame(ActionEvent e)
 	{
 		PokemonGUI pok = PokemonGUI.getInstance();
 		Log.info("Loading game...");
-		pok.changeGui(pok.getGameDisplay().getMainPanel());
+		pok.changeGui(pok.getLoadGameDisplay());
 	}
 
 	private void openSettings(ActionEvent e)
 	{
 		PokemonGUI pok = PokemonGUI.getInstance();
 		Log.info("Opening settings...");
-		pok.changeGui(pok.getGameDisplay().getMainPanel());
+		pok.changeGui(pok.getSettingsDisplay());
 	}
 
 	private void exitGame(ActionEvent e)
@@ -60,5 +62,17 @@ public class MainMenuGui
 	private void createUIComponents()
 	{
 		// TODO: place custom component creation code here
+	}
+
+	@Override
+	public void onInit()
+	{
+		PokemonGUI.getInstance().getAudioSystem().play(Track.MAIN_MENU);
+	}
+
+	@Override
+	public void loadGraphics()
+	{
+
 	}
 }

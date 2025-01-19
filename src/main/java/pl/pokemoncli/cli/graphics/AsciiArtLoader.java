@@ -68,7 +68,8 @@ public class AsciiArtLoader
 	private static String[] loadAsciiArt(String filePath) throws IOException
 	{
 		List<String> lines = new ArrayList<>();
-		try(InputStream is = new FileInputStream("src/main/resources/"+filePath))
+
+		try(InputStream is = AsciiArtLoader.class.getResourceAsStream("/cli/"+filePath))
 		{
 			try(BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8)))
 			{

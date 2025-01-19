@@ -1,12 +1,14 @@
 package pl;
 
 import com.googlecode.lanterna.input.Key;
+import lombok.Getter;
 import pl.pokemoncli.cli.KeyHandlingDisplay;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.SaveStateUtils;
+import pl.pokemoncli.logic.SaveStateUtils.SaveObject;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.move.Move;
 import pl.pokemoncli.logic.combat.move.MoveType;
@@ -18,6 +20,7 @@ import pl.pokemoncli.logic.dialogue.DialogueResponse;
 import pl.pokemoncli.sound.AudioSystem;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
+import java.io.File;
 import java.util.Random;
 
 /**
@@ -30,6 +33,7 @@ public abstract class PokemonCommon
 	protected Player player;
 	protected Dialogue dialogue;
 	protected Fight fight;
+	@Getter
 	protected final AudioSystem audioSystem = new AudioSystem();
 	protected final Random diceRoll = new Random();
 	protected boolean exitGame = false;
@@ -113,12 +117,11 @@ public abstract class PokemonCommon
 			case NEW_GAME -> false;
 			case SAVE_GAME ->
 			{
-				SaveStateUtils.saveGame(player);
+				saveGame();
 				yield false;
 			}
 			case LOAD_GAME ->
 			{
-				//TODO: 19.11.2024 game loading
 				yield false;
 			}
 			case EXIT_GAME ->
@@ -128,6 +131,8 @@ public abstract class PokemonCommon
 			}
 		};
 	}
+
+	protected abstract void saveGame();
 
 	protected void generateWildPokemon()
 	{

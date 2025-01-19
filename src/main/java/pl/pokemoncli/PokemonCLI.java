@@ -14,7 +14,11 @@ import pl.pokemoncli.cli.side_display.FightPanelDisplay;
 import pl.pokemoncli.cli.side_display.GamePanelDisplay;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.SaveStateUtils;
+import pl.pokemoncli.logic.SaveStateUtils.SaveObject;
 import pl.pokemoncli.sound.AudioSystem.Track;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 /**
  * @author Pabilo8
@@ -61,6 +65,14 @@ public class PokemonCLI extends PokemonCommon
 		instance.displayGame();
 	}
 
+	@Override
+	protected void saveGame()
+	{
+		SaveStateUtils.saveGame(new SaveObject(player, new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB),
+						"Pokemon CLI Save"),
+				new File("saves/player.pok"));
+	}
+
 	protected void loadGraphics()
 	{
 		for(TileGraphics value : TileGraphics.values())
@@ -91,7 +103,9 @@ public class PokemonCLI extends PokemonCommon
 						case LOAD_GAME ->
 						{
 							level.removeCharacter(player);
-							player = SaveStateUtils.loadGame(player);
+							SaveObject save = SaveStateUtils.loadGame(new File("saves/player.pok"));
+							if(save.getPlayer()!=null)
+								player = save.getPlayer();
 							level.addCharacter(player);
 							continueLoop = false;
 						}

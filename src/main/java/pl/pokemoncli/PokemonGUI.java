@@ -2,15 +2,14 @@ package pl.pokemoncli;
 
 import com.esotericsoftware.minlog.Log;
 import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 import lombok.AccessLevel;
 import lombok.Getter;
 import pl.PokemonCommon;
+import pl.pokemoncli.gui.PokeLogger;
 import pl.pokemoncli.gui.display.*;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Pabilo8
@@ -30,10 +29,7 @@ public class PokemonGUI extends PokemonCommon
 	private final DialogueGui dialogueDisplay;
 	private final FightGui fightDisplay;
 	private final GameGui gameDisplay;
-
-	//Panels
-	private final FightPanelGui fightPanelDisplay;
-	private final GamePanelGui gamePanelDisplay;
+	private final IPokemonGui[] allGuis;
 
 	public PokemonGUI()
 	{
@@ -43,18 +39,19 @@ public class PokemonGUI extends PokemonCommon
 		this.gameDisplay = new GameGui();
 		this.fightDisplay = new FightGui();
 		this.dialogueDisplay = new DialogueGui();
-
-		this.gamePanelDisplay = new GamePanelGui();
-		this.fightPanelDisplay = new FightPanelGui();
+		this.allGuis = new IPokemonGui[]{mainMenuDisplay, settingsDisplay, loadGameDisplay, dialogueDisplay, fightDisplay, gameDisplay};
 
 		this.window = new JFrame("Pokemon (GUI Edition)");
 	}
 
 	public static void main(String[] args)
 	{
+		Log.setLogger(new PokeLogger());
 		//Set FlatLaf look and feel
 		if(!FlatDarculaLaf.setup())
 			Log.error("PokemonGUI", "Failed to set FlatLaf look and feel");
+		UIManager.put("defaultFont", new Font("JetBrains Mono", Font.PLAIN, 18));
+
 		instance = new PokemonGUI();
 
 		//Load level
@@ -65,30 +62,34 @@ public class PokemonGUI extends PokemonCommon
 		instance.displayMenu();
 	}
 
-	private void displayGame()
-	{
-
-	}
-
 	private void displayMenu()
 	{
 		window.setLocationRelativeTo(null);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		changeGui(mainMenuDisplay.getMainPanel());
+		changeGui(mainMenuDisplay);
 		window.setVisible(true);
+	}
 
+	@Override
+	protected void saveGame()
+	{
+		//TODO: 19.01.2025 game saving
 	}
 
 	@Override
 	protected void loadGraphics()
 	{
-
+		mainMenuDisplay.loadGraphics();
 	}
 
-	public void changeGui(JPanel gui)
+	public void changeGui(IPokemonGui gui)
 	{
-		window.setContentPane(gui);
-		window.repaint();
+		SwingUtilities.invokeLater(() -> {
+			window.setContentPane(gui.getMainPanel());
+			window.revalidate();
+			window.repaint();
+			gui.onInit();
+		});
 	}
 }

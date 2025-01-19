@@ -1,6 +1,8 @@
 package pl.pokemoncli.gui.display;
 
 import com.googlecode.lanterna.input.Key;
+import lombok.AccessLevel;
+import lombok.Getter;
 import pl.pokemoncli.cli.KeyHandlingDisplay;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
@@ -14,8 +16,9 @@ import javax.swing.*;
  * @author Pabilo8
  * @since 14.01.2025
  */
-public class DialogueGui implements KeyHandlingDisplay
+public class DialogueGui implements KeyHandlingDisplay, IPokemonGui
 {
+	@Getter(AccessLevel.PUBLIC)
 	private JPanel mainPanel;
 	private JButton button1;
 	private JTextPane textPane1;
@@ -25,5 +28,11 @@ public class DialogueGui implements KeyHandlingDisplay
 	public ActionResult handleKeyInput(Level level, Player player, Dialogue dialogue, Fight fight, Key key)
 	{
 		return null;
+	}
+
+	@Override
+	public void loadGraphics()
+	{
+
 	}
 }

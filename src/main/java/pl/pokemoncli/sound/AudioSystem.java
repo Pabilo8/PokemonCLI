@@ -1,6 +1,8 @@
 package pl.pokemoncli.sound;
 
+import com.esotericsoftware.minlog.Log;
 import lombok.NoArgsConstructor;
+import pl.pokemoncli.cli.graphics.AsciiArtLoader;
 
 import javax.sound.sampled.*;
 import java.io.File;
@@ -24,7 +26,9 @@ public class AudioSystem
 
 		try
 		{
-			AudioInputStream audioInputStream = javax.sound.sampled.AudioSystem.getAudioInputStream(new File(musicTrack.getPath()));
+			AudioInputStream audioInputStream = javax.sound.sampled.AudioSystem.getAudioInputStream(
+					AudioSystem.class.getResourceAsStream(musicTrack.getPath())
+			);
 			clip = javax.sound.sampled.AudioSystem.getClip();
 			clip.open(audioInputStream);
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -32,7 +36,7 @@ public class AudioSystem
 			currentTrack = musicTrack;
 		} catch(UnsupportedAudioFileException|IOException|LineUnavailableException|IllegalArgumentException e)
 		{
-			System.out.printf("Error while playing track %s: %s%n", musicTrack.name(), e.getMessage());
+			Log.error("AudioSystem", String.format("Error while playing track %s: %s%n", musicTrack.name(), e.getMessage()));
 		}
 	}
 
@@ -52,7 +56,7 @@ public class AudioSystem
 
 		public String getPath()
 		{
-			return "src/main/resources/music/"+name().toLowerCase()+".wav";
+			return "/music/"+name().toLowerCase()+".wav";
 		}
 	}
 }

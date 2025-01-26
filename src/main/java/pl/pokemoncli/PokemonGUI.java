@@ -2,14 +2,26 @@ package pl.pokemoncli;
 
 import com.esotericsoftware.minlog.Log;
 import com.formdev.flatlaf.FlatDarculaLaf;
+import com.googlecode.lanterna.input.Key;
 import lombok.AccessLevel;
 import lombok.Getter;
-import pl.PokemonCommon;
+import pl.pokemoncli.cli.KeyHandlingDisplay;
 import pl.pokemoncli.gui.PokeLogger;
 import pl.pokemoncli.gui.display.*;
+import pl.pokemoncli.gui.graphics.GUITileGraphics;
+import pl.pokemoncli.logic.Level.Terrain;
+import pl.pokemoncli.logic.PokemonCommon;
+import pl.pokemoncli.logic.SpriteHandler;
+import pl.pokemoncli.logic.SpriteHandler.SimpleSpriteHandler;
+import pl.pokemoncli.logic.characters.Door;
+import pl.pokemoncli.logic.characters.Enemy;
+import pl.pokemoncli.logic.characters.NPC;
+import pl.pokemoncli.logic.characters.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * @author Pabilo8
@@ -70,6 +82,27 @@ public class PokemonGUI extends PokemonCommon
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		changeGui(mainMenuDisplay);
+		window.addKeyListener(new KeyListener()
+		{
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+				if(currentGui!=null&&currentGui instanceof KeyHandlingDisplay)
+					((KeyHandlingDisplay)currentGui).handleKeyInput(level, player, dialogue, fight, new Key(e.getKeyChar()));
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+			}
+		});
+		window.setFocusable(true);
 		window.setVisible(true);
 	}
 
@@ -83,6 +116,62 @@ public class PokemonGUI extends PokemonCommon
 	protected void loadGraphics()
 	{
 		mainMenuDisplay.loadGraphics();
+
+		//
+		Terrain.GRASS.setTileGraphics(GUITileGraphics.GRASS);
+		Terrain.BEACH.setTileGraphics(GUITileGraphics.BEACH);
+		Terrain.BEACH2.setTileGraphics(GUITileGraphics.BEACH2);
+		Terrain.ROAD.setTileGraphics(GUITileGraphics.ROAD);
+		Terrain.FLOOR.setTileGraphics(GUITileGraphics.FLOOR);
+		Terrain.BLOCKED.setTileGraphics(GUITileGraphics.BLOCKED);
+		Terrain.VOID.setTileGraphics(GUITileGraphics.VOID);
+		Terrain.BUSH1.setTileGraphics(GUITileGraphics.BUSH1);
+		Terrain.BUSH2.setTileGraphics(GUITileGraphics.BUSH2);
+		Terrain.TREE_LEAVES.setTileGraphics(GUITileGraphics.TREE_LEAVES);
+		Terrain.TREE_TRUNK.setTileGraphics(GUITileGraphics.TREE_TRUNK);
+		Terrain.TREE_LEAVES_SOLID.setTileGraphics(GUITileGraphics.TREE_LEAVES);
+		Terrain.WATER_STILL.setTileGraphics(GUITileGraphics.WATER_STILL1,
+				GUITileGraphics.WATER_STILL1, GUITileGraphics.WATER_STILL2, GUITileGraphics.WATER_STILL2);
+		Terrain.WATER_FLOWING.setTileGraphics(GUITileGraphics.WATER_FLOWING1,
+				GUITileGraphics.WATER_FLOWING2, GUITileGraphics.WATER_FLOWING3, GUITileGraphics.WATER_FLOWING4);
+		Terrain.BRIDGE1.setTileGraphics(GUITileGraphics.BRIDGE1);
+		Terrain.BRIDGE2.setTileGraphics(GUITileGraphics.BRIDGE2);
+		Terrain.DOOR.setTileGraphics(GUITileGraphics.DOOR);
+		Terrain.HOUSE_WALL_LEFT.setTileGraphics(GUITileGraphics.HOUSE_WALL_LEFT);
+		Terrain.HOUSE_WALL_RIGHT.setTileGraphics(GUITileGraphics.HOUSE_WALL_RIGHT);
+		Terrain.HOUSE_WALL_LEFT_BOTTOM.setTileGraphics(GUITileGraphics.HOUSE_WALL_LEFT_BOTTOM);
+		Terrain.HOUSE_WALL_RIGHT_BOTTOM.setTileGraphics(GUITileGraphics.HOUSE_WALL_RIGHT_BOTTOM);
+		Terrain.HOUSE_WALL_LEFT_ROOF.setTileGraphics(GUITileGraphics.HOUSE_WALL_LEFT_ROOF);
+		Terrain.HOUSE_WALL_RIGHT_ROOF.setTileGraphics(GUITileGraphics.HOUSE_WALL_RIGHT_ROOF);
+		Terrain.HOUSE_WALL_MIDDLE_ROOF.setTileGraphics(GUITileGraphics.HOUSE_WALL_MIDDLE_ROOF);
+		Terrain.HOUSE_WALL_ROOF_LEFT.setTileGraphics(GUITileGraphics.HOUSE_ROOF_TOP_LEFT);
+		Terrain.HOUSE_WALL_ROOF_RIGHT.setTileGraphics(GUITileGraphics.HOUSE_ROOF_TOP_RIGHT);
+		Terrain.HOUSE_WALL_ROOF_MIDDLE.setTileGraphics(GUITileGraphics.HOUSE_ROOF_TOP_MIDDLE);
+		Terrain.HOUSE_WALL.setTileGraphics(GUITileGraphics.HOUSE_WALL);
+		Terrain.HOUSE_WALL_BOTTOM.setTileGraphics(GUITileGraphics.HOUSE_WALL_BOTTOM);
+
+		SpriteHandler.registerHandler(Player.class, new SpriteHandler<>()
+		{
+			@Override
+			protected GUITileGraphics getSprite(Player gameObject)
+			{
+				return switch(gameObject.getDirection())
+				{
+					case 1 -> GUITileGraphics.PLAYER_LEFT;
+					case 2 -> GUITileGraphics.PLAYER_RIGHT;
+					default -> GUITileGraphics.PLAYER_VERTICAL;
+				};
+			}
+		});
+		SpriteHandler.registerHandler(Enemy.class, new SimpleSpriteHandler<>(GUITileGraphics.ENEMY_VERTICAL));
+		SpriteHandler.registerHandler(NPC.class, new SimpleSpriteHandler<>(GUITileGraphics.NPC_VERTICAL));
+		SpriteHandler.registerHandler(Door.class, new SimpleSpriteHandler<>(GUITileGraphics.DOOR_OPENABLE));
+
+		for(GUITileGraphics value : GUITileGraphics.values())
+			value.loadGraphics();
+		//TODO: 26.01.2025 load pokemon graphics
+		/*for(PokemonGraphics value : PokemonGraphics.values())
+			value.loadGraphics();*/
 	}
 
 	public void changeGui(IPokemonGui gui)
@@ -90,7 +179,9 @@ public class PokemonGUI extends PokemonCommon
 		SwingUtilities.invokeLater(() -> {
 			//Exit parent container
 			if(currentGui!=null)
+			{
 				currentGui.onExit();
+			}
 			//Change GUI
 			window.setContentPane(gui.getMainPanel());
 			currentGui = gui;

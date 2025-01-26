@@ -2,7 +2,8 @@ package pl.pokemoncli.logic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import pl.pokemoncli.cli.graphics.TileGraphics;
+import lombok.Setter;
+import pl.pokemoncli.cli.graphics.CLITileGraphics;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.item.ItemType;
 import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
@@ -23,7 +24,7 @@ public class Level
 	private final Terrain[][] map;
 	private final List<GameObject> gameObjects;
 	private final List<PokemonSpecies> pokemonSpawnList;
-	private final List<WildPokemon>	wildPokemons;
+	private final List<WildPokemon> wildPokemons;
 
 	public Level(int width, int height, Terrain defaultTile)
 	{
@@ -196,54 +197,59 @@ public class Level
 	@Getter
 	public enum Terrain
 	{
-		GRASS(true, TileGraphics.GRASS),
-		BEACH(true, TileGraphics.BEACH),
-		BEACH2(true, TileGraphics.BEACH2),
-		ROAD(true, TileGraphics.ROAD),
-		FLOOR(true, TileGraphics.FLOOR),
-		BLOCKED(false, TileGraphics.BLOCKED),
-		VOID(false, TileGraphics.VOID),
+		GRASS(true),
+		BEACH(true),
+		BEACH2(true),
+		ROAD(true),
+		FLOOR(true),
+		BLOCKED(false),
+		VOID(false),
 
-		BUSH1(true, TileGraphics.BUSH1),
-		BUSH2(true, TileGraphics.BUSH2),
-		TREE_LEAVES(true, TileGraphics.TREE_LEAVES),
-		TREE_TRUNK(false, TileGraphics.TREE_TRUNK),
-		TREE_LEAVES_SOLID(false, TileGraphics.TREE_LEAVES),
+		BUSH1(true),
+		BUSH2(true),
+		TREE_LEAVES(true),
+		TREE_TRUNK(false),
+		TREE_LEAVES_SOLID(false),
 
-		WATER_STILL(false, TileGraphics.WATER_STILL1, TileGraphics.WATER_STILL1, TileGraphics.WATER_STILL2, TileGraphics.WATER_STILL2),
-		WATER_FLOWING(false, TileGraphics.WATER_FLOWING1, TileGraphics.WATER_FLOWING2, TileGraphics.WATER_FLOWING3, TileGraphics.WATER_FLOWING4, TileGraphics.WATER_FLOWING5),
-		BRIDGE1(true, TileGraphics.BRIDGE1),
-		BRIDGE2(true, TileGraphics.BRIDGE2),
+		WATER_STILL(false),
+		WATER_FLOWING(false),
+		BRIDGE1(true),
+		BRIDGE2(true),
 
-		DOOR(true, TileGraphics.DOOR),
-		HOUSE_WALL_LEFT(false, TileGraphics.HOUSE_WALL_LEFT),
-		HOUSE_WALL_RIGHT(false, TileGraphics.HOUSE_WALL_RIGHT),
-		HOUSE_WALL_LEFT_BOTTOM(false, TileGraphics.HOUSE_WALL_LEFT_BOTTOM),
-		HOUSE_WALL_RIGHT_BOTTOM(false, TileGraphics.HOUSE_WALL_RIGHT_BOTTOM),
+		DOOR(true),
+		HOUSE_WALL_LEFT(false),
+		HOUSE_WALL_RIGHT(false),
+		HOUSE_WALL_LEFT_BOTTOM(false),
+		HOUSE_WALL_RIGHT_BOTTOM(false),
 
-		HOUSE_WALL_LEFT_ROOF(false, TileGraphics.HOUSE_WALL_LEFT_ROOF),
-		HOUSE_WALL_RIGHT_ROOF(false, TileGraphics.HOUSE_WALL_RIGHT_ROOF),
-		HOUSE_WALL_MIDDLE_ROOF(false, TileGraphics.HOUSE_WALL_MIDDLE_ROOF),
-		HOUSE_WALL_ROOF_LEFT(false, TileGraphics.HOUSE_ROOF_TOP_LEFT),
-		HOUSE_WALL_ROOF_RIGHT(false, TileGraphics.HOUSE_ROOF_TOP_RIGHT),
-		HOUSE_WALL_ROOF_MIDDLE(false, TileGraphics.HOUSE_ROOF_TOP_MIDDLE),
+		HOUSE_WALL_LEFT_ROOF(false),
+		HOUSE_WALL_RIGHT_ROOF(false),
+		HOUSE_WALL_MIDDLE_ROOF(false),
+		HOUSE_WALL_ROOF_LEFT(false),
+		HOUSE_WALL_ROOF_RIGHT(false),
+		HOUSE_WALL_ROOF_MIDDLE(false),
 
-		HOUSE_WALL(false, TileGraphics.HOUSE_WALL),
-		HOUSE_WALL_BOTTOM(false, TileGraphics.HOUSE_WALL_BOTTOM),
+		HOUSE_WALL(false),
+		HOUSE_WALL_BOTTOM(false),
 		;
 
 		final boolean passable;
-		final TileGraphics[] tileGraphics;
+		AbstractTileGraphics<?>[] tileGraphics;
 
-		Terrain(boolean passable, TileGraphics... tileGraphics)
+		Terrain(boolean passable)
 		{
 			this.passable = passable;
-			this.tileGraphics = tileGraphics;
+			this.tileGraphics = new AbstractTileGraphics[0];
 		}
 
-		public TileGraphics getTile(int time)
+		public AbstractTileGraphics<?> getTile(int time)
 		{
 			return tileGraphics[time%tileGraphics.length];
+		}
+
+		public void setTileGraphics(AbstractTileGraphics<?>... graphics)
+		{
+			this.tileGraphics = graphics;
 		}
 	}
 

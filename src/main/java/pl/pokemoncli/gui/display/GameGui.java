@@ -8,6 +8,7 @@ import pl.pokemoncli.cli.KeyHandlingDisplay;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
+import pl.pokemoncli.logic.Level.ResultType;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 import pl.pokemoncli.logic.dialogue.Dialogue;
@@ -33,7 +34,15 @@ public class GameGui implements KeyHandlingDisplay, IPokemonGui
 	@Override
 	public ActionResult handleKeyInput(Level level, Player player, Dialogue dialogue, Fight fight, Key key)
 	{
-		return null;
+		return switch(key.getCharacter())
+		{
+			case 'w' -> level.moveCharacterBy(player, 0, -1);
+			case 'a' -> level.moveCharacterBy(player, -1, 0);
+			case 's' -> level.moveCharacterBy(player, 0, 1);
+			case 'd' -> level.moveCharacterBy(player, 1, 0);
+			case 'p' -> new ActionResult(ResultType.SAVE_GAME);
+			default -> null;
+		};
 	}
 
 	public GameGui()

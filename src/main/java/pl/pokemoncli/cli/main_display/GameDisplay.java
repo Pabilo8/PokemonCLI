@@ -4,11 +4,14 @@ import com.googlecode.lanterna.input.Key;
 import pl.pokemoncli.cli.BaseDisplay;
 import pl.pokemoncli.cli.DoubleBufferedTerminal;
 import pl.pokemoncli.cli.KeyHandlingDisplay;
-import pl.pokemoncli.cli.graphics.TileGraphics;
+import pl.pokemoncli.cli.graphics.CLITileGraphics;
+import pl.pokemoncli.logic.AbstractTileGraphics;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
+import pl.pokemoncli.logic.Level.ResultType;
 import pl.pokemoncli.logic.Level.Terrain;
+import pl.pokemoncli.logic.SpriteHandler;
 import pl.pokemoncli.logic.characters.GameObject;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.logic.dialogue.Dialogue;
@@ -26,8 +29,8 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 
 	public void drawWholeMap(Player player, Level level, int gameX, int gameY, int currentTicks)
 	{
-		int visibleWidth = gameX/TileGraphics.TILE_SIZE_X;
-		int visibleHeight = gameY/TileGraphics.TILE_SIZE_Y;
+		int visibleWidth = gameX/CLITileGraphics.TILE_SIZE_X;
+		int visibleHeight = gameY/CLITileGraphics.TILE_SIZE_Y;
 		int playerX = player.getX();
 		int playerY = player.getY();
 
@@ -36,9 +39,11 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 		for(int y = 0; y < visibleHeight; y++)
 			for(int x = 0; x < visibleWidth; x++)
 			{
-				int drawX = x*TileGraphics.TILE_SIZE_X;
-				int drawY = y*TileGraphics.TILE_SIZE_Y;
-				visibleMap[x][y].getTile(currentTicks).draw(drawX, drawY, terminal);
+				int drawX = x*CLITileGraphics.TILE_SIZE_X;
+				int drawY = y*CLITileGraphics.TILE_SIZE_Y;
+				AbstractTileGraphics<?> tile = visibleMap[x][y].getTile(currentTicks);
+				assert tile instanceof CLITileGraphics;
+				((CLITileGraphics)tile).draw(drawX, drawY, terminal);
 			}
 
 		// Draw characters on the visible map
@@ -50,15 +55,15 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 
 	public void updateDrawCharacter(int playerX, int playerY, GameObject gameObject, int gameX, int gameY)
 	{
-		int startX = Math.max(0, playerX-gameX/TileGraphics.TILE_SIZE_X/2);
-		int startY = Math.max(0, playerY-gameY/TileGraphics.TILE_SIZE_Y/2);
+		int startX = Math.max(0, playerX-gameX/CLITileGraphics.TILE_SIZE_X/2);
+		int startY = Math.max(0, playerY-gameY/CLITileGraphics.TILE_SIZE_Y/2);
 		int cX = gameObject.getX()-startX, cY = gameObject.getY()-startY;
 
-		if(cX < 0||cY < 0||cX*TileGraphics.TILE_SIZE_X >= gameX||cY*TileGraphics.TILE_SIZE_Y >= gameY)
+		if(cX < 0||cY < 0||cX*CLITileGraphics.TILE_SIZE_X >= gameX||cY*CLITileGraphics.TILE_SIZE_Y >= gameY)
 			return;
 
-		TileGraphics sprite = gameObject.getCurrentSprite();
-		sprite.drawTrnsparent(cX*TileGraphics.TILE_SIZE_X, cY*TileGraphics.TILE_SIZE_Y, terminal);
+		CLITileGraphics sprite = (CLITileGraphics)SpriteHandler.getHandler(gameObject.getClass()).getSpriteFor(gameObject);
+		sprite.drawTransparent(cX*CLITileGraphics.TILE_SIZE_X, cY*CLITileGraphics.TILE_SIZE_Y, terminal);
 	}
 
 	@Override
@@ -70,7 +75,7 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 			case 'a' -> level.moveCharacterBy(player, -1, 0);
 			case 's' -> level.moveCharacterBy(player, 0, 1);
 			case 'd' -> level.moveCharacterBy(player, 1, 0);
-			case 'p' -> new ActionResult(Level.ResultType.SAVE_GAME);
+			case 'p' -> new ActionResult(ResultType.SAVE_GAME);
 			default -> null;
 		};
 	}

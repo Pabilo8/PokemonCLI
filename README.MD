@@ -1,6 +1,8 @@
-# Pokemon CLI
-A Pokemon-inspired TUI game written in Java using Google's Lanterna library.
-Uses Lombok for boilerplate code reduction and JUnit for testing.
+# Pokemon CLI/GUI
+This repository contains the code necessary to build and run Pokemon CLI/GUI, a Pokemon-inspired game written in Java.
+It uses Lombok for boilerplate code reduction and JUnit for testing.
+The game logic is the same in both games, only difference being the display technology (Lanterna in CLI, Swing in GUI
+version).
 ## Building
 The project is built using Gradle, so you can build it using the following command: `gradle build`
 ```shell

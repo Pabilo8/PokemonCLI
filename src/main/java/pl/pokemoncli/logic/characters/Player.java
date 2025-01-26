@@ -1,6 +1,6 @@
 package pl.pokemoncli.logic.characters;
 
-import pl.pokemoncli.cli.graphics.TileGraphics;
+import lombok.Getter;
 
 /**
  * @author Pabilo8
@@ -8,7 +8,8 @@ import pl.pokemoncli.cli.graphics.TileGraphics;
  */
 public class Player extends FightableCharacter
 {
-	TileGraphics currentSprite = TileGraphics.PLAYER_VERTICAL;
+	@Getter
+	int direction = 0;
 
 	public Player(String name, int y, int x, int maxPokemons)
 	{
@@ -23,16 +24,10 @@ public class Player extends FightableCharacter
 
 		//Change sprite based on movement
 		if(x > cX)
-			currentSprite = TileGraphics.PLAYER_RIGHT;
+			direction = 0;
 		else if(x < cX)
-			currentSprite = TileGraphics.PLAYER_LEFT;
+			direction = 1;
 		else
-			currentSprite = TileGraphics.PLAYER_VERTICAL;
-	}
-
-	@Override
-	public TileGraphics getCurrentSprite()
-	{
-		return currentSprite;
+			direction = 2;
 	}
 }

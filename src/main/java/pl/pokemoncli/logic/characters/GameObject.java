@@ -1,7 +1,7 @@
 package pl.pokemoncli.logic.characters;
 
 import lombok.Getter;
-import pl.pokemoncli.cli.graphics.TileGraphics;
+import pl.pokemoncli.cli.graphics.CLITileGraphics;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -25,8 +25,6 @@ public abstract class GameObject implements Serializable
 		this.x = x;
 		this.y = y;
 	}
-
-	public abstract TileGraphics getCurrentSprite();
 
 	public void setPosition(int x, int y)
 	{

@@ -5,7 +5,7 @@
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="pl.pokemoncli.*" />
+        <option name="PATTERN" value="pl.pokemoncli.logic.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

@@ -35,10 +35,24 @@ public class LoadGameGui implements IPokemonGui
 		this.backToMenuButton.addActionListener(this::backToMenu);
 		this.loadGameButton.setDefaultCapable(true);
 
-		loadSaveObjects();
+		this.saveList.setCellRenderer(new SaveObjectRenderer());
+		this.saveList.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				if(e.getClickCount()==2)
+				{
+					int index = saveList.locationToIndex(e.getPoint());
+					saveList.setSelectedIndex(index);
+					loadGame(null);
+				}
+			}
+		});
 	}
 
-	private void loadSaveObjects()
+	@Override
+	public void onInit()
 	{
 		File saveDir = new File("saves/");
 		File[] saveFiles = saveDir.listFiles((dir, name) -> name.endsWith(".pok"));
@@ -52,22 +66,7 @@ public class LoadGameGui implements IPokemonGui
 				saveObjects.add(saveObject);
 			}
 		}
-
 		saveList.setListData(saveObjects.toArray(new SaveObject[0]));
-		saveList.setCellRenderer(new SaveObjectRenderer());
-		saveList.addMouseListener(new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-				if(e.getClickCount()==2)
-				{
-					int index = saveList.locationToIndex(e.getPoint());
-					saveList.setSelectedIndex(index);
-					loadGame(null);
-				}
-			}
-		});
 	}
 
 	private void loadGame(ActionEvent actionEvent)

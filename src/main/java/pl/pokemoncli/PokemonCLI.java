@@ -1,20 +1,26 @@
 package pl.pokemoncli;
 
 import com.googlecode.lanterna.input.Key;
-import pl.PokemonCommon;
+import lombok.RequiredArgsConstructor;
 import pl.pokemoncli.cli.DoubleBufferedTerminal;
 import pl.pokemoncli.cli.KeyHandlingDisplay;
 import pl.pokemoncli.cli.MainMenuDisplay;
+import pl.pokemoncli.cli.graphics.CLITileGraphics;
 import pl.pokemoncli.cli.graphics.PokemonGraphics;
-import pl.pokemoncli.cli.graphics.TileGraphics;
 import pl.pokemoncli.cli.main_display.DialogueDisplay;
 import pl.pokemoncli.cli.main_display.FightDisplay;
 import pl.pokemoncli.cli.main_display.GameDisplay;
 import pl.pokemoncli.cli.side_display.FightPanelDisplay;
 import pl.pokemoncli.cli.side_display.GamePanelDisplay;
+import pl.pokemoncli.logic.AbstractTileGraphics;
 import pl.pokemoncli.logic.Level.ActionResult;
+import pl.pokemoncli.logic.Level.Terrain;
+import pl.pokemoncli.logic.PokemonCommon;
 import pl.pokemoncli.logic.SaveStateUtils;
 import pl.pokemoncli.logic.SaveStateUtils.SaveObject;
+import pl.pokemoncli.logic.SpriteHandler;
+import pl.pokemoncli.logic.SpriteHandler.SimpleSpriteHandler;
+import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
 import java.awt.image.BufferedImage;
@@ -75,7 +81,58 @@ public class PokemonCLI extends PokemonCommon
 
 	protected void loadGraphics()
 	{
-		for(TileGraphics value : TileGraphics.values())
+		//Set tile graphics
+		Terrain.GRASS.setTileGraphics(CLITileGraphics.GRASS);
+		Terrain.BEACH.setTileGraphics(CLITileGraphics.BEACH);
+		Terrain.BEACH2.setTileGraphics(CLITileGraphics.BEACH2);
+		Terrain.ROAD.setTileGraphics(CLITileGraphics.ROAD);
+		Terrain.FLOOR.setTileGraphics(CLITileGraphics.FLOOR);
+		Terrain.BLOCKED.setTileGraphics(CLITileGraphics.BLOCKED);
+		Terrain.VOID.setTileGraphics(CLITileGraphics.VOID);
+		Terrain.BUSH1.setTileGraphics(CLITileGraphics.BUSH1);
+		Terrain.BUSH2.setTileGraphics(CLITileGraphics.BUSH2);
+		Terrain.TREE_LEAVES.setTileGraphics(CLITileGraphics.TREE_LEAVES);
+		Terrain.TREE_TRUNK.setTileGraphics(CLITileGraphics.TREE_TRUNK);
+		Terrain.TREE_LEAVES_SOLID.setTileGraphics(CLITileGraphics.TREE_LEAVES);
+		Terrain.WATER_STILL.setTileGraphics(CLITileGraphics.WATER_STILL1,
+				CLITileGraphics.WATER_STILL1, CLITileGraphics.WATER_STILL2, CLITileGraphics.WATER_STILL2);
+		Terrain.WATER_FLOWING.setTileGraphics(CLITileGraphics.WATER_FLOWING1,
+				CLITileGraphics.WATER_FLOWING2, CLITileGraphics.WATER_FLOWING3, CLITileGraphics.WATER_FLOWING4, CLITileGraphics.WATER_FLOWING5);
+		Terrain.BRIDGE1.setTileGraphics(CLITileGraphics.BRIDGE1);
+		Terrain.BRIDGE2.setTileGraphics(CLITileGraphics.BRIDGE2);
+		Terrain.DOOR.setTileGraphics(CLITileGraphics.DOOR);
+		Terrain.HOUSE_WALL_LEFT.setTileGraphics(CLITileGraphics.HOUSE_WALL_LEFT);
+		Terrain.HOUSE_WALL_RIGHT.setTileGraphics(CLITileGraphics.HOUSE_WALL_RIGHT);
+		Terrain.HOUSE_WALL_LEFT_BOTTOM.setTileGraphics(CLITileGraphics.HOUSE_WALL_LEFT_BOTTOM);
+		Terrain.HOUSE_WALL_RIGHT_BOTTOM.setTileGraphics(CLITileGraphics.HOUSE_WALL_RIGHT_BOTTOM);
+		Terrain.HOUSE_WALL_LEFT_ROOF.setTileGraphics(CLITileGraphics.HOUSE_WALL_LEFT_ROOF);
+		Terrain.HOUSE_WALL_RIGHT_ROOF.setTileGraphics(CLITileGraphics.HOUSE_WALL_RIGHT_ROOF);
+		Terrain.HOUSE_WALL_MIDDLE_ROOF.setTileGraphics(CLITileGraphics.HOUSE_WALL_MIDDLE_ROOF);
+		Terrain.HOUSE_WALL_ROOF_LEFT.setTileGraphics(CLITileGraphics.HOUSE_ROOF_TOP_LEFT);
+		Terrain.HOUSE_WALL_ROOF_RIGHT.setTileGraphics(CLITileGraphics.HOUSE_ROOF_TOP_RIGHT);
+		Terrain.HOUSE_WALL_ROOF_MIDDLE.setTileGraphics(CLITileGraphics.HOUSE_ROOF_TOP_MIDDLE);
+		Terrain.HOUSE_WALL.setTileGraphics(CLITileGraphics.HOUSE_WALL);
+		Terrain.HOUSE_WALL_BOTTOM.setTileGraphics(CLITileGraphics.HOUSE_WALL_BOTTOM);
+
+		SpriteHandler.registerHandler(Player.class, new SpriteHandler<>()
+		{
+			@Override
+			protected CLITileGraphics getSprite(Player gameObject)
+			{
+				return switch(gameObject.getDirection())
+				{
+					case 1 -> CLITileGraphics.PLAYER_LEFT;
+					case 2 -> CLITileGraphics.PLAYER_RIGHT;
+					default -> CLITileGraphics.PLAYER_VERTICAL;
+				};
+			}
+		});
+		SpriteHandler.registerHandler(Enemy.class, new SimpleSpriteHandler<>(CLITileGraphics.ENEMY_VERTICAL));
+		SpriteHandler.registerHandler(NPC.class, new SimpleSpriteHandler<>(CLITileGraphics.NPC_VERTICAL));
+		SpriteHandler.registerHandler(Door.class, new SimpleSpriteHandler<>(CLITileGraphics.DOOR_OPENABLE));
+
+		//Load tile graphics
+		for(CLITileGraphics value : CLITileGraphics.values())
 			value.loadGraphics();
 		for(PokemonGraphics value : PokemonGraphics.values())
 			value.loadGraphics();
@@ -122,7 +179,7 @@ public class PokemonCLI extends PokemonCommon
 	private void displayGame() throws InterruptedException
 	{
 		GAME_Y = Math.min(terminal.getWidth(), terminal.getHeight());
-		GAME_X = (int)(GAME_Y*(TileGraphics.TILE_SIZE_X/(float)TileGraphics.TILE_SIZE_Y));
+		GAME_X = (int)(GAME_Y*(CLITileGraphics.TILE_SIZE_X/(float)CLITileGraphics.TILE_SIZE_Y));
 
 		//TODO: 19.11.2024 game end condition / return to main menu
 		while(!exitGame)

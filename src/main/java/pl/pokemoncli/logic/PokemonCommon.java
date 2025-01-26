@@ -1,10 +1,8 @@
-package pl;
+package pl.pokemoncli.logic;
 
 import com.googlecode.lanterna.input.Key;
 import lombok.Getter;
 import pl.pokemoncli.cli.KeyHandlingDisplay;
-import pl.pokemoncli.logic.Fight;
-import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.SaveStateUtils.SaveObject;

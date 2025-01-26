@@ -1,6 +1,7 @@
 package pl.pokemoncli.cli.graphics;
 
 import pl.pokemoncli.cli.DoubleBufferedTerminal;
+import pl.pokemoncli.logic.AbstractTileGraphics;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.*;
  * @author Pabilo8
  * @since 05.11.2024
  */
-public enum TileGraphics
+public enum CLITileGraphics implements AbstractTileGraphics<DoubleBufferedTerminal>
 {
 	GRASS("tiles/grass.txt", new Color(0x4C7C4F), new Color(0x68916C)),
 	FLOOR("tiles/floor.txt", new Color(0x7C674C), new Color(0x918368)),
@@ -73,7 +74,7 @@ public enum TileGraphics
 	private String filePath;
 	String[] graphics;
 
-	TileGraphics(Color foreground, Color background, String[] graphics)
+	CLITileGraphics(Color foreground, Color background, String[] graphics)
 	{
 		this.graphics = graphics;
 		this.foreground = foreground;
@@ -81,28 +82,30 @@ public enum TileGraphics
 		this.filePath = null;
 	}
 
-	TileGraphics(String filePath, Color foreground, Color background)
+	CLITileGraphics(String filePath, Color foreground, Color background)
 	{
 		this(foreground, background, null);
 		this.filePath = filePath;
 	}
 
 	@Nonnull
+	@Override
 	public void loadGraphics()
 	{
 		if(filePath!=null)
 			this.graphics = AsciiArtLoader.loadAsciiArt(filePath, TILE_SIZE_X, TILE_SIZE_Y, AsciiArtLoader.FALLBACK_TILE_GRAPHICS);
 	}
 
+	@Override
 	public void draw(int offsetX, int offsetY, DoubleBufferedTerminal terminal)
 	{
-		//TODO: 16.11.2024 batch drawing using System.arraycopy
 		for(int y = 0; y < TILE_SIZE_Y; y++)
 			for(int x = 0; x < TILE_SIZE_X; x++)
 				terminal.drawColor(offsetX+x, offsetY+y, graphics[y].charAt(x), foreground, background);
 	}
 
-	public void drawTrnsparent(int offsetX, int offsetY, DoubleBufferedTerminal terminal)
+	@Override
+	public void drawTransparent(int offsetX, int offsetY, DoubleBufferedTerminal terminal)
 	{
 		for(int y = 0; y < TILE_SIZE_Y; y++)
 			for(int x = 0; x < TILE_SIZE_X; x++)

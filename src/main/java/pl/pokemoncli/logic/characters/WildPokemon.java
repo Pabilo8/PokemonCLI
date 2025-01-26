@@ -1,6 +1,6 @@
 package pl.pokemoncli.logic.characters;
 
-import pl.pokemoncli.cli.graphics.TileGraphics;
+import pl.pokemoncli.cli.graphics.CLITileGraphics;
 import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 
 public class WildPokemon extends Enemy
@@ -9,11 +9,5 @@ public class WildPokemon extends Enemy
 	{
 		super(wildPokemon.getName(), x, y, 1);
 		getPokemons().add(wildPokemon);
-	}
-
-	@Override
-	public TileGraphics getCurrentSprite()
-	{
-		return TileGraphics.BUSH1;
 	}
 }

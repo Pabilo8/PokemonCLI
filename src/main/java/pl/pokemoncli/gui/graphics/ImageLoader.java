@@ -5,6 +5,8 @@ import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,10 @@ public class ImageLoader
 
 	public void loadImage(String key, String path)
 	{
-		ImageIcon icon = new ImageIcon(this.getClass().getResource(path));
+		URL resource = this.getClass().getResource(path);
+
+		ImageIcon icon = resource==null?new ImageIcon(new BufferedImage(24, 24, BufferedImage.TYPE_INT_RGB)):
+				new ImageIcon(resource);
 		imageMap.put(key, icon.getImage());
 	}
 

@@ -1,7 +1,6 @@
 package pl.pokemoncli;
 
 import com.googlecode.lanterna.input.Key;
-import lombok.RequiredArgsConstructor;
 import pl.pokemoncli.cli.DoubleBufferedTerminal;
 import pl.pokemoncli.cli.KeyHandlingDisplay;
 import pl.pokemoncli.cli.MainMenuDisplay;
@@ -12,7 +11,6 @@ import pl.pokemoncli.cli.main_display.FightDisplay;
 import pl.pokemoncli.cli.main_display.GameDisplay;
 import pl.pokemoncli.cli.side_display.FightPanelDisplay;
 import pl.pokemoncli.cli.side_display.GamePanelDisplay;
-import pl.pokemoncli.logic.AbstractTileGraphics;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.PokemonCommon;
@@ -87,12 +85,14 @@ public class PokemonCLI extends PokemonCommon
 		Terrain.BEACH2.setTileGraphics(CLITileGraphics.BEACH2);
 		Terrain.ROAD.setTileGraphics(CLITileGraphics.ROAD);
 		Terrain.FLOOR.setTileGraphics(CLITileGraphics.FLOOR);
-		Terrain.BLOCKED.setTileGraphics(CLITileGraphics.BLOCKED);
+		Terrain.ROCK.setTileGraphics(CLITileGraphics.ROCK);
+		Terrain.ROCK_SAND.setTileGraphics(CLITileGraphics.ROCK);
 		Terrain.VOID.setTileGraphics(CLITileGraphics.VOID);
 		Terrain.BUSH1.setTileGraphics(CLITileGraphics.BUSH1);
 		Terrain.BUSH2.setTileGraphics(CLITileGraphics.BUSH2);
 		Terrain.TREE_LEAVES.setTileGraphics(CLITileGraphics.TREE_LEAVES);
 		Terrain.TREE_TRUNK.setTileGraphics(CLITileGraphics.TREE_TRUNK);
+		Terrain.TREE_TRUNK_SOLID.setTileGraphics(CLITileGraphics.TREE_TRUNK);
 		Terrain.TREE_LEAVES_SOLID.setTileGraphics(CLITileGraphics.TREE_LEAVES);
 		Terrain.WATER_STILL.setTileGraphics(CLITileGraphics.WATER_STILL1,
 				CLITileGraphics.WATER_STILL1, CLITileGraphics.WATER_STILL2, CLITileGraphics.WATER_STILL2);
@@ -101,6 +101,7 @@ public class PokemonCLI extends PokemonCommon
 		Terrain.BRIDGE1.setTileGraphics(CLITileGraphics.BRIDGE1);
 		Terrain.BRIDGE2.setTileGraphics(CLITileGraphics.BRIDGE2);
 		Terrain.DOOR.setTileGraphics(CLITileGraphics.DOOR);
+		Terrain.DOOR_INSIDE.setTileGraphics(CLITileGraphics.DOOR);
 		Terrain.HOUSE_WALL_LEFT.setTileGraphics(CLITileGraphics.HOUSE_WALL_LEFT);
 		Terrain.HOUSE_WALL_RIGHT.setTileGraphics(CLITileGraphics.HOUSE_WALL_RIGHT);
 		Terrain.HOUSE_WALL_LEFT_BOTTOM.setTileGraphics(CLITileGraphics.HOUSE_WALL_LEFT_BOTTOM);
@@ -117,16 +118,17 @@ public class PokemonCLI extends PokemonCommon
 		SpriteHandler.registerHandler(Player.class, new SpriteHandler<>()
 		{
 			@Override
-			protected CLITileGraphics getSprite(Player gameObject)
+			protected CLITileGraphics getSprite(Player gameObject, float progress)
 			{
 				return switch(gameObject.getDirection())
 				{
-					case 1 -> CLITileGraphics.PLAYER_LEFT;
-					case 2 -> CLITileGraphics.PLAYER_RIGHT;
+					case 0 -> CLITileGraphics.PLAYER_LEFT;
+					case 1 -> CLITileGraphics.PLAYER_RIGHT;
 					default -> CLITileGraphics.PLAYER_VERTICAL;
 				};
 			}
 		});
+		SpriteHandler.registerHandler(WildPokemon.class, new SimpleSpriteHandler<>(CLITileGraphics.BUSH1));
 		SpriteHandler.registerHandler(Enemy.class, new SimpleSpriteHandler<>(CLITileGraphics.ENEMY_VERTICAL));
 		SpriteHandler.registerHandler(NPC.class, new SimpleSpriteHandler<>(CLITileGraphics.NPC_VERTICAL));
 		SpriteHandler.registerHandler(Door.class, new SimpleSpriteHandler<>(CLITileGraphics.DOOR_OPENABLE));

@@ -57,7 +57,7 @@ public enum CLITileGraphics implements AbstractTileGraphics<DoubleBufferedTermin
 	HOUSE_ROOF_TOP_MIDDLE("tiles/house_roof_top_middle.txt", new Color(0x709A9A), new Color(0x4C6A6A)),
 
 	VOID("tiles/void.txt", new Color(0x000000), new Color(0x222222)),
-	BLOCKED("tiles/blocked.txt", new Color(0x000000), new Color(0x8A8A8A)),
+	ROCK("tiles/blocked.txt", new Color(0x000000), new Color(0x8A8A8A)),
 
 	//--- Characters ---//
 	PLAYER_VERTICAL("tiles/player_vertical.txt", new Color(0xAF6464), new Color(0xB5A5A5)),
@@ -97,7 +97,7 @@ public enum CLITileGraphics implements AbstractTileGraphics<DoubleBufferedTermin
 	}
 
 	@Override
-	public void draw(int offsetX, int offsetY, DoubleBufferedTerminal terminal)
+	public void drawBackground(int offsetX, int offsetY, DoubleBufferedTerminal terminal)
 	{
 		for(int y = 0; y < TILE_SIZE_Y; y++)
 			for(int x = 0; x < TILE_SIZE_X; x++)

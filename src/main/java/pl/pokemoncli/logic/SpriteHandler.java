@@ -27,10 +27,15 @@ public abstract class SpriteHandler<T extends GameObject, G extends AbstractTile
 
 	public G getSpriteFor(GameObject gameObject)
 	{
-		return getSprite((T)gameObject);
+		return getSpriteFor(gameObject, 0);
 	}
 
-	protected abstract G getSprite(T gameObject);
+	public G getSpriteFor(GameObject gameObject, float progress)
+	{
+		return getSprite((T)gameObject, progress);
+	}
+
+	protected abstract G getSprite(T gameObject, float progress);
 
 	@RequiredArgsConstructor
 	public static class SimpleSpriteHandler<T extends GameObject, G extends AbstractTileGraphics<?>> extends SpriteHandler<T, G>
@@ -38,7 +43,7 @@ public abstract class SpriteHandler<T extends GameObject, G extends AbstractTile
 		private final G graphics;
 
 		@Override
-		protected G getSprite(T gameObject)
+		protected G getSprite(T gameObject, float progress)
 		{
 			return graphics;
 		}

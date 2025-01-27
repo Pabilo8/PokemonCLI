@@ -43,7 +43,7 @@ public class GameDisplay extends BaseDisplay implements KeyHandlingDisplay
 				int drawY = y*CLITileGraphics.TILE_SIZE_Y;
 				AbstractTileGraphics<?> tile = visibleMap[x][y].getTile(currentTicks);
 				assert tile instanceof CLITileGraphics;
-				((CLITileGraphics)tile).draw(drawX, drawY, terminal);
+				((CLITileGraphics)tile).drawBackground(drawX, drawY, terminal);
 			}
 
 		// Draw characters on the visible map

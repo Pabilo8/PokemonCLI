@@ -9,7 +9,7 @@ import lombok.Getter;
 public class Player extends FightableCharacter
 {
 	@Getter
-	int direction = 0;
+	int direction = 2;
 
 	public Player(String name, int y, int x, int maxPokemons)
 	{
@@ -27,7 +27,9 @@ public class Player extends FightableCharacter
 			direction = 0;
 		else if(x < cX)
 			direction = 1;
-		else
+		else if(y > cY)
 			direction = 2;
+		else if(y < cY)
+			direction = 3;
 	}
 }

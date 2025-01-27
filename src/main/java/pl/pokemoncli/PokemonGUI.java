@@ -5,7 +5,7 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.googlecode.lanterna.input.Key;
 import lombok.AccessLevel;
 import lombok.Getter;
-import pl.pokemoncli.cli.KeyHandlingDisplay;
+import pl.pokemoncli.cli.graphics.RandomGUISpriteHandler;
 import pl.pokemoncli.gui.PokeLogger;
 import pl.pokemoncli.gui.display.*;
 import pl.pokemoncli.gui.graphics.GUITileGraphics;
@@ -13,10 +13,7 @@ import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.PokemonCommon;
 import pl.pokemoncli.logic.SpriteHandler;
 import pl.pokemoncli.logic.SpriteHandler.SimpleSpriteHandler;
-import pl.pokemoncli.logic.characters.Door;
-import pl.pokemoncli.logic.characters.Enemy;
-import pl.pokemoncli.logic.characters.NPC;
-import pl.pokemoncli.logic.characters.Player;
+import pl.pokemoncli.logic.characters.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,8 +84,7 @@ public class PokemonGUI extends PokemonCommon
 			@Override
 			public void keyTyped(KeyEvent e)
 			{
-				if(currentGui!=null&&currentGui instanceof KeyHandlingDisplay)
-					((KeyHandlingDisplay)currentGui).handleKeyInput(level, player, dialogue, fight, new Key(e.getKeyChar()));
+				handleKeyInput(new Key(e.getKeyChar()));
 			}
 
 			@Override
@@ -103,6 +99,7 @@ public class PokemonGUI extends PokemonCommon
 			}
 		});
 		window.setFocusable(true);
+		window.setAutoRequestFocus(true);
 		window.setVisible(true);
 	}
 
@@ -123,13 +120,15 @@ public class PokemonGUI extends PokemonCommon
 		Terrain.BEACH2.setTileGraphics(GUITileGraphics.BEACH2);
 		Terrain.ROAD.setTileGraphics(GUITileGraphics.ROAD);
 		Terrain.FLOOR.setTileGraphics(GUITileGraphics.FLOOR);
-		Terrain.BLOCKED.setTileGraphics(GUITileGraphics.BLOCKED);
+		Terrain.ROCK.setTileGraphics(GUITileGraphics.ROCK);
+		Terrain.ROCK_SAND.setTileGraphics(GUITileGraphics.ROCK_SAND);
 		Terrain.VOID.setTileGraphics(GUITileGraphics.VOID);
 		Terrain.BUSH1.setTileGraphics(GUITileGraphics.BUSH1);
 		Terrain.BUSH2.setTileGraphics(GUITileGraphics.BUSH2);
 		Terrain.TREE_LEAVES.setTileGraphics(GUITileGraphics.TREE_LEAVES);
 		Terrain.TREE_TRUNK.setTileGraphics(GUITileGraphics.TREE_TRUNK);
-		Terrain.TREE_LEAVES_SOLID.setTileGraphics(GUITileGraphics.TREE_LEAVES);
+		Terrain.TREE_LEAVES_SOLID.setTileGraphics(GUITileGraphics.TREE_LEAVES_BIG);
+		Terrain.TREE_TRUNK_SOLID.setTileGraphics(GUITileGraphics.TREE_LEAVES_BIG);
 		Terrain.WATER_STILL.setTileGraphics(GUITileGraphics.WATER_STILL1,
 				GUITileGraphics.WATER_STILL1, GUITileGraphics.WATER_STILL2, GUITileGraphics.WATER_STILL2);
 		Terrain.WATER_FLOWING.setTileGraphics(GUITileGraphics.WATER_FLOWING1,
@@ -137,6 +136,7 @@ public class PokemonGUI extends PokemonCommon
 		Terrain.BRIDGE1.setTileGraphics(GUITileGraphics.BRIDGE1);
 		Terrain.BRIDGE2.setTileGraphics(GUITileGraphics.BRIDGE2);
 		Terrain.DOOR.setTileGraphics(GUITileGraphics.DOOR);
+		Terrain.DOOR_INSIDE.setTileGraphics(GUITileGraphics.DOOR_INSIDE);
 		Terrain.HOUSE_WALL_LEFT.setTileGraphics(GUITileGraphics.HOUSE_WALL_LEFT);
 		Terrain.HOUSE_WALL_RIGHT.setTileGraphics(GUITileGraphics.HOUSE_WALL_RIGHT);
 		Terrain.HOUSE_WALL_LEFT_BOTTOM.setTileGraphics(GUITileGraphics.HOUSE_WALL_LEFT_BOTTOM);
@@ -153,18 +153,29 @@ public class PokemonGUI extends PokemonCommon
 		SpriteHandler.registerHandler(Player.class, new SpriteHandler<>()
 		{
 			@Override
-			protected GUITileGraphics getSprite(Player gameObject)
+			protected GUITileGraphics getSprite(Player gameObject, float progress)
 			{
 				return switch(gameObject.getDirection())
 				{
-					case 1 -> GUITileGraphics.PLAYER_LEFT;
-					case 2 -> GUITileGraphics.PLAYER_RIGHT;
-					default -> GUITileGraphics.PLAYER_VERTICAL;
+					case 0 ->
+							getAnimation(progress, GUITileGraphics.PLAYER_RIGHT1, GUITileGraphics.PLAYER_RIGHT2, GUITileGraphics.PLAYER_RIGHT3);
+					case 1 ->
+							getAnimation(progress, GUITileGraphics.PLAYER_LEFT1, GUITileGraphics.PLAYER_LEFT2, GUITileGraphics.PLAYER_LEFT3);
+					case 2 ->
+							getAnimation(progress, GUITileGraphics.PLAYER_FRONT1, GUITileGraphics.PLAYER_FRONT2, GUITileGraphics.PLAYER_FRONT3);
+					default ->
+							getAnimation(progress, GUITileGraphics.PLAYER_BACK1, GUITileGraphics.PLAYER_BACK2, GUITileGraphics.PLAYER_BACK3);
 				};
 			}
 		});
-		SpriteHandler.registerHandler(Enemy.class, new SimpleSpriteHandler<>(GUITileGraphics.ENEMY_VERTICAL));
-		SpriteHandler.registerHandler(NPC.class, new SimpleSpriteHandler<>(GUITileGraphics.NPC_VERTICAL));
+		SpriteHandler.registerHandler(WildPokemon.class, new SimpleSpriteHandler<>(GUITileGraphics.BUSH2));
+		SpriteHandler.registerHandler(Enemy.class, new RandomGUISpriteHandler<Enemy>(GUITileGraphics.ENEMY0)
+				.withSprite("Psi Syn", GUITileGraphics.ENEMY1)
+				.withSprite("Czlowiek", GUITileGraphics.ENEMY2)
+		);
+		SpriteHandler.registerHandler(NPC.class, new RandomGUISpriteHandler<NPC>(GUITileGraphics.NPC0)
+				.withSprite("Pies", GUITileGraphics.NPC_PIES)
+		);
 		SpriteHandler.registerHandler(Door.class, new SimpleSpriteHandler<>(GUITileGraphics.DOOR_OPENABLE));
 
 		for(GUITileGraphics value : GUITileGraphics.values())
@@ -172,6 +183,12 @@ public class PokemonGUI extends PokemonCommon
 		//TODO: 26.01.2025 load pokemon graphics
 		/*for(PokemonGraphics value : PokemonGraphics.values())
 			value.loadGraphics();*/
+	}
+
+	private GUITileGraphics getAnimation(float progress, GUITileGraphics... graphics)
+	{
+		int index = (int)(progress*graphics.length);
+		return graphics[Math.min(index, graphics.length-1)];
 	}
 
 	public void changeGui(IPokemonGui gui)
@@ -190,5 +207,10 @@ public class PokemonGUI extends PokemonCommon
 			//Init new GUI
 			gui.onInit();
 		});
+	}
+
+	public void focus()
+	{
+		window.requestFocus();
 	}
 }

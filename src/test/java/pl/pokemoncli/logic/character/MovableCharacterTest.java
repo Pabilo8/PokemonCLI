@@ -53,7 +53,7 @@ public class MovableCharacterTest
 	void testMoveCharacterToObstacle()
 	{
 		character.setPosition(0, 0);
-		level.setTerrain(1, 0, Level.Terrain.BLOCKED);
+		level.setTerrain(1, 0, Level.Terrain.ROCK);
 		ActionResult result = level.moveCharacterBy(character, 1, 0);
 
 		assertEquals(ResultType.MET_OBSTACLE, result.getResult());

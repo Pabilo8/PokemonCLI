@@ -2,8 +2,6 @@ package pl.pokemoncli.logic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import pl.pokemoncli.cli.graphics.CLITileGraphics;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.item.ItemType;
 import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
@@ -202,13 +200,15 @@ public class Level
 		BEACH2(true),
 		ROAD(true),
 		FLOOR(true),
-		BLOCKED(false),
+		ROCK(false),
+		ROCK_SAND(false),
 		VOID(false),
 
 		BUSH1(true),
 		BUSH2(true),
 		TREE_LEAVES(true),
 		TREE_TRUNK(false),
+		TREE_TRUNK_SOLID(false),
 		TREE_LEAVES_SOLID(false),
 
 		WATER_STILL(false),
@@ -217,6 +217,7 @@ public class Level
 		BRIDGE2(true),
 
 		DOOR(true),
+		DOOR_INSIDE(true),
 		HOUSE_WALL_LEFT(false),
 		HOUSE_WALL_RIGHT(false),
 		HOUSE_WALL_LEFT_BOTTOM(false),

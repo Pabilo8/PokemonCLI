@@ -1,6 +1,5 @@
 package pl.pokemoncli.logic.characters;
 
-import pl.pokemoncli.cli.graphics.CLITileGraphics;
 import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 
 public class WildPokemon extends Enemy

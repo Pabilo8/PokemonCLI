@@ -38,7 +38,7 @@ public abstract class PokemonCommon
 	protected final AudioSystem audioSystem = new AudioSystem();
 	protected final Random diceRoll = new Random();
 	protected boolean exitGame = false;
-	protected int tickTimer = 0;
+	protected int tickTimer = 0, actionDelayTimer = 0;
 
 	protected void handleMusic()
 	{
@@ -160,9 +160,9 @@ public abstract class PokemonCommon
 
 		//--- House Interior 1 ---//
 		Level houseInside = new Level(7, 7, Terrain.VOID);
-		houseInside.paintTerrain(0, 0, 10, 5, Terrain.FLOOR);
+		houseInside.paintTerrain(0, 0, 10, 6, Terrain.FLOOR);
 		houseInside.addDoor(3, 6, level, 8, 4);
-		houseInside.setTerrain(3, 6, Terrain.DOOR);
+		houseInside.setTerrain(3, 6, Terrain.DOOR_INSIDE);
 		houseInside.addCharacter(new NPC("Pies", 3, 3)
 				.withDialogue(new DialogueNode("Wrrrrr",
 						new DialogueResponse("Onie", null),
@@ -184,12 +184,12 @@ public abstract class PokemonCommon
 
 		//--- House Interior 2 ---//
 		Level houseInside2 = new Level(17, 7, Terrain.VOID);
-		houseInside2.paintTerrain(0, 0, 4, 5, Terrain.FLOOR);
-		houseInside2.paintTerrain(6, 0, 10, 5, Terrain.FLOOR);
-		houseInside2.paintTerrain(12, 0, 17, 5, Terrain.FLOOR);
-		houseInside2.setTerrain(2, 6, Terrain.DOOR);
-		houseInside2.setTerrain(8, 6, Terrain.DOOR);
-		houseInside2.setTerrain(14, 6, Terrain.DOOR);
+		houseInside2.paintTerrain(0, 0, 4, 6, Terrain.FLOOR);
+		houseInside2.paintTerrain(6, 0, 10, 6, Terrain.FLOOR);
+		houseInside2.paintTerrain(12, 0, 17, 6, Terrain.FLOOR);
+		houseInside2.setTerrain(2, 6, Terrain.DOOR_INSIDE);
+		houseInside2.setTerrain(8, 6, Terrain.DOOR_INSIDE);
+		houseInside2.setTerrain(14, 6, Terrain.DOOR_INSIDE);
 		houseInside2.addDoor(2, 6, level, 12, 4);
 		houseInside2.addDoor(8, 6, level, 15, 4);
 		houseInside2.addDoor(14, 6, level, 18, 4);
@@ -223,19 +223,19 @@ public abstract class PokemonCommon
 		level.paintTerrain(24, 3, 31, 3, Terrain.TREE_LEAVES);
 		level.paintTerrain(24, 4, 31, 4, Terrain.TREE_TRUNK);
 
-		level.setTerrain(0, 6, Terrain.BLOCKED);
-		level.setTerrain(2, 7, Terrain.BLOCKED);
-		level.setTerrain(8, 6, Terrain.BLOCKED);
-		level.setTerrain(9, 8, Terrain.BLOCKED);
-		level.setTerrain(14, 7, Terrain.BLOCKED);
-		level.setTerrain(19, 7, Terrain.BLOCKED);
-		level.setTerrain(25, 6, Terrain.BLOCKED);
-		level.setTerrain(30, 6, Terrain.BLOCKED);
-		level.setTerrain(1, 14, Terrain.BLOCKED);
-		level.setTerrain(2, 17, Terrain.BLOCKED);
-		level.setTerrain(8, 15, Terrain.BLOCKED);
-		level.setTerrain(8, 15, Terrain.BLOCKED);
-		level.setTerrain(13, 14, Terrain.BLOCKED);
+		level.setTerrain(0, 6, Terrain.ROCK);
+		level.setTerrain(2, 7, Terrain.ROCK_SAND);
+		level.setTerrain(8, 6, Terrain.ROCK_SAND);
+		level.setTerrain(9, 8, Terrain.ROCK_SAND);
+		level.setTerrain(14, 7, Terrain.ROCK_SAND);
+		level.setTerrain(19, 7, Terrain.ROCK_SAND);
+		level.setTerrain(25, 6, Terrain.ROCK_SAND);
+		level.setTerrain(30, 6, Terrain.ROCK_SAND);
+		level.setTerrain(1, 14, Terrain.ROCK_SAND);
+		level.setTerrain(2, 17, Terrain.ROCK);
+		level.setTerrain(8, 15, Terrain.ROCK_SAND);
+		level.setTerrain(8, 15, Terrain.ROCK);
+		level.setTerrain(13, 14, Terrain.ROCK_SAND);
 
 		level.paintTerrain(0, 29, 4, 31, Terrain.BUSH2, Terrain.GRASS, Terrain.GRASS, Terrain.GRASS);
 
@@ -270,7 +270,8 @@ public abstract class PokemonCommon
 		level.paintTerrain(8, 30, 15, 30, Terrain.TREE_LEAVES);
 		level.paintTerrain(8, 31, 15, 31, Terrain.TREE_TRUNK);
 		level.paintTerrain(19, 25, 24, 31, Terrain.TREE_LEAVES_SOLID);
-		level.paintTerrain(19, 19, 24, 23, Terrain.TREE_LEAVES_SOLID);
+		level.paintTerrain(19, 19, 24, 22, Terrain.TREE_LEAVES_SOLID);
+		level.paintTerrain(19, 23, 24, 23, Terrain.TREE_TRUNK_SOLID);
 		level.paintTerrain(19, 16, 24, 18, Terrain.TREE_LEAVES_SOLID, Terrain.GRASS, Terrain.GRASS, Terrain.GRASS);
 
 	}
@@ -283,6 +284,9 @@ public abstract class PokemonCommon
 			player = save.getPlayer();
 		level.addCharacter(player);
 	}
+
+	//TODO: 27.01.2025 action delay
+//	protected abstract int getActionDelay();
 
 	protected abstract void loadGraphics();
 

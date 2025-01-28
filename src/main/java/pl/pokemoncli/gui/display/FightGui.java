@@ -57,7 +57,7 @@ public class FightGui implements KeyHandlingDisplay, IPokemonGui
 		ActionResult result = lastResult;
 
 		//Progress bar and buttons update
-		if(fight!=null)
+		if(fight!=null&&fight.getCurrEnemyPokemon().getCurrentHp() > 0)
 		{
 			Pokemon playerPokemon = fight.getCurrPlayerPokemon();
 			Pokemon enemyPokemon = fight.getCurrEnemyPokemon();

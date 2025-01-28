@@ -8,6 +8,7 @@ import pl.pokemoncli.gui.graphics.ImageLoader;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -23,6 +24,7 @@ public class MainMenuGui implements IPokemonGui
 	private JButton settingsButton;
 	private JButton exitButton;
 	private JPanel imagePanel;
+	private JPanel centerPanel;
 
 	public MainMenuGui()
 	{
@@ -74,6 +76,7 @@ public class MainMenuGui implements IPokemonGui
 	public void onInit()
 	{
 		PokemonGUI.getInstance().getAudioSystem().play(Track.MAIN_MENU);
+		centerPanel.setBackground(new Color(0, 0, 0, 0));
 	}
 
 	@Override

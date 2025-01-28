@@ -70,18 +70,22 @@ public enum GUITileGraphics implements AbstractTileGraphics<Graphics>
 	PLAYER_BACK1("/gui/sprites/player/player_back1.png"),
 	PLAYER_BACK2("/gui/sprites/player/player_back2.png"),
 	PLAYER_BACK3("/gui/sprites/player/player_back3.png"),
+	PLAYER_BACK4("/gui/sprites/player/player_back4.png"),
 
 	PLAYER_FRONT1("/gui/sprites/player/player_front1.png"),
 	PLAYER_FRONT2("/gui/sprites/player/player_front2.png"),
 	PLAYER_FRONT3("/gui/sprites/player/player_front3.png"),
+	PLAYER_FRONT4("/gui/sprites/player/player_front4.png"),
 
 	PLAYER_RIGHT1("/gui/sprites/player/player_right1.png"),
 	PLAYER_RIGHT2("/gui/sprites/player/player_right2.png"),
 	PLAYER_RIGHT3("/gui/sprites/player/player_right3.png"),
+	PLAYER_RIGHT4("/gui/sprites/player/player_right4.png"),
 
 	PLAYER_LEFT1("/gui/sprites/player/player_left1.png"),
 	PLAYER_LEFT2("/gui/sprites/player/player_left2.png"),
 	PLAYER_LEFT3("/gui/sprites/player/player_left3.png"),
+	PLAYER_LEFT4("/gui/sprites/player/player_left4.png"),
 
 	ENEMY0("/gui/sprites/enemy0.png"),
 	ENEMY1("/gui/sprites/enemy1.png"),

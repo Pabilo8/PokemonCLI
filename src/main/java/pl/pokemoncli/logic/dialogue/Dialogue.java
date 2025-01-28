@@ -39,6 +39,11 @@ public class Dialogue
 		selectedResponseIndex = (selectedResponseIndex-1+currentNode.getResponses().size())%currentNode.getResponses().size();
 	}
 
+	public void selectResponse(int id)
+	{
+		selectedResponseIndex = id;
+	}
+
 	public DialogueResponse getSelectedResponse()
 	{
 		return currentNode.getResponses().get(selectedResponseIndex);

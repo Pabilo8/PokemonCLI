@@ -164,19 +164,19 @@ public abstract class PokemonCommon
 		houseInside.addDoor(3, 6, level, 8, 4);
 		houseInside.setTerrain(3, 6, Terrain.DOOR_INSIDE);
 		houseInside.addCharacter(new NPC("Pies", 3, 3)
-				.withDialogue(new DialogueNode("Wrrrrr",
-						new DialogueResponse("Onie", null),
-						new DialogueResponse("Otak", new DialogueNode("(starts doing dog stuff)",
-								new DialogueResponse("Creature of Dog, My gratitude upon thee for thy tricks, but the crimes-", null)
+				.withDialogue(new DialogueNode("Wrrrrr", Track.DIALOGUE_WRR,
+						new DialogueResponse("Onie", Track.DIALOGUE_THYEND, null),
+						new DialogueResponse("Otak", Track.DIALOGUE_CREATURE, new DialogueNode("(starts doing dog stuff)",
+								new DialogueResponse("Creature of Dog, My gratitude upon thee for thy tricks, but the crimes-", Track.DIALOGUE_JUDGEMENT, null)
 						))
 				))
 		);
 		houseInside.addCharacter(new NPC("Big Smoke", 5, 5)
-				.withDialogue(new DialogueNode("YOU'VE PICKED THE WRONG HOUSE, FOOL!",
-						new DialogueResponse("[nadstawia głowę i dostaje krzesłem]", null),
-						new DialogueResponse("Big Smoke, chill, it's me, CJ", new DialogueNode("CJ?!",
+				.withDialogue(new DialogueNode("YOU'VE PICKED THE WRONG HOUSE, FOOL!", Track.DIALOGUE_FOOL0,
+						new DialogueResponse("[nadstawia głowę i dostaje krzesłem]", Track.DIALOGUE_METAL_BAR, null),
+						new DialogueResponse("Big Smoke, chill, it's me, CJ", Track.DIALOGUE_FOOL1, new DialogueNode("CJ?!",
 								new DialogueResponse("...",
-										new DialogueNode("OH MY DOG, CJ?! WHAT'S UP MAN. HEY, BABY, YOU OK?", new DialogueResponse("ja nie panimaju pa Anglijski", null))
+										new DialogueNode("OH MY DOG, CJ?! WHAT'S UP MAN. HEY, BABY, YOU OK?", Track.DIALOGUE_FOOL2, new DialogueResponse("ja nie panimaju pa Anglijski", Track.DIALOGUE_FOOL3, null))
 								)))
 				))
 		);

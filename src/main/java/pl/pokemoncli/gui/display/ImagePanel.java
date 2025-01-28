@@ -7,10 +7,15 @@ import java.awt.*;
 
 public class ImagePanel extends JPanel
 {
-	private final String imageKey;
-	private final double aspectRatio;
+	private String imageKey = "";
+	private double aspectRatio;
 
 	public ImagePanel(String imageKey)
+	{
+		setImage(imageKey);
+	}
+
+	public void setImage(String imageKey)
 	{
 		this.imageKey = imageKey;
 		Image image = ImageLoader.getInstance().getImage(imageKey);

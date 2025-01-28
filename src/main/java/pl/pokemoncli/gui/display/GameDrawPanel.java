@@ -6,6 +6,7 @@ import pl.pokemoncli.logic.AbstractTileGraphics;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.SpriteHandler;
 import pl.pokemoncli.logic.characters.GameObject;
+import pl.pokemoncli.logic.characters.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +21,7 @@ public class GameDrawPanel extends JComponent implements IPokemonGui
 {
 	private static final int TILE_SIZE = 64;
 	private final Timer fps = new Timer(20, e -> this.repaint());
-	int tickTimer = 0;
+	int tickTimer = 0, moveTimer = 0;
 	private PokemonGUI pok;
 
 	public GameDrawPanel()
@@ -36,7 +37,6 @@ public class GameDrawPanel extends JComponent implements IPokemonGui
 					@Override
 					public void mouseClicked(MouseEvent e)
 					{
-						//BUG: 27.01.2025 sometimes selecting a position on sidebar Jlist makes the game lose focus
 						pok.focus();
 					}
 				}
@@ -58,20 +58,40 @@ public class GameDrawPanel extends JComponent implements IPokemonGui
 		int playerX = pok.getPlayer().getX();
 		int playerY = pok.getPlayer().getY();
 
-		if(pok.getLevel().getWidth()*TILE_SIZE < getWidth())
-			g.translate((getWidth()-pok.getLevel().getWidth()*TILE_SIZE)/2, 0);
-		if(pok.getLevel().getHeight()*TILE_SIZE < getHeight())
-			g.translate(0, (getHeight()-pok.getLevel().getHeight()*TILE_SIZE)/2);
-
+		//Calculate the visible map
 		int startX = Math.max(0, playerX-visibleWidth/2);
 		int startY = Math.max(0, playerY-visibleHeight/2);
 		Terrain[][] visibleMap = pok.getLevel().getVisibleMap(playerX, playerY, visibleWidth+1, visibleHeight);
 
+		//Smooth camera scrolling with player movement
+		int moveX = 0, moveY = 0;
+		if(moveTimer > 0)
+			switch(pok.getPlayer().getDirection())
+			{
+				case 0 -> moveX = 1;
+				case 1 -> moveX = -1;
+				case 2 -> moveY = 1;
+				case 3 -> moveY = -1;
+			}
+
+		//Center the player and move the camera smoothly on the X axis
+		if(pok.getLevel().getWidth()*TILE_SIZE < getWidth())
+			g.translate((getWidth()-pok.getLevel().getWidth()*TILE_SIZE)/2, 0);
+		else if(startX > 0)
+			g.translate((int)(moveX*TILE_SIZE*moveTimer/4f), 0);
+		//Center the player and move the camera smoothly on the Y axis
+		if(pok.getLevel().getHeight()*TILE_SIZE < getHeight())
+			g.translate(0, (getHeight()-pok.getLevel().getHeight()*TILE_SIZE)/2);
+		else if(startY > 0)
+			g.translate(0, (int)(moveY*TILE_SIZE*moveTimer/4f));
+
+		//Used later for checking tile neighbours / applying tilesets
 		boolean[] neighbours = new boolean[]{
 				false, false, false,
 				false, false, false,
 				false, false, false
 		};
+
 		//Draw background tiles
 		drawTiles(g, visibleHeight, visibleWidth, visibleMap, startX, startY, neighbours, false);
 
@@ -83,8 +103,10 @@ public class GameDrawPanel extends JComponent implements IPokemonGui
 		//Draw foreground tiles
 		drawTiles(g, visibleHeight, visibleWidth, visibleMap, startX, startY, neighbours, true);
 
-
+		//Cycle the tick timer
 		tickTimer = (tickTimer+1)%20;
+		//Decrement the move timer
+		moveTimer = Math.max(0, moveTimer-1);
 	}
 
 	private void drawTiles(Graphics g, int visibleHeight, int visibleWidth, Terrain[][] visibleMap,
@@ -118,11 +140,29 @@ public class GameDrawPanel extends JComponent implements IPokemonGui
 
 		if(cX < 0||cY < 0||cX*TILE_SIZE >= getWidth()||cY*TILE_SIZE >= getHeight())
 			return;
+		int tileX = cX*TILE_SIZE;
+		int tileY = cY*TILE_SIZE;
 
-		GUITileGraphics sprite = (GUITileGraphics)SpriteHandler.getHandler(gameObject.getClass()).getSpriteFor(gameObject);
+		GUITileGraphics sprite;
+		if(gameObject==pok.getPlayer())
+		{
+			Player player = (Player)gameObject;
+			float progress = moveTimer/4f;
+			sprite = (GUITileGraphics)SpriteHandler.getHandler(gameObject.getClass()).getSpriteFor(gameObject, progress);
+			switch(player.getDirection())
+			{
+				case 0 -> tileX -= (int)(progress*TILE_SIZE);
+				case 1 -> tileX += (int)(progress*TILE_SIZE);
+				case 2 -> tileY -= (int)(progress*TILE_SIZE);
+				case 3 -> tileY += (int)(progress*TILE_SIZE);
+			}
+		}
+		else
+			sprite = (GUITileGraphics)SpriteHandler.getHandler(gameObject.getClass()).getSpriteFor(gameObject);
+
 		if(sprite==null)
 			return;
-		sprite.drawBackground(cX*TILE_SIZE, cY*TILE_SIZE, graphics);
+		sprite.drawBackground(tileX, tileY, graphics);
 	}
 
 	@Override
@@ -142,5 +182,15 @@ public class GameDrawPanel extends JComponent implements IPokemonGui
 	public void onExit()
 	{
 		fps.stop();
+	}
+
+	public boolean isAnimationClear()
+	{
+		return moveTimer==0;
+	}
+
+	public void setMoveAnimation()
+	{
+		moveTimer = 4;
 	}
 }

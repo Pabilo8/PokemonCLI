@@ -34,7 +34,8 @@ public class GameGui implements KeyHandlingDisplay, IPokemonGui
 	@Override
 	public ActionResult handleKeyInput(Level level, Player player, Dialogue dialogue, Fight fight, Key key)
 	{
-		return switch(key.getCharacter())
+
+		ActionResult result = gamePanel.isAnimationClear()?switch(key.getCharacter())
 		{
 			case 'w' -> level.moveCharacterBy(player, 0, -1);
 			case 'a' -> level.moveCharacterBy(player, -1, 0);
@@ -42,7 +43,18 @@ public class GameGui implements KeyHandlingDisplay, IPokemonGui
 			case 'd' -> level.moveCharacterBy(player, 1, 0);
 			case 'p' -> new ActionResult(ResultType.SAVE_GAME);
 			default -> null;
-		};
+		}: null;
+
+		if(result!=null&&result.getResult()==ResultType.MOVE)
+		{
+			PokemonGUI pok = PokemonGUI.getInstance();
+			pok.getAudioSystem().soundEffect(Track.STEP);
+			gamePanel.setMoveAnimation();
+		}
+
+		labelXPos.setText("X: "+player.getX());
+		labelYPos.setText("Y: "+player.getY());
+		return result;
 	}
 
 	public GameGui()

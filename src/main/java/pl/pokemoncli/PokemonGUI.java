@@ -9,6 +9,7 @@ import pl.pokemoncli.cli.graphics.RandomGUISpriteHandler;
 import pl.pokemoncli.gui.PokeLogger;
 import pl.pokemoncli.gui.display.*;
 import pl.pokemoncli.gui.graphics.GUITileGraphics;
+import pl.pokemoncli.gui.graphics.ImageLoader;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.PokemonCommon;
 import pl.pokemoncli.logic.SpriteHandler;
@@ -104,6 +105,17 @@ public class PokemonGUI extends PokemonCommon
 	}
 
 	@Override
+	public boolean handleKeyInput(Key key)
+	{
+		boolean result = super.handleKeyInput(key);
+		if(dialogue!=null)
+			changeGui(dialogueDisplay);
+		if(fight!=null)
+			changeGui(fightDisplay);
+		return result;
+	}
+
+	@Override
 	protected void saveGame()
 	{
 		//TODO: 19.01.2025 game saving
@@ -113,8 +125,6 @@ public class PokemonGUI extends PokemonCommon
 	protected void loadGraphics()
 	{
 		mainMenuDisplay.loadGraphics();
-
-		//
 		Terrain.GRASS.setTileGraphics(GUITileGraphics.GRASS);
 		Terrain.BEACH.setTileGraphics(GUITileGraphics.BEACH);
 		Terrain.BEACH2.setTileGraphics(GUITileGraphics.BEACH2);
@@ -158,13 +168,13 @@ public class PokemonGUI extends PokemonCommon
 				return switch(gameObject.getDirection())
 				{
 					case 0 ->
-							getAnimation(progress, GUITileGraphics.PLAYER_RIGHT1, GUITileGraphics.PLAYER_RIGHT2, GUITileGraphics.PLAYER_RIGHT3);
+							getAnimation(progress, GUITileGraphics.PLAYER_RIGHT1, GUITileGraphics.PLAYER_RIGHT2, GUITileGraphics.PLAYER_RIGHT3, GUITileGraphics.PLAYER_RIGHT4);
 					case 1 ->
-							getAnimation(progress, GUITileGraphics.PLAYER_LEFT1, GUITileGraphics.PLAYER_LEFT2, GUITileGraphics.PLAYER_LEFT3);
+							getAnimation(progress, GUITileGraphics.PLAYER_LEFT1, GUITileGraphics.PLAYER_LEFT2, GUITileGraphics.PLAYER_LEFT3, GUITileGraphics.PLAYER_LEFT4);
 					case 2 ->
-							getAnimation(progress, GUITileGraphics.PLAYER_FRONT1, GUITileGraphics.PLAYER_FRONT2, GUITileGraphics.PLAYER_FRONT3);
+							getAnimation(progress, GUITileGraphics.PLAYER_FRONT1, GUITileGraphics.PLAYER_FRONT2, GUITileGraphics.PLAYER_FRONT3, GUITileGraphics.PLAYER_FRONT4);
 					default ->
-							getAnimation(progress, GUITileGraphics.PLAYER_BACK1, GUITileGraphics.PLAYER_BACK2, GUITileGraphics.PLAYER_BACK3);
+							getAnimation(progress, GUITileGraphics.PLAYER_BACK1, GUITileGraphics.PLAYER_BACK2, GUITileGraphics.PLAYER_BACK3, GUITileGraphics.PLAYER_BACK4);
 				};
 			}
 		});
@@ -177,6 +187,10 @@ public class PokemonGUI extends PokemonCommon
 				.withSprite("Pies", GUITileGraphics.NPC_PIES)
 		);
 		SpriteHandler.registerHandler(Door.class, new SimpleSpriteHandler<>(GUITileGraphics.DOOR_OPENABLE));
+
+		ImageLoader.getInstance().loadImage("npc_ash", "/gui/npc/ash.png");
+		ImageLoader.getInstance().loadImage("npc_Pies", "/gui/npc/psi_syn.png");
+		ImageLoader.getInstance().loadImage("npc_Big Smoke", "/gui/npc/big_smoke.png");
 
 		for(GUITileGraphics value : GUITileGraphics.values())
 			value.loadGraphics();
@@ -193,12 +207,12 @@ public class PokemonGUI extends PokemonCommon
 
 	public void changeGui(IPokemonGui gui)
 	{
+		if(currentGui==gui)
+			return;
 		SwingUtilities.invokeLater(() -> {
 			//Exit parent container
 			if(currentGui!=null)
-			{
 				currentGui.onExit();
-			}
 			//Change GUI
 			window.setContentPane(gui.getMainPanel());
 			currentGui = gui;

@@ -4,7 +4,7 @@ import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.input.Key.Kind;
 import pl.pokemoncli.cli.BaseDisplay;
 import pl.pokemoncli.cli.DoubleBufferedTerminal;
-import pl.pokemoncli.cli.KeyHandlingDisplay;
+import pl.pokemoncli.logic.KeyHandlingDisplay;
 import pl.pokemoncli.cli.graphics.CLIPokemonGraphics;
 import pl.pokemoncli.logic.AbstractPokemonGraphics;
 import pl.pokemoncli.logic.Fight;

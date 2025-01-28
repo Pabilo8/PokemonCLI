@@ -2,7 +2,7 @@ package pl.pokemoncli;
 
 import com.googlecode.lanterna.input.Key;
 import pl.pokemoncli.cli.DoubleBufferedTerminal;
-import pl.pokemoncli.cli.KeyHandlingDisplay;
+import pl.pokemoncli.logic.KeyHandlingDisplay;
 import pl.pokemoncli.cli.MainMenuDisplay;
 import pl.pokemoncli.cli.graphics.CLITileGraphics;
 import pl.pokemoncli.cli.graphics.CLIPokemonGraphics;

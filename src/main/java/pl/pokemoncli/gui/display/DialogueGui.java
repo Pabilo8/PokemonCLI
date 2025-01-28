@@ -4,7 +4,7 @@ import com.googlecode.lanterna.input.Key;
 import lombok.AccessLevel;
 import lombok.Getter;
 import pl.pokemoncli.PokemonGUI;
-import pl.pokemoncli.cli.KeyHandlingDisplay;
+import pl.pokemoncli.logic.KeyHandlingDisplay;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;

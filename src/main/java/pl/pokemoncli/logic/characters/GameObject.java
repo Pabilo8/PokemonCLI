@@ -1,7 +1,6 @@
 package pl.pokemoncli.logic.characters;
 
 import lombok.Getter;
-import pl.pokemoncli.cli.graphics.CLITileGraphics;
 
 import java.io.Serial;
 import java.io.Serializable;

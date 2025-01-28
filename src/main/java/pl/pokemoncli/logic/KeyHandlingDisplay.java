@@ -1,8 +1,6 @@
-package pl.pokemoncli.cli;
+package pl.pokemoncli.logic;
 
 import com.googlecode.lanterna.input.Key;
-import pl.pokemoncli.logic.Fight;
-import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.logic.dialogue.Dialogue;

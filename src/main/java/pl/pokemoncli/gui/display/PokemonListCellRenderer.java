@@ -1,5 +1,6 @@
 package pl.pokemoncli.gui.display;
 
+import pl.pokemoncli.gui.graphics.GUIPokemonGraphics;
 import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 
 import javax.swing.*;
@@ -43,7 +44,8 @@ public class PokemonListCellRenderer extends JPanel implements ListCellRenderer<
 		hpBar.setValue(pokemon.getCurrentHp());
 
 		// Placeholder for the image
-		imageLabel.setIcon(new ImageIcon(new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB)));
+		GUIPokemonGraphics graphics = (GUIPokemonGraphics)pokemon.getSpecies().getFront();
+		imageLabel.setIcon(new ImageIcon(graphics.getImage()));
 
 		if(isSelected)
 		{

@@ -5,7 +5,7 @@ import pl.pokemoncli.cli.DoubleBufferedTerminal;
 import pl.pokemoncli.cli.KeyHandlingDisplay;
 import pl.pokemoncli.cli.MainMenuDisplay;
 import pl.pokemoncli.cli.graphics.CLITileGraphics;
-import pl.pokemoncli.cli.graphics.PokemonGraphics;
+import pl.pokemoncli.cli.graphics.CLIPokemonGraphics;
 import pl.pokemoncli.cli.main_display.DialogueDisplay;
 import pl.pokemoncli.cli.main_display.FightDisplay;
 import pl.pokemoncli.cli.main_display.GameDisplay;
@@ -19,6 +19,7 @@ import pl.pokemoncli.logic.SaveStateUtils.SaveObject;
 import pl.pokemoncli.logic.SpriteHandler;
 import pl.pokemoncli.logic.SpriteHandler.SimpleSpriteHandler;
 import pl.pokemoncli.logic.characters.*;
+import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
 import java.awt.image.BufferedImage;
@@ -115,6 +116,22 @@ public class PokemonCLI extends PokemonCommon
 		Terrain.HOUSE_WALL.setTileGraphics(CLITileGraphics.HOUSE_WALL);
 		Terrain.HOUSE_WALL_BOTTOM.setTileGraphics(CLITileGraphics.HOUSE_WALL_BOTTOM);
 
+		//Set pokemon graphics
+		PokemonSpecies.MISSINGNO.setGraphics(CLIPokemonGraphics.POKEMON_NULL, CLIPokemonGraphics.POKEMON_NULL);
+		PokemonSpecies.BULBASAUR.setGraphics(CLIPokemonGraphics.BULBASAUR_FRONT, CLIPokemonGraphics.BULBASAUR_BACK);
+		PokemonSpecies.CHARMANDER.setGraphics(CLIPokemonGraphics.CHARMANDER_FRONT, CLIPokemonGraphics.CHARMANDER_BACK);
+		PokemonSpecies.SQUIRTLE.setGraphics(CLIPokemonGraphics.SQUIRTLE_FRONT, CLIPokemonGraphics.SQUIRTLE_BACK);
+		PokemonSpecies.CATERPIE.setGraphics(CLIPokemonGraphics.CATERPIE_FRONT, CLIPokemonGraphics.CATERPIE_BACK);
+		PokemonSpecies.METAPOD.setGraphics(CLIPokemonGraphics.METAPOD_FRONT, CLIPokemonGraphics.METAPOD_BACK);
+		PokemonSpecies.BUTTERFREE.setGraphics(CLIPokemonGraphics.BUTTERFREE_FRONT, CLIPokemonGraphics.BUTTERFREE_BACK);
+		PokemonSpecies.WEEDLE.setGraphics(CLIPokemonGraphics.WEEDLE_FRONT, CLIPokemonGraphics.WEEDLE_BACK);
+		PokemonSpecies.KAKUNA.setGraphics(CLIPokemonGraphics.KAKUNA_FRONT, CLIPokemonGraphics.KAKUNA_BACK);
+		PokemonSpecies.BEEDRILL.setGraphics(CLIPokemonGraphics.BEEDRILL_FRONT, CLIPokemonGraphics.BEEDRILL_BACK);
+		PokemonSpecies.PIDGEY.setGraphics(CLIPokemonGraphics.PIDGEY_FRONT, CLIPokemonGraphics.PIDGEY_BACK);
+		PokemonSpecies.RATTATA.setGraphics(CLIPokemonGraphics.RATTATA_FRONT, CLIPokemonGraphics.RATTATA_BACK);
+		PokemonSpecies.EEVEE.setGraphics(CLIPokemonGraphics.EEVEE_FRONT, CLIPokemonGraphics.EEVEE_BACK);
+
+		//Set sprite handlers
 		SpriteHandler.registerHandler(Player.class, new SpriteHandler<>()
 		{
 			@Override
@@ -136,7 +153,7 @@ public class PokemonCLI extends PokemonCommon
 		//Load tile graphics
 		for(CLITileGraphics value : CLITileGraphics.values())
 			value.loadGraphics();
-		for(PokemonGraphics value : PokemonGraphics.values())
+		for(CLIPokemonGraphics value : CLIPokemonGraphics.values())
 			value.loadGraphics();
 	}
 

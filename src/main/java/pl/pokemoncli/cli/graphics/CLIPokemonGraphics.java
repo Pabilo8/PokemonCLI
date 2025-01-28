@@ -1,6 +1,7 @@
 package pl.pokemoncli.cli.graphics;
 
 import pl.pokemoncli.cli.DoubleBufferedTerminal;
+import pl.pokemoncli.logic.AbstractPokemonGraphics;
 
 import java.awt.*;
 
@@ -8,7 +9,7 @@ import java.awt.*;
  * @author KitsuneOkami
  * @since 17.11.2024
  */
-public enum PokemonGraphics
+public enum CLIPokemonGraphics implements AbstractPokemonGraphics<DoubleBufferedTerminal>
 {
 	POKEMON_NULL(new Color(0x0A2A0A), new Color(0x4C7C4F), AsciiArtLoader.FALLBACK_POKEMON_GRAPHICS),
 	BULBASAUR_BACK("pokemon/bulbasaur.txt", new Color(0x0A2A0A), new Color(0x4C7C4F), false),
@@ -44,7 +45,7 @@ public enum PokemonGraphics
 	String[] graphics;
 
 
-	PokemonGraphics(Color foreground, Color background, String[] graphics)
+	CLIPokemonGraphics(Color foreground, Color background, String[] graphics)
 	{
 		this.graphics = graphics;
 		this.foreground = foreground;
@@ -53,7 +54,7 @@ public enum PokemonGraphics
 		this.mirrored = false;
 	}
 
-	PokemonGraphics(String filePath, Color foreground, Color background, boolean mirrored)
+	CLIPokemonGraphics(String filePath, Color foreground, Color background, boolean mirrored)
 	{
 		this.filePath = filePath;
 		this.foreground = foreground;

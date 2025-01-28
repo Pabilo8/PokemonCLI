@@ -5,10 +5,12 @@ import com.googlecode.lanterna.input.Key.Kind;
 import pl.pokemoncli.cli.BaseDisplay;
 import pl.pokemoncli.cli.DoubleBufferedTerminal;
 import pl.pokemoncli.cli.KeyHandlingDisplay;
-import pl.pokemoncli.cli.graphics.PokemonGraphics;
+import pl.pokemoncli.cli.graphics.CLIPokemonGraphics;
+import pl.pokemoncli.logic.AbstractPokemonGraphics;
 import pl.pokemoncli.logic.Fight;
 import pl.pokemoncli.logic.Level;
 import pl.pokemoncli.logic.Level.ActionResult;
+import pl.pokemoncli.logic.Level.ResultType;
 import pl.pokemoncli.logic.characters.Player;
 import pl.pokemoncli.logic.dialogue.Dialogue;
 import pl.pokemoncli.logic.combat.pokemon.Pokemon;
@@ -77,12 +79,16 @@ public class FightDisplay extends BaseDisplay implements KeyHandlingDisplay
 				terminal.drawColor(x, y, '░', foreground, background);
 
 		// draw enemy pokemon
-		fight.getCurrEnemyPokemon().getFront().draw(displayX-PokemonGraphics.POKEMON_SIZE_X-4, 2, terminal);
+		AbstractPokemonGraphics<?> front = fight.getCurrEnemyPokemon().getSpecies().getFront();
+		assert front instanceof CLIPokemonGraphics;
+		((CLIPokemonGraphics)front).draw(displayX-CLIPokemonGraphics.POKEMON_SIZE_X-4, 2, terminal);
 		drawPokemon(fight.getCurrEnemyPokemon(), 7, 2, false);
 
 		// draw player pokemon
-		fight.getCurrPlayerPokemon().getBack().draw(4, displayY-PokemonGraphics.POKEMON_SIZE_Y-2, terminal);
-		drawPokemon(fight.getCurrPlayerPokemon(), 4+PokemonGraphics.POKEMON_SIZE_X+2, displayY-PokemonGraphics.POKEMON_SIZE_Y-2, true);
+		AbstractPokemonGraphics<?> back = fight.getCurrEnemyPokemon().getSpecies().getBack();
+		assert back instanceof CLIPokemonGraphics;
+		((CLIPokemonGraphics)back).draw(4, displayY-CLIPokemonGraphics.POKEMON_SIZE_Y-2, terminal);
+		drawPokemon(fight.getCurrPlayerPokemon(), 4+CLIPokemonGraphics.POKEMON_SIZE_X+2, displayY-CLIPokemonGraphics.POKEMON_SIZE_Y-2, true);
 	}
 
 	@Override
@@ -99,7 +105,7 @@ public class FightDisplay extends BaseDisplay implements KeyHandlingDisplay
 			case ' ' ->
 			{
 				if(fight.getButton()==Fight.Button.RUN&&fight.isMainMenu())
-					yield new ActionResult(Level.ResultType.END_OF_BATTLE);
+					yield new ActionResult(ResultType.END_OF_BATTLE);
 				else yield fight.selectButton();
 			}
 			default -> null;

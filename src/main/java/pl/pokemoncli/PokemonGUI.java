@@ -5,7 +5,8 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.googlecode.lanterna.input.Key;
 import lombok.AccessLevel;
 import lombok.Getter;
-import pl.pokemoncli.cli.graphics.RandomGUISpriteHandler;
+import pl.pokemoncli.gui.graphics.GUIPokemonGraphics;
+import pl.pokemoncli.gui.graphics.RandomGUISpriteHandler;
 import pl.pokemoncli.gui.PokeLogger;
 import pl.pokemoncli.gui.display.*;
 import pl.pokemoncli.gui.graphics.GUITileGraphics;
@@ -15,6 +16,7 @@ import pl.pokemoncli.logic.PokemonCommon;
 import pl.pokemoncli.logic.SpriteHandler;
 import pl.pokemoncli.logic.SpriteHandler.SimpleSpriteHandler;
 import pl.pokemoncli.logic.characters.*;
+import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,8 +69,10 @@ public class PokemonGUI extends PokemonCommon
 		instance = new PokemonGUI();
 
 		//Load level
+		Log.info("PokemonGUI", "Loading game...");
 		instance.loadGame();
 		//Load Graphics
+		Log.info("PokemonGUI", "Loading graphics...");
 		instance.loadGraphics();
 		//Display the Game
 		instance.displayMenu();
@@ -124,7 +128,10 @@ public class PokemonGUI extends PokemonCommon
 	@Override
 	protected void loadGraphics()
 	{
+		//Load GUI Graphics
 		mainMenuDisplay.loadGraphics();
+
+		//Set amd Load Tile Graphics
 		Terrain.GRASS.setTileGraphics(GUITileGraphics.GRASS);
 		Terrain.BEACH.setTileGraphics(GUITileGraphics.BEACH);
 		Terrain.BEACH2.setTileGraphics(GUITileGraphics.BEACH2);
@@ -160,6 +167,22 @@ public class PokemonGUI extends PokemonCommon
 		Terrain.HOUSE_WALL.setTileGraphics(GUITileGraphics.HOUSE_WALL);
 		Terrain.HOUSE_WALL_BOTTOM.setTileGraphics(GUITileGraphics.HOUSE_WALL_BOTTOM);
 
+		//Set pokemon graphics
+		PokemonSpecies.MISSINGNO.setGraphics(GUIPokemonGraphics.POKEMON_NULL, GUIPokemonGraphics.POKEMON_NULL);
+		PokemonSpecies.BULBASAUR.setGraphics(GUIPokemonGraphics.BULBASAUR_FRONT, GUIPokemonGraphics.BULBASAUR_BACK);
+		PokemonSpecies.CHARMANDER.setGraphics(GUIPokemonGraphics.CHARMANDER_FRONT, GUIPokemonGraphics.CHARMANDER_BACK);
+		PokemonSpecies.SQUIRTLE.setGraphics(GUIPokemonGraphics.SQUIRTLE_FRONT, GUIPokemonGraphics.SQUIRTLE_BACK);
+		PokemonSpecies.CATERPIE.setGraphics(GUIPokemonGraphics.CATERPIE_FRONT, GUIPokemonGraphics.CATERPIE_BACK);
+		PokemonSpecies.METAPOD.setGraphics(GUIPokemonGraphics.METAPOD_FRONT, GUIPokemonGraphics.METAPOD_BACK);
+		PokemonSpecies.BUTTERFREE.setGraphics(GUIPokemonGraphics.BUTTERFREE_FRONT, GUIPokemonGraphics.BUTTERFREE_BACK);
+		PokemonSpecies.WEEDLE.setGraphics(GUIPokemonGraphics.WEEDLE_FRONT, GUIPokemonGraphics.WEEDLE_BACK);
+		PokemonSpecies.KAKUNA.setGraphics(GUIPokemonGraphics.KAKUNA_FRONT, GUIPokemonGraphics.KAKUNA_BACK);
+		PokemonSpecies.BEEDRILL.setGraphics(GUIPokemonGraphics.BEEDRILL_FRONT, GUIPokemonGraphics.BEEDRILL_BACK);
+		PokemonSpecies.PIDGEY.setGraphics(GUIPokemonGraphics.PIDGEY_FRONT, GUIPokemonGraphics.PIDGEY_BACK);
+		PokemonSpecies.RATTATA.setGraphics(GUIPokemonGraphics.RATTATA_FRONT, GUIPokemonGraphics.RATTATA_BACK);
+		PokemonSpecies.EEVEE.setGraphics(GUIPokemonGraphics.EEVEE_FRONT, GUIPokemonGraphics.EEVEE_BACK);
+
+		//Set Sprite Handlers
 		SpriteHandler.registerHandler(Player.class, new SpriteHandler<>()
 		{
 			@Override
@@ -192,11 +215,10 @@ public class PokemonGUI extends PokemonCommon
 		ImageLoader.getInstance().loadImage("npc_Pies", "/gui/npc/psi_syn.png");
 		ImageLoader.getInstance().loadImage("npc_Big Smoke", "/gui/npc/big_smoke.png");
 
-		for(GUITileGraphics value : GUITileGraphics.values())
+		for(var value : GUITileGraphics.values())
 			value.loadGraphics();
-		//TODO: 26.01.2025 load pokemon graphics
-		/*for(PokemonGraphics value : PokemonGraphics.values())
-			value.loadGraphics();*/
+		for(var value : GUIPokemonGraphics.values())
+			value.loadGraphics();
 	}
 
 	private GUITileGraphics getAnimation(float progress, GUITileGraphics... graphics)
@@ -209,6 +231,7 @@ public class PokemonGUI extends PokemonCommon
 	{
 		if(currentGui==gui)
 			return;
+		Log.info("PokemonGUI", "Changing GUI to "+gui.getClass().getSimpleName());
 		SwingUtilities.invokeLater(() -> {
 			//Exit parent container
 			if(currentGui!=null)

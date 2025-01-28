@@ -1,7 +1,6 @@
-package pl.pokemoncli.cli.graphics;
+package pl.pokemoncli.gui.graphics;
 
 import lombok.RequiredArgsConstructor;
-import pl.pokemoncli.gui.graphics.GUITileGraphics;
 import pl.pokemoncli.logic.SpriteHandler;
 import pl.pokemoncli.logic.characters.GameObject;
 

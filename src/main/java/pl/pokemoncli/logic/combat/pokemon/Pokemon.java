@@ -2,7 +2,6 @@ package pl.pokemoncli.logic.combat.pokemon;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.pokemoncli.cli.graphics.PokemonGraphics;
 import pl.pokemoncli.logic.combat.move.Move;
 import pl.pokemoncli.logic.combat.move.MoveType;
 
@@ -24,8 +23,7 @@ public class Pokemon implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-	private final PokemonType type1;
-	private final PokemonType type2;
+	private PokemonSpecies species;
 	private int level;
 	private int hp;
 	private int currentHp;
@@ -35,20 +33,14 @@ public class Pokemon implements Serializable
 	private int spDefence;
 	private int speed;
 
-	private final PokemonGraphics front;
-	private final PokemonGraphics back;
-
 	private ArrayList<Move> moves;
 
 	private final int maxMoves = 4;
 
-	public Pokemon(String name, PokemonType type1, PokemonType type2,
-				   int hp, int attack, int defence, int spAttack, int spDefence, int speed,
-				   PokemonGraphics front, PokemonGraphics back)
+	public Pokemon(String name, PokemonSpecies species, int hp, int attack, int defence, int spAttack, int spDefence, int speed)
 	{
 		this.name = name;
-		this.type1 = type1;
-		this.type2 = type2;
+		this.species = species;
 		this.level = 0;
 		this.hp = hp;
 		this.currentHp = hp;
@@ -57,16 +49,12 @@ public class Pokemon implements Serializable
 		this.spAttack = spAttack;
 		this.spDefence = spDefence;
 		this.speed = speed;
-		this.front = front;
-		this.back = back;
 		this.moves = new ArrayList<>();
 	}
 
 	public Pokemon(PokemonSpecies species, int level)
 	{
-		this(species.name(), species.getType1(), species.getType2(),
-				species.getHp(), species.getAttack(), species.getDefence(), species.getSpAttack(), species.getSpDefence(), species.getSpeed(),
-				species.getFront(), species.getBack());
+		this(species.name(), species, species.getHp(), species.getAttack(), species.getDefence(), species.getSpAttack(), species.getSpDefence(), species.getSpeed());
 		this.level = level;
 	}
 

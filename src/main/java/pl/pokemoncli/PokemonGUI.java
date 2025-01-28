@@ -30,6 +30,9 @@ import java.awt.event.KeyListener;
 @Getter
 public class PokemonGUI extends PokemonCommon
 {
+	public static final Color COLOR_HP_PLAYER = new Color(0x00FF00);
+	public static final Color COLOR_HP_ENEMY = new Color(0xFF0000);
+
 	private final JFrame window;
 	@Getter(AccessLevel.PUBLIC)
 	private static PokemonGUI instance;
@@ -56,6 +59,8 @@ public class PokemonGUI extends PokemonCommon
 		this.allGuis = new IPokemonGui[]{mainMenuDisplay, settingsDisplay, loadGameDisplay, dialogueDisplay, fightDisplay, gameDisplay};
 
 		this.window = new JFrame("Pokemon (GUI Edition)");
+		ImageLoader.getInstance().loadImage("game_icon", "/gui/icon.png");
+		this.window.setIconImage(ImageLoader.getInstance().getImage("game_icon"));
 	}
 
 	public static void main(String[] args)
@@ -129,6 +134,7 @@ public class PokemonGUI extends PokemonCommon
 	{
 		//Load GUI Graphics
 		mainMenuDisplay.loadGraphics();
+		fightDisplay.loadGraphics();
 
 		//Set amd Load Tile Graphics
 		Terrain.GRASS.setTileGraphics(GUITileGraphics.GRASS);

@@ -1,5 +1,6 @@
 package pl.pokemoncli.gui.display;
 
+import pl.pokemoncli.PokemonGUI;
 import pl.pokemoncli.gui.graphics.GUIPokemonGraphics;
 import pl.pokemoncli.logic.combat.pokemon.Pokemon;
 
@@ -42,6 +43,7 @@ public class PokemonListCellRenderer extends JPanel implements ListCellRenderer<
 		hpLabel.setText("HP: "+pokemon.getCurrentHp()+"/"+pokemon.getHp());
 		hpBar.setMaximum(pokemon.getHp());
 		hpBar.setValue(pokemon.getCurrentHp());
+		hpBar.setForeground(PokemonGUI.COLOR_HP_PLAYER);
 
 		// Placeholder for the image
 		GUIPokemonGraphics graphics = (GUIPokemonGraphics)pokemon.getSpecies().getFront();

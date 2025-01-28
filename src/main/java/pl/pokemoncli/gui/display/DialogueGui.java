@@ -116,8 +116,8 @@ public class DialogueGui implements KeyHandlingDisplay, IPokemonGui
 
 	private void createUIComponents()
 	{
-		this.imageNPC = new ImagePanel("");
-		this.imagePlayer = new ImagePanel("");
+		this.imageNPC = new ImagePanel();
+		this.imagePlayer = new ImagePanel();
 		// TODO: place custom component creation code here
 	}
 }

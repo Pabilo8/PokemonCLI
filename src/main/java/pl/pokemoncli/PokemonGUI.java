@@ -89,13 +89,12 @@ public class PokemonGUI extends PokemonCommon
 			@Override
 			public void keyTyped(KeyEvent e)
 			{
-				handleKeyInput(new Key(e.getKeyChar()));
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e)
 			{
-
+				handleKeyInput(new Key(e.getKeyChar()));
 			}
 
 			@Override

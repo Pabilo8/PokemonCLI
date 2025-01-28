@@ -1,10 +1,12 @@
 package pl.pokemoncli.gui.display;
 
+import lombok.NoArgsConstructor;
 import pl.pokemoncli.gui.graphics.ImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
 
+@NoArgsConstructor
 public class ImagePanel extends JPanel
 {
 	private String imageKey = "";

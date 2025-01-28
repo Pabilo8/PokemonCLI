@@ -50,7 +50,7 @@ class FightTest
 		Pokemon enemyPokemon = enemy.getPokemon(0);
 		Pokemon playerPokemon = player.getPokemon(0);
 
-		fight.userAction(ActionType.ATTACK);
+		fight.userAction(ActionType.FIGHT);
 
 		assertTrue(enemyPokemon.getCurrentHp() <= enemyPokemon.getHp()||
 						playerPokemon.getCurrentHp() <= playerPokemon.getHp(),

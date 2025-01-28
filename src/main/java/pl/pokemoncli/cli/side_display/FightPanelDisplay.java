@@ -1,7 +1,9 @@
 package pl.pokemoncli.cli.side_display;
 
 import pl.pokemoncli.cli.DoubleBufferedTerminal;
+import pl.pokemoncli.cli.main_display.FightDisplay;
 import pl.pokemoncli.logic.Fight;
+import pl.pokemoncli.logic.Fight.ActionType;
 import pl.pokemoncli.logic.combat.move.Move;
 
 import java.awt.*;
@@ -50,7 +52,7 @@ public class FightPanelDisplay extends GamePanelDisplay
 		drawStringColor("█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█", gameX, gameY+4, COLOR_SELECT, COLOR_BACKGROUND);
 	}
 
-	private void drawMainMenuButton(Fight fight, int buttonX, int buttonY, Fight.Button button)
+	private void drawMainMenuButton(Fight fight, FightDisplay fightDisplay, int buttonX, int buttonY, ActionType button)
 	{
 		String buttonText = switch(button)
 		{
@@ -60,13 +62,13 @@ public class FightPanelDisplay extends GamePanelDisplay
 			case RUN -> TEXT_RUN;
 		};
 
-		if(fight.getButton()==button)
+		if(fightDisplay.getButton()==button)
 			drawSelectedButton(buttonX, buttonY, buttonText);
 		else
 			drawButton(buttonX, buttonY, buttonText);
 	}
 
-	private void drawAttacksMenuButton(Fight fight, int buttonX, int buttonY, Fight.Button button)
+	private void drawAttacksMenuButton(Fight fight, FightDisplay fightDisplay, int buttonX, int buttonY, ActionType button)
 	{
 		Move move = switch(button)
 		{
@@ -76,7 +78,7 @@ public class FightPanelDisplay extends GamePanelDisplay
 			case RUN -> fight.getCurrPlayerPokemon().getMoves().get(3);
 		};
 
-		if(fight.getButton()==button)
+		if(fightDisplay.getButton()==button)
 			drawSelectedButton(buttonX, buttonY, TEXT_EMPTY);
 		else
 			drawButton(buttonX, buttonY, TEXT_EMPTY);
@@ -100,8 +102,14 @@ public class FightPanelDisplay extends GamePanelDisplay
 				drawString("⮚ ", gameX, gameY+i);
 	}
 
+	private static final ActionType[][] BUTTON_OPTIONS = {
+			{ActionType.FIGHT, ActionType.POKEMON},
+			{ActionType.ITEM, ActionType.RUN}
+	};
+
+
 	// draw main fight panel
-	public void drawMenuPanel(Fight fight, int gameX, int gameY)
+	public void drawMenuPanel(Fight fight, FightDisplay fightDisplay, int gameX, int gameY)
 	{
 		// Draw Current Pokemon
 		if(fight.getCurrPlayerPokemonID()==fight.getTempPlayerPokemonID())
@@ -110,23 +118,23 @@ public class FightPanelDisplay extends GamePanelDisplay
 		// Draw Menu
 		if(fight.isMainMenu())
 		{
-			drawMainMenuButton(fight, gameX+2, gameY-BUTTON_HEIGHT-7, Fight.Button.FIGHT);
-			drawMainMenuButton(fight, gameX+BUTTON_WIDTH+4, gameY-BUTTON_HEIGHT-7, Fight.Button.POKEMON);
-			drawMainMenuButton(fight, gameX+2, gameY-6, Fight.Button.ITEM);
-			drawMainMenuButton(fight, gameX+BUTTON_WIDTH+4, gameY-6, Fight.Button.RUN);
+			drawMainMenuButton(fight, fightDisplay, gameX+2, gameY-BUTTON_HEIGHT-7, ActionType.FIGHT);
+			drawMainMenuButton(fight, fightDisplay, gameX+BUTTON_WIDTH+4, gameY-BUTTON_HEIGHT-7, ActionType.POKEMON);
+			drawMainMenuButton(fight, fightDisplay, gameX+2, gameY-6, ActionType.ITEM);
+			drawMainMenuButton(fight, fightDisplay, gameX+BUTTON_WIDTH+4, gameY-6, ActionType.RUN);
 		}
 		else
-			switch(fight.getSecondMenu())
+			switch(fightDisplay.getSecondMenu())
 			{
-				case FIGHT ->
+				case ActionType.FIGHT ->
 				{
-					drawAttacksMenuButton(fight, gameX+2, gameY-BUTTON_HEIGHT-7, Fight.Button.FIGHT);
-					drawAttacksMenuButton(fight, gameX+BUTTON_WIDTH+4, gameY-BUTTON_HEIGHT-7, Fight.Button.POKEMON);
-					drawAttacksMenuButton(fight, gameX+2, gameY-6, Fight.Button.ITEM);
-					drawAttacksMenuButton(fight, gameX+BUTTON_WIDTH+4, gameY-6, Fight.Button.RUN);
+					drawAttacksMenuButton(fight, fightDisplay, gameX+2, gameY-BUTTON_HEIGHT-7, ActionType.FIGHT);
+					drawAttacksMenuButton(fight, fightDisplay, gameX+BUTTON_WIDTH+4, gameY-BUTTON_HEIGHT-7, ActionType.POKEMON);
+					drawAttacksMenuButton(fight, fightDisplay, gameX+2, gameY-6, ActionType.ITEM);
+					drawAttacksMenuButton(fight, fightDisplay, gameX+BUTTON_WIDTH+4, gameY-6, ActionType.RUN);
 				}
-				case POKEMON -> drawPokemonList(fight, gameX+2, 4, fight.getTempPlayerPokemonID());
-				case ITEM -> {} //TODO: 17.11.2024 item selection screen
+				case ActionType.POKEMON -> drawPokemonList(fight, gameX+2, 4, fight.getTempPlayerPokemonID());
+				case ActionType.ITEM -> {} //TODO: 17.11.2024 item selection screen
 			}
 
 	}

@@ -208,7 +208,7 @@ public class PokemonCLI extends PokemonCommon
 			if(fight!=null)
 			{
 				fightDisplay.drawFightScreen(fight, GAME_X, GAME_Y);
-				fightPanelDisplay.drawMenuPanel(fight, GAME_X, GAME_Y);
+				fightPanelDisplay.drawMenuPanel(fight, fightDisplay, GAME_X, GAME_Y);
 			}
 			else
 				gameDisplay.drawWholeMap(player, level, GAME_X, GAME_Y, tickTimer);

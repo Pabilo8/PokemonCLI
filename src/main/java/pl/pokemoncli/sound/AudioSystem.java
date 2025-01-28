@@ -82,6 +82,7 @@ public class AudioSystem
 		FIGHT,
 
 		STEP,
+		ATTACK,
 
 		DIALOGUE_WRR,
 		DIALOGUE_THYEND,

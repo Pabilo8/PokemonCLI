@@ -13,15 +13,23 @@ import pl.pokemoncli.gui.graphics.GUITileGraphics;
 import pl.pokemoncli.gui.graphics.ImageLoader;
 import pl.pokemoncli.logic.Level.Terrain;
 import pl.pokemoncli.logic.PokemonCommon;
+import pl.pokemoncli.logic.SaveStateUtils;
+import pl.pokemoncli.logic.SaveStateUtils.SaveObject;
 import pl.pokemoncli.logic.SpriteHandler;
 import pl.pokemoncli.logic.SpriteHandler.SimpleSpriteHandler;
 import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * @author Pabilo8
@@ -126,7 +134,29 @@ public class PokemonGUI extends PokemonCommon
 	@Override
 	protected void saveGame()
 	{
-		//TODO: 19.01.2025 game saving
+		BufferedImage iconImage = null;
+		try
+		{
+			URL resource = this.getClass().getResource("/save_gui.png");
+			iconImage = ImageIO.read(resource);
+		} catch(IOException e)
+		{
+			Log.error("PokemonGUI", "Failed to load save icon, "+e.getMessage());
+			iconImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+		}
+
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setCurrentDirectory(new File("./saves/"));
+		fileChooser.setDialogTitle("Save Game");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Pokemon Save Files", "pok");
+		fileChooser.setFileFilter(filter);
+		int userSelection = fileChooser.showSaveDialog(window);
+
+		if(userSelection==JFileChooser.APPROVE_OPTION)
+		{
+			File fileToSave = fileChooser.getSelectedFile();
+			SaveStateUtils.saveGame(new SaveObject(player, iconImage, "Pokemon GUI Save"), fileToSave);
+		}
 	}
 
 	@Override

@@ -144,6 +144,7 @@ public class FightGui implements KeyHandlingDisplay, IPokemonGui
 			JButton attackButton = new JButton(attack.getName());
 			attackButton.addActionListener(e -> {
 				ActionType.FIGHT.setId(attackIndex);
+				PokemonGUI.getInstance().getAudioSystem().soundEffect(Track.ATTACK);
 				fight.userAction(ActionType.FIGHT);
 				//Refresh the GUI after performing the action
 				onInit();

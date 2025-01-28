@@ -22,8 +22,11 @@ import pl.pokemoncli.logic.characters.*;
 import pl.pokemoncli.logic.combat.pokemon.PokemonSpecies;
 import pl.pokemoncli.sound.AudioSystem.Track;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * @author Pabilo8
@@ -73,9 +76,19 @@ public class PokemonCLI extends PokemonCommon
 	@Override
 	protected void saveGame()
 	{
-		SaveStateUtils.saveGame(new SaveObject(player, new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB),
-						"Pokemon CLI Save"),
-				new File("saves/player.pok"));
+
+		BufferedImage iconImage = null;
+		try
+		{
+			URL resource = this.getClass().getResource("/save_tui.png");
+			iconImage = ImageIO.read(resource);
+		} catch(IOException e)
+		{
+			e.printStackTrace();
+			iconImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+		}
+		SaveStateUtils.saveGame(new SaveObject(player, iconImage, "Pokemon CLI Save"),
+				new File("saves/player_cli.pok"));
 	}
 
 	protected void loadGraphics()

@@ -66,7 +66,7 @@ public class SaveStateUtils
 							player = (Player)ois.readObject();
 						}
 						break;
-					case "save_icon.jpg":
+					case "save_icon.png":
 						iconImage = ImageIO.read(zis);
 						break;
 					case "description.txt":
@@ -112,8 +112,8 @@ public class SaveStateUtils
 			zos.closeEntry();
 
 			//Save icon image
-			zos.putNextEntry(new ZipEntry("save_icon.jpg"));
-			ImageIO.write(saveObject.getIconImage(), "jpg", zos);
+			zos.putNextEntry(new ZipEntry("save_icon.png"));
+			ImageIO.write(saveObject.getIconImage(), "png", zos);
 			zos.closeEntry();
 
 			//Save description
